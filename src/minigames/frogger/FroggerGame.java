@@ -128,8 +128,8 @@ public class FroggerGame extends AbstractGame {
 
     private void bewegeFrosch() {
 
-        double x = controller.getJoystickX() * SPEED_FROG;
-        double y = controller.getJoystickY() * SPEED_FROG;
+        double x = controller.getJoystickLinksX() * SPEED_FROG;
+        double y = controller.getJoystickLinksY() * SPEED_FROG;
 
         frosch.move(x, y);
 

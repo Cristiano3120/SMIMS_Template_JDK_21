@@ -42,46 +42,104 @@ public class TastaturController extends AbstractController {
      * @return
      */
     @Override
-    public double getJoystickX() {
+    public double getJoystickLinksX() {
 
         double x = 0.0;
 
-        if (view.keyLeftPressed()) {
-            x += -512.0;
+        if (view.keyPressed('A')) {
+            x += -1d;
         }
 
-        if (view.keyRightPressed()) {
-            x += 511.0;
+        if (view.keyPressed('D')) {
+            x += 1d;
         }
 
         return x;
     }
 
     @Override
-    public double getJoystickY() {
+    public double getJoystickLinksY() {
         double y = 0.0;
 
-        if (view.keyUpPressed()) {
-            y += -512.0;
+        if (view.keyPressed('W')) {
+            y += -1d;
         }
 
         if (view.keyDownPressed()) {
-            y += 511.0;
+            y += 1d;
+        }
+
+        return y;
+    }
+
+    public double getJoystickRechtsX() {
+
+        double x = 0.0;
+
+        if (view.keyLeftPressed()) {
+            x += -1d;
+        }
+
+        if (view.keyRightPressed()) {
+            x += 1d;
+        }
+
+        return x;
+    }
+
+    @Override
+    public double getJoystickRechtsY() {
+        double y = 0.0;
+
+        if (view.keyUpPressed()) {
+            y += -1d;
+        }
+
+        if (view.keyDownPressed()) {
+            y += 1d;
         }
 
         return y;
     }
 
     @Override
-    public boolean getA() {
-        return view.keyPressed('A');
+    public boolean getLinksA() {
+        return view.keyPressed('1');
     }
 
     @Override
-    public boolean getB() {
-        return view.keyPressed('B');
+    public boolean getLinksB() {
+        return view.keyPressed('1');
     }
 
+    @Override
+    public boolean getLinksC() {
+        return view.keyPressed('3');
+    }
+    @Override
+    public boolean getLinksD() {
+        return view.keyPressed('4');
+    }
+
+    @Override
+    public boolean getRechtsA() {
+        return view.keyPressed('7');
+    }
+
+    @Override
+    public boolean getRechtsB() {
+        return view.keyPressed('8');
+    }
+
+    @Override
+    public boolean getRechtsC() {
+        return view.keyPressed('9');
+    }
+
+    @Override
+    public boolean getRechtsD() {
+        return view.keyPressed('0');
+    }
     /* Inner Classes */
 
 }
