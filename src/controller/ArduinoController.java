@@ -1,9 +1,11 @@
 package controller;
 
+import controller.arduinoReceiveData.EmpfangendeDaten;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
+import com.google.gson.Gson;
 
 public class ArduinoController extends AbstractController implements SerialPortEventListener {
 
@@ -12,7 +14,7 @@ public class ArduinoController extends AbstractController implements SerialPortE
     /* Static Methods */
 
     /* Object Variables */
-    private String data = "";
+    private String data;
     private SerialPort serialPort;
 
     /* Constructors */
@@ -50,8 +52,8 @@ public class ArduinoController extends AbstractController implements SerialPortE
 
         System.out.println("data: " + data); // TODO: diese Zeile hier löschen
 
-        // TODO: Hier passiert die Magie.
 
+        EmpfangendeDaten  empfangendeDaten = new EmpfangendeDaten();
 
         // Sobald wir fertig sind, müssen wir den Inhalt des data-Strings löschen, denn der Controller schreibt
         // hier ununterbrochen neues Input rein. Auf diese Weise würde schnell eine sehr lange Zeichenkette
