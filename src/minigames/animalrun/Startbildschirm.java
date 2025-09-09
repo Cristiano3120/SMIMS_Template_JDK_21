@@ -10,61 +10,38 @@ import java.util.ArrayList;
 
 public class Startbildschirm {
 
-    protected AbstractController controller;
-    protected View view;
-    protected ArrayList<Shapes> shapesToRemove;
-
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
-
-    ScalablePicture[] backgrounds;
-
-    public Startbildschirm(AbstractController controller, View view) {
-        this.controller = controller;
-        this.view = view;
-        this.shapesToRemove = new ArrayList<>();
-        initView();
-    }
+    private AbstractController controller;
+    private View view;
 
 
-    protected void initView() {
-        view.setSize(WIDTH, HEIGHT);
+    public Startbildschirm(AbstractController controller, View view, int viewWidth, int viewHeight) {
+
+        view.setSize(viewWidth, viewHeight);
         view.setName("Startbildschirm Animalrun");
 
         ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), "resources/animalrun/background.png");
         ScalablePicture pressA_button = new ScalablePicture(210, 300, 375, 250, "resources/animalrun/pressA_button.png");
         ScalablePicture headline = new ScalablePicture(100, 0, 600, 400, "resources/animalrun/headline.png");
 
-        shapesToRemove.add(background);
-        shapesToRemove.add(pressA_button);
-        shapesToRemove.add(headline);
-
         // hier auf button warten
         while(!controller.getLinksA()) {
             view.wait(10);
         }
 
+        background.setHidden(true);
+        pressA_button.setHidden(true);
+        headline.setHidden(true);
+
+        view.remove(background);
+        view.remove(pressA_button);
+        view.remove(headline);
 
     }
 
-
-    protected void runGame() {
-
-//        cleanUp();
-
-        // Generiere Backgrounds.
-        backgrounds = new ScalablePicture[4];
-        for (int i = 0; i < backgrounds.length; i++) {
-            backgrounds[i] = new ScalablePicture(i * 375.0, view.getHeight() - 100d, 375.0, 100, "resources/animalrun/background_1.png");
-            shapesToRemove.add(backgrounds[i]);
-        }
-
-    }
-
-
-
-
+    // TODO: Das muss hier weg und ins Game.
     private void moveBackground(double offsetX) {
+
+        ScalablePicture[] backgrounds = new ScalablePicture[4];// TODO: Das hier richtig machen.
         for (int j = 0; j < backgrounds.length; j++) { // Gehe durch alle Bodenelemente durch ...
             backgrounds[j].move(-offsetX, 0); // ... und bewege das jeweils aktuelle Element nach links.
             if (backgrounds[j].getShapeX() + backgrounds[j].getShapeWidth() < 0) { // Sind wir links über den Rand hinaus?
