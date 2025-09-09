@@ -1,0 +1,74 @@
+Index: src/main/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main;\r\n\r\nimport controller.AbstractController;\r\nimport controller.TastaturController;\r\nimport demo_and_test.SaSDemo;\r\nimport mastercontroler.Mastercontrol;\r\nimport minigames.animalrun.AnimalRun;\r\nimport sas.View;\r\n\r\n\r\npublic class Main {\r\n\r\n    public static void main(String[] args) {\r\n\r\n        // eine ganz simple Demo für SaS\r\n     //   SaSDemo demo = new SaSDemo();\r\n   //    demo.demo1();\r\n//        demo.demo2();\r\n        \r\n        // ein einfaches Spiel in SaS\r\n//        View view = new View(800, 600, \"SMIMS\");\r\n//        AbstractController controller = new TastaturController(view);\r\n//        AbstractGame game = new FroggerGame(controller, view);\r\n//        game.start();\r\n        Mastercontrol mc = new Mastercontrol();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/Main.java b/src/main/Main.java
+--- a/src/main/Main.java	(revision 31772e3054e9af0be279b90deebefb1962f15f6d)
++++ b/src/main/Main.java	(date 1757440797385)
+@@ -4,7 +4,6 @@
+ import controller.TastaturController;
+ import demo_and_test.SaSDemo;
+ import mastercontroler.Mastercontrol;
+-import minigames.animalrun.AnimalRun;
+ import sas.View;
+ 
+ 
+Index: src/minigames/animalrun/World.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/World.java b/src/minigames/animalrun/World.java
+deleted file mode 100644
+--- a/src/minigames/animalrun/World.java	(revision 31772e3054e9af0be279b90deebefb1962f15f6d)
++++ /dev/null	(revision 31772e3054e9af0be279b90deebefb1962f15f6d)
+@@ -1,5 +0,0 @@
+-package minigames.animalrun;
+-
+-public class World {
+-
+-}
+Index: src/minigames/frogger/Pokal.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.frogger;\r\n\r\nimport common.ScalablePicture;\r\nimport minigames.AbstractGame;\r\n\r\npublic class Pokal extends ScalablePicture {\r\n\r\n    /* Static Variables */\r\n    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES + \"frogger/goblet.png\";\r\n\r\n    /* Static Methods */\r\n\r\n    /* Object Variables */\r\n\r\n    /* Constructors */\r\n    public Pokal(int x, int y) {\r\n        super(x, y, PATH_IMAGE);\r\n    }\r\n\r\n    /* Object Methods */\r\n\r\n    /* Getters and Setters */\r\n\r\n    /* Inner Classes */\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/frogger/Pokal.java b/src/minigames/frogger/Pokal.java
+--- a/src/minigames/frogger/Pokal.java	(revision 31772e3054e9af0be279b90deebefb1962f15f6d)
++++ b/src/minigames/frogger/Pokal.java	(date 1757439965156)
+@@ -6,8 +6,10 @@
+ public class Pokal extends ScalablePicture {
+ 
+     /* Static Variables */
+-    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES + "frogger/goblet.png";
++    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES +"frogger/goblet.png";
+ 
++
++
+     /* Static Methods */
+ 
+     /* Object Variables */
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"21\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/out\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 31772e3054e9af0be279b90deebefb1962f15f6d)
++++ b/.idea/misc.xml	(date 1757440104913)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="21" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="corretto-21" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/out" />
+   </component>
+ </project>
+\ No newline at end of file
