@@ -127,8 +127,8 @@ public class SnakeGame extends AbstractGame {
             tickCounter++;
 
             // Do we have to move the snake by input?
-            double joyX = controller.getJoystickX();
-            double joyY = controller.getJoystickY();
+            double joyX = controller.getJoystickLinksX();
+            double joyY = controller.getJoystickLinksY();
 
             if (blockInputCounter >= 1) {
                 blockInputCounter++;

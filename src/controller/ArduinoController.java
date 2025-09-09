@@ -77,22 +77,62 @@ public class ArduinoController extends AbstractController implements SerialPortE
 
     /* Getters and Setters */
     @Override
-    public double getJoystickX() {
+    public double getJoystickLinksX() {
         return 0;
     }
 
     @Override
-    public double getJoystickY() {
+    public double getJoystickLinksY() {
         return 0;
     }
 
     @Override
-    public boolean getA() {
+    public double getJoystickRechtsX() {
+        return 0;
+    }
+
+    @Override
+    public double getJoystickRechtsY() {
+        return 0;
+    }
+
+    @Override
+    public boolean getLinksA() {
         return false;
     }
 
     @Override
-    public boolean getB() {
+    public boolean getLinksB() {
+        return false;
+    }
+
+    @Override
+    public boolean getLinksC() {
+        return false;
+    }
+
+    @Override
+    public boolean getLinksD() {
+        return false;
+    }
+
+    @Override
+    public boolean getRechtsA() {
+        return false;
+    }
+
+    @Override
+    public boolean getRechtsB() {
+        return false;
+    }
+
+    @Override
+    public boolean getRechtsC() {
+        return false;
+    }
+
+    @Override
+    public boolean getRechtsD() {
         return false;
     }
 
