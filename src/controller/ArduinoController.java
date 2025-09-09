@@ -16,7 +16,8 @@ public class ArduinoController extends AbstractController implements SerialPortE
     /* Object Variables */
     private SerialPort serialPort;
     private final StringBuilder buffer = new StringBuilder();
-    private EmpfangendeDaten empfangendeDaten;
+    private  EmpfangendeDaten empfangendeDaten;
+
 
     /* Constructors */
     public ArduinoController() {
@@ -39,12 +40,13 @@ public class ArduinoController extends AbstractController implements SerialPortE
             if (incoming != null) {
                 buffer.append(incoming);
 
-                int newlineIndex;
-                while ((newlineIndex = buffer.indexOf("\n")) != -1) {
-                    String line = buffer.substring(0, newlineIndex).trim();
-                    buffer.delete(0, newlineIndex + 1);
+                int newLineIndex;
+                while ((newLineIndex = buffer.indexOf("\n")) != -1) {
+                    String line = buffer.substring(0, newLineIndex).trim();
+                    buffer.delete(0, newLineIndex +1);
 
-                    if (!line.isEmpty()) {
+                    if (!line.isEmpty())
+                    {
                         werteDatenAus(line);
                     }
                 }
@@ -52,21 +54,15 @@ public class ArduinoController extends AbstractController implements SerialPortE
         } catch (SerialPortException ex) {
             System.out.println(ex);
         }
+
     }
 
     @Override
     protected void werteDatenAus(String json) {
         System.out.println("data: " + json);
 
-        try
-        {
-            Gson gson = new Gson();
-            empfangendeDaten = gson.fromJson(json, EmpfangendeDaten.class);
-        }
-        catch (Exception ex)
-        {
-
-        }
+        Gson gson = new Gson();
+        empfangendeDaten =  gson.fromJson(json, EmpfangendeDaten.class);
     }
 
     private void initSerialPort() {
@@ -87,64 +83,62 @@ public class ArduinoController extends AbstractController implements SerialPortE
     /* Getters and Setters */
     @Override
     public double getJoystickLinksX() {
-        return 0;
+        return (empfangendeDaten.links.X - 512) / 512 ;
     }
 
     @Override
     public double getJoystickLinksY() {
-        return 0;
+        return (empfangendeDaten.links.Y - 512) / 512 ;
     }
-
     @Override
     public double getJoystickRechtsX() {
-        return 0;
+        return (empfangendeDaten.rechts.X - 512) / 512 ;
     }
 
     @Override
     public double getJoystickRechtsY() {
-        return 0;
+        return (empfangendeDaten.rechts.Y - 512) / 512 ;
     }
 
     @Override
     public boolean getLinksA() {
-        return false;
+        return empfangendeDaten.links.A == 1;
     }
 
     @Override
     public boolean getLinksB() {
-        return false;
+        return empfangendeDaten.links.B == 1;
     }
 
     @Override
     public boolean getLinksC() {
-        return false;
+        return empfangendeDaten.links.C == 1;
     }
 
     @Override
     public boolean getLinksD() {
-        return false;
+        return empfangendeDaten.links.D == 1;
     }
 
     @Override
     public boolean getRechtsA() {
-        return false;
+        return empfangendeDaten.rechts.A == 1;
     }
 
     @Override
     public boolean getRechtsB() {
-        return false;
+        return empfangendeDaten.rechts.B == 1;
     }
 
     @Override
     public boolean getRechtsC() {
-        return false;
+        return empfangendeDaten.rechts.C == 1;
     }
 
     @Override
     public boolean getRechtsD() {
-        return false;
+        return empfangendeDaten.rechts.D == 1;
     }
-
     /* Inner Classes */
 
 }
