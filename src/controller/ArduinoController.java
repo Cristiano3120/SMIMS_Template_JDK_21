@@ -16,8 +16,12 @@ public class ArduinoController extends AbstractController implements SerialPortE
     /* Object Variables */
     private SerialPort serialPort;
     private final StringBuilder buffer = new StringBuilder();
-    private  EmpfangendeDaten empfangendeDaten;
-
+    private  EmpfangendeDaten empfangendeDaten = new EmpfangendeDaten();
+    boolean ersterLauf = true;
+    double offSetLinksX = 0;
+    double offSetLinksY = 0;
+    double offSetRechtsX = 0;
+    double offSetRechtsY = 0;
 
     /* Constructors */
     public ArduinoController() {
@@ -67,6 +71,12 @@ public class ArduinoController extends AbstractController implements SerialPortE
             empfangendeDaten =  gson.fromJson(json, EmpfangendeDaten.class);
         }
         catch (Exception ex) {System.out.println("FEHLER: " + json);}
+        if(ersterLauf){
+            offSetLinksX = empfangendeDaten.links.X - 512;
+            offSetLinksY = empfangendeDaten.links.Y - 512;
+            offSetRechtsX = empfangendeDaten.links.X - 512;
+            offSetRechtsY = empfangendeDaten.links.Y - 512;
+        }
     }
 
     private void initSerialPort() {
@@ -87,21 +97,29 @@ public class ArduinoController extends AbstractController implements SerialPortE
     /* Getters and Setters */
     @Override
     public double getJoystickLinksX() {
-        return (empfangendeDaten.links.X - 512) / 512 ;
+        double value = (empfangendeDaten.links.X - 512 - offSetLinksX) / 512 ;
+        if(Math.abs(value) > 1) value = value / Math.abs(value);
+        return value;
     }
 
     @Override
     public double getJoystickLinksY() {
-        return (empfangendeDaten.links.Y - 512) / 512 ;
+        double value = (empfangendeDaten.links.Y - 512 - offSetLinksY) / 512 ;
+        if(Math.abs(value) > 1) value = value / Math.abs(value);
+        return value;
     }
     @Override
     public double getJoystickRechtsX() {
-        return (empfangendeDaten.rechts.X - 512) / 512 ;
+        double value = (empfangendeDaten.rechts.X - 512 - offSetRechtsX) / 512 ;
+        if(Math.abs(value) > 1) value = value / Math.abs(value);
+        return value;
     }
 
     @Override
     public double getJoystickRechtsY() {
-        return (empfangendeDaten.rechts.Y - 512) / 512 ;
+        double value = (empfangendeDaten.rechts.Y - 512 - offSetRechtsY) / 512 ;
+        if(Math.abs(value) > 1) value = value / Math.abs(value);
+        return value;
     }
 
     @Override

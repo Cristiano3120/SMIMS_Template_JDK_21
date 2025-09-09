@@ -1,0 +1,128 @@
+Index: src/controller/ArduinoController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\nimport controller.arduinoReceiveData.EmpfangendeDaten;\r\nimport jssc.SerialPort;\r\nimport jssc.SerialPortEvent;\r\nimport jssc.SerialPortEventListener;\r\nimport jssc.SerialPortException;\r\nimport com.google.gson.Gson;\r\n\r\npublic class ArduinoController extends AbstractController implements SerialPortEventListener {\r\n\r\n    /* Static Variables */\r\n\r\n    /* Static Methods */\r\n\r\n    /* Object Variables */\r\n    private String data;\r\n    private SerialPort serialPort;\r\n\r\n    /* Constructors */\r\n    public ArduinoController() {\r\n        initSerialPort();\r\n    }\r\n\r\n    /* Object Methods */\r\n    @Override\r\n    public void disconnect() {\r\n        try {\r\n            serialPort.closePort();\r\n        } catch (SerialPortException e) {\r\n            System.err.println(e);\r\n        }\r\n    }\r\n\r\n    public void serialEvent(SerialPortEvent e) {\r\n        try {\r\n            data = data + serialPort.readString();\r\n            data = data.replaceAll(\" \", \"\");\r\n            data = data.replaceAll(\"null\", \"\");\r\n            data = data.replaceAll(\"\\n\", \"\");\r\n            data = data.replaceAll(\"\\r\", \"\");\r\n\r\n            werteDatenAus();\r\n\r\n        } catch (SerialPortException ex) {\r\n            System.out.println(ex);\r\n        }\r\n    }\r\n\r\n    @Override\r\n    protected void werteDatenAus() {\r\n\r\n        System.out.println(\"data: \" + data); // TODO: diese Zeile hier löschen\r\n\r\n\r\n        EmpfangendeDaten  empfangendeDaten = new EmpfangendeDaten();\r\n\r\n        // Sobald wir fertig sind, müssen wir den Inhalt des data-Strings löschen, denn der Controller schreibt\r\n        // hier ununterbrochen neues Input rein. Auf diese Weise würde schnell eine sehr lange Zeichenkette\r\n        // gebildet, in der z.B. alle Analogstick-Bewegungen gespeichert würden, die aber überhaupt nicht mehr\r\n        // relevant sind.\r\n        data = \"\";\r\n    }\r\n\r\n    private void initSerialPort() {\r\n        boolean funktioniert = false;\r\n        for (int i = 21; i > 1 && !funktioniert; i--) {\r\n            funktioniert = true;\r\n            try {\r\n                serialPort = new SerialPort(\"COM\" + i);\r\n                serialPort.openPort();\r\n                serialPort.setParams(9600, 8, 1, 0);\r\n                serialPort.addEventListener(this);\r\n            } catch (SerialPortException ex) {\r\n                funktioniert = false;\r\n            }\r\n        }\r\n    }\r\n\r\n    /* Getters and Setters */\r\n    @Override\r\n    public double getJoystickLinksX() {\r\n        return 0;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickLinksY() {\r\n        return 0;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickRechtsX() {\r\n        return 0;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickRechtsY() {\r\n        return 0;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksA() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksB() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksC() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksD() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsA() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsB() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsC() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsD() {\r\n        return false;\r\n    }\r\n\r\n    /* Inner Classes */\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/ArduinoController.java b/src/controller/ArduinoController.java
+--- a/src/controller/ArduinoController.java	(revision e148c4550688fb72b569e0daf22c0306f353abb2)
++++ b/src/controller/ArduinoController.java	(date 1757410621581)
+@@ -5,7 +5,6 @@
+ import jssc.SerialPortEvent;
+ import jssc.SerialPortEventListener;
+ import jssc.SerialPortException;
+-import com.google.gson.Gson;
+ 
+ public class ArduinoController extends AbstractController implements SerialPortEventListener {
+ 
+@@ -14,6 +13,7 @@
+     /* Static Methods */
+ 
+     /* Object Variables */
++    EmpfangendeDaten  empfangendeDaten = new EmpfangendeDaten();
+     private String data;
+     private SerialPort serialPort;
+ 
+@@ -53,7 +53,7 @@
+         System.out.println("data: " + data); // TODO: diese Zeile hier löschen
+ 
+ 
+-        EmpfangendeDaten  empfangendeDaten = new EmpfangendeDaten();
++
+ 
+         // Sobald wir fertig sind, müssen wir den Inhalt des data-Strings löschen, denn der Controller schreibt
+         // hier ununterbrochen neues Input rein. Auf diese Weise würde schnell eine sehr lange Zeichenkette
+@@ -80,62 +80,61 @@
+     /* Getters and Setters */
+     @Override
+     public double getJoystickLinksX() {
+-        return 0;
++        return (empfangendeDaten.links.X - 512) / 512 ;
+     }
+ 
+     @Override
+     public double getJoystickLinksY() {
+-        return 0;
++        return (empfangendeDaten.links.Y - 512) / 512 ;
+     }
+-
+     @Override
+     public double getJoystickRechtsX() {
+-        return 0;
++        return (empfangendeDaten.rechts.X - 512) / 512 ;
+     }
+ 
+     @Override
+     public double getJoystickRechtsY() {
+-        return 0;
++        return (empfangendeDaten.rechts.Y - 512) / 512 ;
+     }
+ 
+     @Override
+     public boolean getLinksA() {
+-        return false;
++        return empfangendeDaten.links.A == 1;
+     }
+ 
+     @Override
+     public boolean getLinksB() {
+-        return false;
++        return empfangendeDaten.links.B == 1;
+     }
+ 
+     @Override
+     public boolean getLinksC() {
+-        return false;
++        return empfangendeDaten.links.C == 1;
+     }
+ 
+     @Override
+     public boolean getLinksD() {
+-        return false;
++        return empfangendeDaten.links.D == 1;
+     }
+ 
+     @Override
+     public boolean getRechtsA() {
+-        return false;
++        return empfangendeDaten.rechts.A == 1;
+     }
+ 
+     @Override
+     public boolean getRechtsB() {
+-        return false;
++        return empfangendeDaten.rechts.B == 1;
+     }
+ 
+     @Override
+     public boolean getRechtsC() {
+-        return false;
++        return empfangendeDaten.rechts.C == 1;
+     }
+ 
+     @Override
+     public boolean getRechtsD() {
+-        return false;
++        return empfangendeDaten.rechts.D == 1;
+     }
+ 
+     /* Inner Classes */
+Index: src/controller/arduinoReceiveData/KnopfSeite.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller.arduinoReceiveData;\r\n\r\npublic final class KnopfSeite\r\n{\r\n    public int A;\r\n    public int B;\r\n    public int C;\r\n    public int D;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/arduinoReceiveData/KnopfSeite.java b/src/controller/arduinoReceiveData/KnopfSeite.java
+--- a/src/controller/arduinoReceiveData/KnopfSeite.java	(revision e148c4550688fb72b569e0daf22c0306f353abb2)
++++ b/src/controller/arduinoReceiveData/KnopfSeite.java	(date 1757410020993)
+@@ -6,4 +6,7 @@
+     public int B;
+     public int C;
+     public int D;
++
++    public double X;
++    public double Y;
+ }
