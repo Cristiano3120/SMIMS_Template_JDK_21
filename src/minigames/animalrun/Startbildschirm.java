@@ -1,15 +1,18 @@
 package minigames.animalrun;
 
 import minigames.AbstractGame;
-import sas.Picture;
-import sas.Text;
-import sas.Tools;
-import sas.View;
+import sas.*;
 import common.ScalablePicture;
 import controller.AbstractController;
 
+import java.util.ArrayList;
 
-public class Startbildschirm extends AbstractGame {
+
+public class Startbildschirm {
+
+    protected AbstractController controller;
+    protected View view;
+    protected ArrayList<Shapes> shapesToRemove;
 
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
@@ -17,11 +20,13 @@ public class Startbildschirm extends AbstractGame {
     ScalablePicture[] backgrounds;
 
     public Startbildschirm(AbstractController controller, View view) {
-        super(controller, view);
+        this.controller = controller;
+        this.view = view;
+        this.shapesToRemove = new ArrayList<>();
         initView();
     }
 
-    @Override
+
     protected void initView() {
         view.setSize(WIDTH, HEIGHT);
         view.setName("Startbildschirm Animalrun");
@@ -42,7 +47,7 @@ public class Startbildschirm extends AbstractGame {
 
     }
 
-    @Override
+
     protected void runGame() {
 
         cleanUp();
@@ -55,6 +60,9 @@ public class Startbildschirm extends AbstractGame {
         }
 
     }
+
+
+
 
     private void moveBackground(double offsetX) {
         for (int j = 0; j < backgrounds.length; j++) { // Gehe durch alle Bodenelemente durch ...
