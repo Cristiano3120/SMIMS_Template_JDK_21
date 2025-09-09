@@ -13,6 +13,7 @@ public abstract class WorldObject extends Shapes {
 
     public abstract void updatePos();
 
+    /* true wenn man darauf laufen kann */
     public abstract boolean isSollit();
 
 }
