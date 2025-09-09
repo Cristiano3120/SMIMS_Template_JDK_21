@@ -2,6 +2,7 @@ package minigames.animalrun;
 
 import controller.AbstractController;
 import minigames.AbstractGame;
+import minigames.animalrun.Worldobject.Platform;
 import minigames.animalrun.Worldobject.WorldObject;
 import sas.Picture;
 import sas.View;
@@ -56,7 +57,7 @@ public class AnimalRun extends AbstractGame {
     }
 
     private class World {
-        int xKameraVersatz = 0;
+        double xKameraVersatz = 0;
         Picture background = new Picture(0,0,900,700,"resources/animalrun/background_game.png");
 
         Set<WorldObject> wordObjects = new HashSet<WorldObject>();
@@ -69,9 +70,18 @@ public class AnimalRun extends AbstractGame {
         void update(int tick) {
 
             wordObjects.stream().forEach(w ->{
+                w.setXKameraVersatz(xKameraVersatz);
                 w.doThings(tick);
                 w.updatePos();
             });
+
+            if(controller.getLinksB()){
+                newWorldObject(new Platform(view));
+            }
+        }
+        void newWorldObject(WorldObject w){
+            wordObjects.add(w);
+            shapesToRemove.add(w);
         }
     }
 }
