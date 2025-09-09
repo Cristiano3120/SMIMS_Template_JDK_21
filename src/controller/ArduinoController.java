@@ -61,8 +61,12 @@ public class ArduinoController extends AbstractController implements SerialPortE
     protected void werteDatenAus(String json) {
         System.out.println("data: " + json);
 
-        Gson gson = new Gson();
-        empfangendeDaten =  gson.fromJson(json, EmpfangendeDaten.class);
+        try
+        {
+            Gson gson = new Gson();
+            empfangendeDaten =  gson.fromJson(json, EmpfangendeDaten.class);
+        }
+        catch (Exception ex) {System.out.println("FEHLER: " + json);}
     }
 
     private void initSerialPort() {
