@@ -24,7 +24,7 @@ public class TastaturController extends AbstractController {
 
     /* Object Methods */
     @Override
-    protected void werteDatenAus() {
+    protected void werteDatenAus(String json) {
         // Hier muss nichts getan werden.
     }
 

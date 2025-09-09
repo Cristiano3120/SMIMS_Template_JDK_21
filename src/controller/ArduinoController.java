@@ -14,8 +14,9 @@ public class ArduinoController extends AbstractController implements SerialPortE
     /* Static Methods */
 
     /* Object Variables */
-    private String data;
     private SerialPort serialPort;
+    private final StringBuilder buffer = new StringBuilder();
+    private EmpfangendeDaten empfangendeDaten;
 
     /* Constructors */
     public ArduinoController() {
@@ -34,32 +35,38 @@ public class ArduinoController extends AbstractController implements SerialPortE
 
     public void serialEvent(SerialPortEvent e) {
         try {
-            data = data + serialPort.readString();
-            data = data.replaceAll(" ", "");
-            data = data.replaceAll("null", "");
-            data = data.replaceAll("\n", "");
-            data = data.replaceAll("\r", "");
+            String incoming = serialPort.readString();
+            if (incoming != null) {
+                buffer.append(incoming);
 
-            werteDatenAus();
+                int newlineIndex;
+                while ((newlineIndex = buffer.indexOf("\n")) != -1) {
+                    String line = buffer.substring(0, newlineIndex).trim();
+                    buffer.delete(0, newlineIndex + 1);
 
+                    if (!line.isEmpty()) {
+                        werteDatenAus(line);
+                    }
+                }
+            }
         } catch (SerialPortException ex) {
             System.out.println(ex);
         }
     }
 
     @Override
-    protected void werteDatenAus() {
+    protected void werteDatenAus(String json) {
+        System.out.println("data: " + json);
 
-        System.out.println("data: " + data); // TODO: diese Zeile hier löschen
+        try
+        {
+            Gson gson = new Gson();
+            empfangendeDaten = gson.fromJson(json, EmpfangendeDaten.class);
+        }
+        catch (Exception ex)
+        {
 
-
-        EmpfangendeDaten  empfangendeDaten = new EmpfangendeDaten();
-
-        // Sobald wir fertig sind, müssen wir den Inhalt des data-Strings löschen, denn der Controller schreibt
-        // hier ununterbrochen neues Input rein. Auf diese Weise würde schnell eine sehr lange Zeichenkette
-        // gebildet, in der z.B. alle Analogstick-Bewegungen gespeichert würden, die aber überhaupt nicht mehr
-        // relevant sind.
-        data = "";
+        }
     }
 
     private void initSerialPort() {

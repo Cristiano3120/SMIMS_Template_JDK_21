@@ -14,7 +14,7 @@ public abstract class AbstractController {
     }
 
     /* Object Methods */
-    protected abstract void werteDatenAus();
+    protected abstract void werteDatenAus(String json);
 
     public abstract void disconnect();
 
