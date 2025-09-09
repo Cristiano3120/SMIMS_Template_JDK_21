@@ -20,6 +20,9 @@ public class AnimalRun extends AbstractGame {
     protected void initView() {
         view.setSize(WIDTH, HEIGHT);
         view.setName("AnimalRun");
+
+        new Startbildschirm(controller, view, WIDTH, HEIGHT);
+
     }
 
     @Override
