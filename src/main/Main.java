@@ -8,8 +8,8 @@ public class Main {
     public static void main(String[] args) {
 
         // eine ganz simple Demo für SaS
-        SaSDemo demo = new SaSDemo();
-        demo.demo1();
+        //SaSDemo demo = new SaSDemo();
+        //demo.demo1();
 //        demo.demo2();
 
         // ein einfaches Spiel in SaS
@@ -18,5 +18,6 @@ public class Main {
 //        AbstractGame game = new FroggerGame(controller, view);
 //        game.start();
         Mastercontrol mc = new Mastercontrol();
+
     }
 }
