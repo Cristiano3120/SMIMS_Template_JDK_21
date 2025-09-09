@@ -14,5 +14,6 @@ public abstract class WorldObject extends Shapes {
     public abstract void updatePos();
 
     public abstract boolean isSollit();
+
 }
 
