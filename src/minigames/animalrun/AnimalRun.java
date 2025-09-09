@@ -7,7 +7,7 @@ import sas.View;
 import java.util.ArrayList;
 
 public class AnimalRun extends AbstractGame {
-    private  static final int FPS = 60;
+    private  static final int tickRate = 60;
     private static final int WIDTH = 900;
     private static final int HEIGHT = 700;
     private boolean gameRuns = true;
@@ -24,7 +24,7 @@ public class AnimalRun extends AbstractGame {
 
     @Override
     protected void runGame() {
-        long milisPerCycle = 1000 / FPS;
+        long milisPerCycle = 1000 / tickRate;
         long timeStamp = System.currentTimeMillis();
         long timeUntilNextCycle;
 
