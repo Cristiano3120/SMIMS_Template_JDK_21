@@ -1,6 +1,7 @@
 package main;
 
 import demo_and_test.SaSDemo;
+import mastercontroler.Mastercontrol;
 
 public class Main {
 
@@ -16,6 +17,6 @@ public class Main {
 //        AbstractController controller = new TastaturController(view);
 //        AbstractGame game = new FroggerGame(controller, view);
 //        game.start();
-
+        Mastercontrol mc = new Mastercontrol();
     }
 }
