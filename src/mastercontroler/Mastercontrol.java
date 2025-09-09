@@ -3,6 +3,7 @@ package mastercontroler;
 import controller.AbstractController;
 import controller.TastaturController;
 import minigames.AbstractGame;
+import minigames.animalrun.AnimalRun;
 import sas.View;
 
 import java.util.ArrayList;
@@ -18,5 +19,6 @@ public class Mastercontrol {
     public Mastercontrol() {
         view = new View(WIDTH,HEIGHT);
         controller =new TastaturController(view);
+        game =new AnimalRun(controller,view);
     }
 }
