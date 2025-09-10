@@ -12,10 +12,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AnimalRun extends AbstractGame {
+public class AnimalRun extends AbstractGame implements Runnable {
     private static final int tickRate = 60;
-    private static final int WIDTH = 1000 / 2;
-    private static final int HEIGHT = 700 / 3;
+    private static final int WIDTH = 1000 / 1;
+    private static final int HEIGHT = 600 / 1;
     private boolean gameRuns = true;
     private int tick = 0;
 
@@ -37,6 +37,13 @@ public class AnimalRun extends AbstractGame {
 
     @Override
     protected void runGame() {
+        new Thread(this).start();;
+    }
+
+    @Override
+    public void run() {
+
+
         System.out.println("Welcome to AnimalRun");
 
         long milisPerCycle = 1000 / tickRate;
@@ -67,6 +74,8 @@ public class AnimalRun extends AbstractGame {
     }
 
 
+
+
     private class World {
         public static double xKameraVersatz = 0;
         double xKameraSpeed = 1;
@@ -83,7 +92,7 @@ public class AnimalRun extends AbstractGame {
 
         void update(int tick) {
             worldObjects.addAll(summoneNextRoundObjects);
-            shapesToRemove.add((Shapes) summoneNextRoundObjects.stream()
+            shapesToRemove.addAll( summoneNextRoundObjects.stream()
                     .filter(o -> o instanceof Shapes)
                     .map(o -> (Shapes) o)
                     .collect(Collectors.toSet()));;

@@ -62,7 +62,7 @@ public class Platform extends Picture implements WorldObject {
     }
 
     void summonNext() {
-
+        //AnimalRun.
     }
 
     public void updatePos() {
