@@ -58,11 +58,20 @@ public class Platform extends Picture implements WorldObject {
 
     public void doThings(int tick) {
         System.out.println("Platform: doThings " + (getCenterX()));
-        if(summonNext && getShapeX()+getShapeWidth() - AnimalRun.getXKameraVersatz() < view.getWidth()) summonNext();
+        System.out.println("Test------ " + (getShapeX()+getShapeWidth() - AnimalRun.getXKameraVersatz())+ " " + getShapeWidth() + " " + view.getWidth());
+        if(summonNext && getShapeX()+getShapeWidth() - AnimalRun.getXKameraVersatz() + 250 < view.getWidth()) summonNext();
     }
 
     void summonNext() {
-        //AnimalRun.
+        summonNext = false;
+        Platform p = null;
+        do{
+            if(p != null) view.remove(p);
+            p = new Platform(view,true);
+            view.remove(p);
+        } while (p.intersects(nextPlatformZone));
+
+        AnimalRun.addToWorldObjects(p);
     }
 
     public void updatePos() {

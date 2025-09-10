@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 
 public class AnimalRun extends AbstractGame implements Runnable {
     private static final int tickRate = 60;
-    private static final int WIDTH = 1000 / 1;
-    private static final int HEIGHT = 600 / 1;
+    private static final int WIDTH = 1000 / 2;
+    private static final int HEIGHT = 600 / 2;
     private boolean gameRuns = true;
     private int tick = 0;
 
@@ -73,6 +73,14 @@ public class AnimalRun extends AbstractGame implements Runnable {
         return World.xKameraVersatz;
     }
 
+    public static Set<WorldObject> getWorldObjects() {
+        return World.worldObjects;
+    }
+    public static void addToWorldObjects(WorldObject o) {
+        World.summoneNextRoundObjects.add(o);
+        //double d = new Platform(view, true).getShapeWidth();
+    }
+
 
 
 
@@ -82,7 +90,7 @@ public class AnimalRun extends AbstractGame implements Runnable {
 
         //Picture background = new Picture(0,0,WIDTH,HEIGHT,"resources/animalrun/background_game.png");
 
-        private static Set<WorldObject> worldObjects = new HashSet<WorldObject>();
+        public static Set<WorldObject> worldObjects = new HashSet<WorldObject>();
         public static Set<WorldObject> summoneNextRoundObjects = new HashSet<>();
         // instanzen der playerklasse
 
