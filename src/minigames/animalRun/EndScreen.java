@@ -83,7 +83,7 @@ public class EndScreen {
     public static void main(String[] args) {
         View view = new View(900, 700, "bla");
         TastaturController controller = new TastaturController(view);
-        EndScreen test = new EndScreen(0, 0, 0.5f, view, false, controller);
+        EndScreen test = new EndScreen(0, 0, 0.5f, view, true, controller);
         System.out.println(test.waitForInput());
 
     }
