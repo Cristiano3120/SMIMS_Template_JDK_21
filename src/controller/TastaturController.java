@@ -117,7 +117,7 @@ public class TastaturController extends AbstractController {
 
     @Override
     public boolean getLinksB() {
-        return view.keyPressed('1');
+        return view.keyPressed('2');
     }
 
     @Override

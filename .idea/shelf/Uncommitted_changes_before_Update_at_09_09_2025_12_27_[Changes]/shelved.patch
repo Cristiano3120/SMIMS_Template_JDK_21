@@ -1,0 +1,158 @@
+Index: src/minigames/frogger/Pokal.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.frogger;\r\n\r\nimport common.ScalablePicture;\r\nimport minigames.AbstractGame;\r\n\r\npublic class Pokal extends ScalablePicture {\r\n\r\n    /* Static Variables */\r\n    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES + \"frogger/goblet.png\";\r\n\r\n    /* Static Methods */\r\n\r\n    /* Object Variables */\r\n\r\n    /* Constructors */\r\n    public Pokal(int x, int y) {\r\n        super(x, y, PATH_IMAGE);\r\n    }\r\n\r\n    /* Object Methods */\r\n\r\n    /* Getters and Setters */\r\n\r\n    /* Inner Classes */\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/frogger/Pokal.java b/src/minigames/frogger/Pokal.java
+--- a/src/minigames/frogger/Pokal.java	(revision 44fb5cd7fed24967b3826d068032b61f6fdc7ed0)
++++ b/src/minigames/frogger/Pokal.java	(date 1757412017416)
+@@ -6,8 +6,10 @@
+ public class Pokal extends ScalablePicture {
+ 
+     /* Static Variables */
+-    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES + "frogger/goblet.png";
++    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES +"frogger/goblet.png";
+ 
++
++
+     /* Static Methods */
+ 
+     /* Object Variables */
+Index: src/minigames/animalrun/World.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun;\r\n\r\npublic class World {\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/World.java b/src/minigames/animalrun/World.java
+--- a/src/minigames/animalrun/World.java	(revision 44fb5cd7fed24967b3826d068032b61f6fdc7ed0)
++++ b/src/minigames/animalrun/World.java	(date 1757411971522)
+@@ -1,5 +1,4 @@
+ package minigames.animalrun;
+ 
+ public class World {
+-
+ }
+Index: src/minigames/animalrun/Worldobject/Fallen.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/Fallen.java b/src/minigames/animalrun/Worldobject/Fallen.java
+new file mode 100644
+--- /dev/null	(date 1757412017426)
++++ b/src/minigames/animalrun/Worldobject/Fallen.java	(date 1757412017426)
+@@ -0,0 +1,11 @@
++package minigames.animalrun.Worldobject;
++
++import common.ScalablePicture;
++import minigames.AbstractGame;
++
++public class Fallen extends ScalablePicture {
++    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES +"frogger/goblet.png";
++    public Fallen(int x, int y) {
++        super(x, y, PATH_IMAGE);
++    }
++}
+Index: src/minigames/animalrun/Worldobject/UnterGrund.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/UnterGrund.java b/src/minigames/animalrun/Worldobject/UnterGrund.java
+new file mode 100644
+--- /dev/null	(date 1757412017426)
++++ b/src/minigames/animalrun/Worldobject/UnterGrund.java	(date 1757412017426)
+@@ -0,0 +1,12 @@
++package minigames.animalrun.Worldobject;
++
++import common.ScalablePicture;
++import minigames.AbstractGame;
++
++public class UnterGrund extends ScalablePicture {
++    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES +"frogger/goblet.png";
++    public UnterGrund(int x, int y) {
++        super(x, y, PATH_IMAGE);
++    }
++
++}
+Index: src/minigames/animalrun/Worldobject/Background.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/Background.java b/src/minigames/animalrun/Worldobject/Background.java
+new file mode 100644
+--- /dev/null	(date 1757413659486)
++++ b/src/minigames/animalrun/Worldobject/Background.java	(date 1757413659486)
+@@ -0,0 +1,11 @@
++package minigames.animalrun.Worldobject;
++
++import common.ScalablePicture;
++import minigames.AbstractGame;
++
++public class Background extends ScalablePicture {
++    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES +"";
++    public Background(int x, int y) {
++        super(x, y, PATH_IMAGE);
++    }
++}
+Index: src/minigames/animalrun/AnimalRun.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/AnimalRun.java b/src/minigames/animalrun/AnimalRun.java
+new file mode 100644
+--- /dev/null	(date 1757409152374)
++++ b/src/minigames/animalrun/AnimalRun.java	(date 1757409152374)
+@@ -0,0 +1,27 @@
++package minigames.animalrun;
++
++import controller.AbstractController;
++import minigames.AbstractGame;
++import sas.View;
++
++import java.util.ArrayList;
++
++public class AnimalRun extends AbstractGame {
++    private static final int WIDTH = 900;
++    private static final int HEIGHT = 700;
++
++    public AnimalRun(AbstractController controller, View view) {
++        super(controller,view);
++    }
++
++    @Override
++    protected void initView() {
++        view.setSize(WIDTH, HEIGHT);
++        view.setName("AnimalRun");
++    }
++
++    @Override
++    protected void runGame() {
++
++    }
++}
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"21\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/out\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 44fb5cd7fed24967b3826d068032b61f6fdc7ed0)
++++ b/.idea/misc.xml	(date 1757402924326)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="21" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_24" default="true" project-jdk-name="24" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/out" />
+   </component>
+ </project>
+\ No newline at end of file

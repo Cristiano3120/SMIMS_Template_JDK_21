@@ -1,0 +1,43 @@
+Index: src/minigames/animalRun/Monkey.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalRun/Monkey.java b/src/minigames/animalRun/Monkey.java
+new file mode 100644
+--- /dev/null	(date 1757406114671)
++++ b/src/minigames/animalRun/Monkey.java	(date 1757406114671)
+@@ -0,0 +1,14 @@
++package minigames.animalRun;
++
++import sas.Picture;
++
++public class Monkey extends Picture {
++
++    public Monkey(double xp, double yp, double w, double h, String name) {
++        super(xp, yp, w, h, name);
++    }
++
++    public void monkeyMove(){
++
++    }
++}
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"21\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/out\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 2c9abe16b9a0eef0d3ddc270790c0df914c9b06e)
++++ b/.idea/misc.xml	(date 1757403993459)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="21" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_24" default="true" project-jdk-name="openjdk-24" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/out" />
+   </component>
+ </project>
+\ No newline at end of file
