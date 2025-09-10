@@ -1,0 +1,33 @@
+Index: src/minigames/animalrun/AnimalRun.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun;\r\n\r\nimport controller.AbstractController;\r\nimport minigames.AbstractGame;\r\nimport sas.View;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class AnimalRun extends AbstractGame {\r\n    private static final int WIDTH = 900;\r\n    private static final int HEIGHT = 700;\r\n\r\n    public AnimalRun(AbstractController controller, View view) {\r\n        super(controller,view);\r\n    }\r\n\r\n    @Override\r\n    protected void initView() {\r\n        view.setSize(WIDTH, HEIGHT);\r\n        view.setName(\"AnimalRun\");\r\n    }\r\n\r\n    @Override\r\n    protected void runGame() {\r\n\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/src/minigames/animalrun/AnimalRun.java b/src/minigames/animalrun/AnimalRun.java
+--- a/src/minigames/animalrun/AnimalRun.java	(revision 183969a1e92c3eb9fc9af0ecef6d7c568c07e7f2)
++++ b/src/minigames/animalrun/AnimalRun.java	(date 1757438374935)
+@@ -2,6 +2,7 @@
+ 
+ import controller.AbstractController;
+ import minigames.AbstractGame;
++import minigames.animalrun.LVL.World_LVL1;
+ import sas.View;
+ 
+ import java.util.ArrayList;
+@@ -12,6 +13,8 @@
+ 
+     public AnimalRun(AbstractController controller, View view) {
+         super(controller,view);
++        initView();
++        runGame();
+     }
+ 
+     @Override
+@@ -22,6 +25,6 @@
+ 
+     @Override
+     protected void runGame() {
+-
++        World_LVL1 worldLVL1 = new World_LVL1();
+     }
+ }
