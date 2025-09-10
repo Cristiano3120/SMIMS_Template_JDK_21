@@ -2,6 +2,14 @@ package controller.arduinoReceiveData;
 
 public final class EmpfangendeDaten
 {
-    public KnopfSeite links;
-    public KnopfSeite rechts;
+    private KnopfSeite links;
+    private KnopfSeite rechts;
+
+    public KnopfSeite getLinks(){
+        return links;
+    };
+
+    public KnopfSeite getRechts(){
+        return rechts;
+    }
 }

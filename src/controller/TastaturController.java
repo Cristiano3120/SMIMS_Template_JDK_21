@@ -1,5 +1,8 @@
 package controller;
 
+import com.google.gson.Gson;
+import controller.arduinoSendData.LedData;
+import jssc.SerialPortException;
 import sas.View;
 
 /**
@@ -26,6 +29,11 @@ public class TastaturController extends AbstractController {
     @Override
     protected void werteDatenAus(String json) {
         // Hier muss nichts getan werden.
+    }
+
+    @Override
+    protected void sendeDaten(LedData  ledData) {
+
     }
 
     @Override

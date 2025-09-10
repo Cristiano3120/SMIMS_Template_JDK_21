@@ -1,5 +1,7 @@
 package controller;
 
+import controller.arduinoSendData.LedData;
+
 public abstract class AbstractController {
 
     /* Static Variables */
@@ -15,6 +17,8 @@ public abstract class AbstractController {
 
     /* Object Methods */
     protected abstract void werteDatenAus(String json);
+
+    protected abstract void sendeDaten(LedData ledData);
 
     public abstract void disconnect();
 
