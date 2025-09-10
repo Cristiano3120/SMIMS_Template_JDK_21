@@ -7,7 +7,6 @@ import java.util.Vector;
 
 public interface WorldObject /*extends Shapes*/ {
 
-    void setView(View view);
     //double xKameraVersatz;
     //protected View view;
 
@@ -23,6 +22,5 @@ public interface WorldObject /*extends Shapes*/ {
     /* true wenn man darauf laufen kann */
     public boolean isSollit();
 
-    public void setXKameraVersatz(double versatz);
 }
 

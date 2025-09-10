@@ -29,6 +29,8 @@ public class Mastercontrol {
         Monkey monkey = new Monkey(600, 200, 200, controller, true, view);
         Monkey monkey2 = new Monkey(400, 200, 200, controller, false, view);
 
+        AnimalRun.addToWorldObjects(monkey);
+        AnimalRun.addToWorldObjects(monkey2);
 
         System.out.println("test0");
         loop(monkey, monkey2, view);

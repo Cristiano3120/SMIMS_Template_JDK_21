@@ -109,7 +109,6 @@ public class AnimalRun extends AbstractGame implements Runnable {
             System.out.println("xKameraVersatz = ");
 
             worldObjects.stream().forEach(w -> {
-                w.setXKameraVersatz(xKameraVersatz);
                 w.doThings(tick);
                 w.updatePos();
             });

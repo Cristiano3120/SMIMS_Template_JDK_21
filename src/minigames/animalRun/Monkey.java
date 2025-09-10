@@ -2,6 +2,7 @@ package minigames.animalRun;
 
 import common.ScalablePicture;
 import controller.AbstractController;
+import minigames.animalrun.Worldobject.WorldObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sas.Circle;
@@ -16,7 +17,7 @@ import java.io.IOException;
 
 import static java.nio.file.Files.move;
 
-public class Monkey extends Circle {
+public class Monkey extends Circle implements WorldObject {
 
     private static final Logger log = LoggerFactory.getLogger(Monkey.class);
     /* Static Variables */
@@ -132,5 +133,20 @@ public class Monkey extends Circle {
         }
         }
 
+    }
+
+    @Override
+    public void doThings(int tick) {
+
+    }
+
+    @Override
+    public void updatePos() {
+
+    }
+
+    @Override
+    public boolean isSollit() {
+        return false;
     }
 }
