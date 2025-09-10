@@ -18,7 +18,7 @@ public class Startbildschirm {
 
         view.setSize(viewWidth, viewHeight);
         view.setName("Startbildschirm Animalrun");
-
+//test
         ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), "resources/animalrun/background.png");
         ScalablePicture pressA_button = new ScalablePicture(0, 0, "resources/animalrun/pressA_button.png");
         ScalablePicture headline = new ScalablePicture(0, 0, "resources/animalrun/headline.png");
