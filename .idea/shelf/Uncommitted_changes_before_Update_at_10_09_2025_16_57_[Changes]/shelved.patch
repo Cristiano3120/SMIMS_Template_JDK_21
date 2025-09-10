@@ -1,0 +1,164 @@
+Index: src/mastercontroler/Mastercontrol.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package mastercontroler;\r\n\r\nimport controller.AbstractController;\r\nimport controller.TastaturController;\r\nimport minigames.AbstractGame;\r\nimport minigames.animalrun.AnimalRun;\r\nimport sas.View;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class Mastercontrol {\r\n    private static final int WIDTH = 600;\r\n    private static final int HEIGHT = 400;\r\n\r\n    protected AbstractController controller;\r\n    protected View view;\r\n    protected AbstractGame game;\r\n\r\n    public Mastercontrol() {\r\n        view = new View(WIDTH,HEIGHT);\r\n        controller =new TastaturController(view);\r\n        game =new AnimalRun(controller,view);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/mastercontroler/Mastercontrol.java b/src/mastercontroler/Mastercontrol.java
+--- a/src/mastercontroler/Mastercontrol.java	(revision 6da52e8e46aea4fc61f5b33e4c560a201a5d4f92)
++++ b/src/mastercontroler/Mastercontrol.java	(date 1757491380197)
+@@ -21,4 +21,5 @@
+         controller =new TastaturController(view);
+         game =new AnimalRun(controller,view);
+     }
++
+ }
+Index: src/minigames/animalrun/Startbildschirm.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun;\r\n\r\nimport minigames.AbstractGame;\r\nimport sas.*;\r\nimport common.ScalablePicture;\r\nimport controller.AbstractController;\r\n\r\nimport java.util.ArrayList;\r\n\r\n\r\npublic class Startbildschirm {\r\n\r\n    private AbstractController controller;\r\n    private View view;\r\n\r\n\r\n    public Startbildschirm(AbstractController controller, View view, int viewWidth, int viewHeight) {\r\n\r\n        view.setSize(viewWidth, viewHeight);\r\n        view.setName(\"Startbildschirm Animalrun\");\r\n\r\n        ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), \"resources/animalrun/background.png\");\r\n        ScalablePicture pressA_button = new ScalablePicture(210, 300, 375, 250, \"resources/animalrun/pressA_button.png\");\r\n        ScalablePicture headline = new ScalablePicture(100, 0, 600, 400, \"resources/animalrun/headline.png\");\r\n\r\n        // hier auf button warten\r\n        while(!controller.getLinksA()) {\r\n            view.wait(10);\r\n        }\r\n\r\n        background.setHidden(true);\r\n        pressA_button.setHidden(true);\r\n        headline.setHidden(true);\r\n\r\n        view.remove(background);\r\n        view.remove(pressA_button);\r\n        view.remove(headline);\r\n\r\n    }\r\n\r\n    // TODO: Das muss hier weg und ins Game.\r\n    private void moveBackground(double offsetX) {\r\n\r\n        ScalablePicture[] backgrounds = new ScalablePicture[4];// TODO: Das hier richtig machen.\r\n        for (int j = 0; j < backgrounds.length; j++) { // Gehe durch alle Bodenelemente durch ...\r\n            backgrounds[j].move(-offsetX, 0); // ... und bewege das jeweils aktuelle Element nach links.\r\n            if (backgrounds[j].getShapeX() + backgrounds[j].getShapeWidth() < 0) { // Sind wir links über den Rand hinaus?\r\n                System.out.println(\"moving \" + j);\r\n                int prevIndex = j <= 0 ? backgrounds.length - 1 : j - 1; // bestimme den Index des vorherigen Bodenelements\r\n                backgrounds[j].moveTo(backgrounds[prevIndex].getShapeX() + backgrounds[prevIndex].getShapeWidth(), backgrounds[j].getShapeY()); // \"teleportiere\" das ELement hinter seinen Vorgänger, sprich: ganz nach rechts\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Startbildschirm.java b/src/minigames/animalrun/Startbildschirm.java
+--- a/src/minigames/animalrun/Startbildschirm.java	(revision 6da52e8e46aea4fc61f5b33e4c560a201a5d4f92)
++++ b/src/minigames/animalrun/Startbildschirm.java	(date 1757445984351)
+@@ -4,14 +4,12 @@
+ import sas.*;
+ import common.ScalablePicture;
+ import controller.AbstractController;
+-
+ import java.util.ArrayList;
+ 
+ 
+ public class Startbildschirm {
+ 
+-    private AbstractController controller;
+-    private View view;
++
+ 
+ 
+     public Startbildschirm(AbstractController controller, View view, int viewWidth, int viewHeight) {
+Index: src/minigames/animalrun/Worldobject/Bldafsdfg.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/Bldafsdfg.java b/src/minigames/animalrun/Worldobject/Bldafsdfg.java
+new file mode 100644
+--- /dev/null	(date 1757490862619)
++++ b/src/minigames/animalrun/Worldobject/Bldafsdfg.java	(date 1757490862619)
+@@ -0,0 +1,19 @@
++package minigames.animalrun.Worldobject;
++
++import sas.Sprite;
++import sas.Text;
++
++public class Bldafsdfg {
++
++    public void nothing() {
++        Text a = new Text(0,0,"a");
++        Text b = new Text(20,0,"b");
++        Text c = new Text(30,0,"c");
++
++        Sprite test = new Sprite();
++        test.add(a);
++        test.add(b);
++        test.add(c);
++        test.move(2);
++    }
++}
+Index: src/minigames/animalrun/EndScreen.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/EndScreen.java b/src/minigames/animalrun/EndScreen.java
+new file mode 100644
+--- /dev/null	(date 1757516193104)
++++ b/src/minigames/animalrun/EndScreen.java	(date 1757516193104)
+@@ -0,0 +1,40 @@
++package minigames.animalrun;
++
++import Hilfe.Rechteck_mit_runden_Ecken;
++import common.ScalablePicture;
++import sas.Rectangle;
++import sas.Text;
++import sas.View;
++import mastercontroler.Mastercontrol;
++
++import java.awt.*;
++
++public class EndScreen {
++    public EndScreen(int x, int y, float transparency, View view,  boolean Player1gewonnen) {
++        Rectangle recht1 = new Rectangle(x, y, view.getWidth(), view.getHeight(), new Color(81, 72, 72));
++        recht1.setTransparency(transparency);
++        Rechteck_mit_runden_Ecken r5 = new Rechteck_mit_runden_Ecken(view.getWidth() * 8 / 90, view.getHeight() / 12, view.getWidth() * 74 / 90, view.getWidth() * 11 / 90, new Color(43, 43, 43));
++        if(Player1gewonnen==true) {
++            Text text = new Text(view.getWidth() / 6, view.getHeight() * 4 / 60, "Player 1 Won!", new Color(250, 146, 6));
++            text.setFontSerif(true, view.getWidth() * 15 / 90);
++        }
++        else{
++            Text text = new Text(view.getWidth() / 6, view.getHeight() * 4 / 60, "Player 2 Won!", new Color(250, 146, 6));
++            text.setFontSerif(true, view.getWidth() * 15 / 90);
++        }
++        ScalablePicture btnRestart = new ScalablePicture(view.getWidth() * 2/ 16, view.getHeight() * 5/ 8, "resources/animalrun/REStartBUTTON.png");
++        btnRestart.scaleTo(view.getHeight() / 5, view.getHeight() * 2 / 15);
++        ScalablePicture btnHome = new ScalablePicture(view.getWidth() * 14/ 16 - 217 , view.getHeight() * 5/ 8, "resources/animalrun/HOMEBUTTON.png");
++        btnHome.scaleTo(view.getHeight() / 5, view.getHeight() * 2 / 15);
++        ScalablePicture trophäe = new ScalablePicture(view.getWidth()*58/100-443-view.getHeight()/100*12 , view.getHeight()*60/100-552- view.getHeight()/100*12,"resources/animalrun/Trophäe.png");
++        trophäe.scaleTo(view.getHeight() *1/4 , view.getHeight() * 1 / 4);
++
++    }
++    public static void main(String[] args) {
++        View view = new View(900, 600, "bla");
++        new EndScreen(0, 0, 0.5f, view,false);
++
++
++    }
++}
++
+Index: src/Hilfe/Rechteck_mit_runden_Ecken.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Hilfe/Rechteck_mit_runden_Ecken.java b/src/Hilfe/Rechteck_mit_runden_Ecken.java
+new file mode 100644
+--- /dev/null	(date 1757499037987)
++++ b/src/Hilfe/Rechteck_mit_runden_Ecken.java	(date 1757499037987)
+@@ -0,0 +1,33 @@
++package Hilfe;
++
++import sas.Circle;
++import sas.Rectangle;
++import sas.Sprite;
++
++import java.awt.*;
++
++public class Rechteck_mit_runden_Ecken extends Sprite {
++    Rectangle r1;
++    Rectangle r2;
++    Circle c1;
++    Circle c2;
++    Circle c3;
++    Circle c4;
++
++    public Rechteck_mit_runden_Ecken(int X, int Y, int Breite, int Höhe, Color c5) {
++        r1=new Rectangle(X,Y+30,Breite,Höhe-60,c5);
++        r2=new Rectangle(X+30,Y,Breite-60,Höhe,c5);
++        c1=new Circle(X ,Y, 30,c5);
++        c2=new Circle(X,Y+Höhe-60, 30,c5);
++        c3=new Circle(X+Breite-60,Y, 30,c5);
++        c4=new Circle(X+Breite-60,Y+Höhe-60, 30,c5);
++
++        add(r1);
++        add(r2);
++        add(c1);
++        add(c2);
++        add(c3);
++        add(c4);
++
++    }
++}

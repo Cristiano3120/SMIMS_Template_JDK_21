@@ -1,0 +1,207 @@
+Index: src/controller/TastaturController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\nimport sas.View;\r\n\r\n/**\r\n * Die Klasse <code>{@link TastaturController}</code> dient lediglich als Platzhalter während der Programmierphase,\r\n * solange Joystick, Gamepad, ... noch nicht fertiggestellt sind. Damit die anderen Teams programmieren und ihre Spiele\r\n * auch steuern können, wird übergangsweise die Tastatur zur Eingabe verwendet. Später kann man dann einfach zur\r\n * Joystick-/Gamepad-/... Steuerung wechseln, indem man schlicht die verwendete Klasse ändert.\r\n */\r\npublic class TastaturController extends AbstractController {\r\n\r\n    /* Static Variables */\r\n\r\n    /* Static Methods */\r\n\r\n    /* Object Variables */\r\n    private View view;\r\n\r\n    /* Constructors */\r\n    public TastaturController(View view) {\r\n        this.view = view;\r\n    }\r\n\r\n    /* Object Methods */\r\n    @Override\r\n    protected void werteDatenAus() {\r\n        // Hier muss nichts getan werden.\r\n    }\r\n\r\n    @Override\r\n    public void disconnect() {\r\n        // Hier muss nichts getan werden.\r\n    }\r\n\r\n    /* Getters and Setters */\r\n\r\n    /**\r\n     * In dieser Beispielmethode wird gezeigt, wie man mithilfe der Tastatureingabe (Pfeiltaste links und / oder\r\n     * Pfeiltaste rechts) das Joystick- bzw. Gamepad-Input simulieren könnte.\r\n     *\r\n     * @return\r\n     */\r\n    @Override\r\n    public double getJoystickLinksX() {\r\n\r\n        double x = 0.0;\r\n\r\n        if (view.keyPressed('A')) {\r\n            x += -1d;\r\n        }\r\n\r\n        if (view.keyPressed('D')) {\r\n            x += 1d;\r\n        }\r\n\r\n        return x;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickLinksY() {\r\n        double y = 0.0;\r\n\r\n        if (view.keyPressed('W')) {\r\n            y += -1d;\r\n        }\r\n\r\n        if (view.keyDownPressed()) {\r\n            y += 1d;\r\n        }\r\n\r\n        return y;\r\n    }\r\n\r\n    public double getJoystickRechtsX() {\r\n\r\n        double x = 0.0;\r\n\r\n        if (view.keyLeftPressed()) {\r\n            x += -1d;\r\n        }\r\n\r\n        if (view.keyRightPressed()) {\r\n            x += 1d;\r\n        }\r\n\r\n        return x;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickRechtsY() {\r\n        double y = 0.0;\r\n\r\n        if (view.keyUpPressed()) {\r\n            y += -1d;\r\n        }\r\n\r\n        if (view.keyDownPressed()) {\r\n            y += 1d;\r\n        }\r\n\r\n        return y;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksA() {\r\n        return view.keyPressed('1');\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksB() {\r\n        return view.keyPressed('1');\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksC() {\r\n        return view.keyPressed('3');\r\n    }\r\n    @Override\r\n    public boolean getLinksD() {\r\n        return view.keyPressed('4');\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsA() {\r\n        return view.keyPressed('7');\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsB() {\r\n        return view.keyPressed('8');\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsC() {\r\n        return view.keyPressed('9');\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsD() {\r\n        return view.keyPressed('0');\r\n    }\r\n    /* Inner Classes */\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/TastaturController.java b/src/controller/TastaturController.java
+--- a/src/controller/TastaturController.java	(revision 82488279d8aa0b2f1f1d296e189c081e7c7d7639)
++++ b/src/controller/TastaturController.java	(date 1757518507330)
+@@ -109,7 +109,7 @@
+ 
+     @Override
+     public boolean getLinksB() {
+-        return view.keyPressed('1');
++        return view.keyPressed('2');
+     }
+ 
+     @Override
+Index: src/mastercontroler/Mastercontrol.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package mastercontroler;\r\n\r\nimport controller.AbstractController;\r\nimport controller.TastaturController;\r\nimport minigames.AbstractGame;\r\nimport minigames.animalRun.Monkey;\r\nimport sas.View;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class Mastercontrol {\r\n    private static final int WIDTH = 1080;\r\n    private static final int HEIGHT = 1920;\r\n\r\n    protected AbstractController controller;\r\n    protected View view;\r\n    protected AbstractGame game;\r\n\r\n    public Mastercontrol() {\r\n        view = new View(WIDTH, HEIGHT);\r\n        controller = new TastaturController(view);\r\n\r\n        Monkey monkey = new Monkey(600, 200, 200, controller, true, view);\r\n        Monkey monkey2 = new Monkey(400, 200, 200, controller, false, view);\r\n\r\n        monkey.pictures1[0].hashCode();\r\n\r\n        loop(monkey, monkey2, view);\r\n\r\n    }\r\n\r\n    private void loop(Monkey monkey, Monkey monkey2, View view) {\r\n\r\n        monkey.pictures1[0].setHidden(true);\r\n        monkey2.pictures1[0].setHidden(true);\r\n\r\n        int i = 0;\r\n        while (true) {\r\n            monkey.monkeyMove();\r\n            monkey2.monkeyMove();\r\n            monkey.monkeyJump();\r\n            monkey2.monkeyJump();\r\n\r\n            monkey.pictures1[i].setHidden(true);\r\n            monkey2.pictures1[i].setHidden(true);\r\n\r\n            i = i >= 4 - 1\r\n                    ? 0\r\n                    : i + 1;\r\n\r\n            monkey.pictures1[i].setHidden(false);\r\n            monkey.currentIndex1 = i;\r\n\r\n            monkey2.pictures1[i].setHidden(false);\r\n            monkey2.currentIndex1 = i;\r\n\r\n            view.wait(180);\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/mastercontroler/Mastercontrol.java b/src/mastercontroler/Mastercontrol.java
+--- a/src/mastercontroler/Mastercontrol.java	(revision 82488279d8aa0b2f1f1d296e189c081e7c7d7639)
++++ b/src/mastercontroler/Mastercontrol.java	(date 1757516264747)
+@@ -57,4 +57,5 @@
+             view.wait(180);
+         }
+     }
++
+ }
+Index: src/minigames/animalrun/Startbildschirm.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun;\r\n\r\nimport minigames.AbstractGame;\r\nimport sas.*;\r\nimport common.ScalablePicture;\r\nimport controller.AbstractController;\r\n\r\nimport java.util.ArrayList;\r\n\r\n\r\npublic class Startbildschirm {\r\n\r\n    private AbstractController controller;\r\n    private View view;\r\n\r\n\r\n    public Startbildschirm(AbstractController controller, View view, int viewWidth, int viewHeight) {\r\n\r\n        view.setSize(viewWidth, viewHeight);\r\n        view.setName(\"Startbildschirm Animalrun\");\r\n//test\r\n        ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), \"resources/animalrun/background.png\");\r\n        ScalablePicture pressA_button = new ScalablePicture(0, 0, \"resources/animalrun/pressA_button.png\");\r\n        ScalablePicture headline = new ScalablePicture(0, 0, \"resources/animalrun/headline.png\");\r\n\r\n        pressA_button.scaleTo(view.getHeight() / 8 * 3);\r\n        headline.scaleTo(view.getHeight() / 8 * 5);\r\n\r\n        pressA_button.moveTo(view.getWidth() / 2 - (pressA_button.getShapeWidth() / 2), view.getHeight() / 2);\r\n        headline.moveTo(view.getWidth() / 2 - (headline.getShapeWidth() / 2), 0);\r\n\r\n        // hier auf button warten\r\n        while(!controller.getLinksA()) {\r\n            view.wait(10);\r\n        }\r\n\r\n        background.setHidden(true);\r\n        pressA_button.setHidden(true);\r\n        headline.setHidden(true);\r\n\r\n        view.remove(background);\r\n        view.remove(pressA_button);\r\n        view.remove(headline);\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Startbildschirm.java b/src/minigames/animalrun/Startbildschirm.java
+--- a/src/minigames/animalrun/Startbildschirm.java	(revision 82488279d8aa0b2f1f1d296e189c081e7c7d7639)
++++ b/src/minigames/animalrun/Startbildschirm.java	(date 1757517340091)
+@@ -4,14 +4,12 @@
+ import sas.*;
+ import common.ScalablePicture;
+ import controller.AbstractController;
+-
+ import java.util.ArrayList;
+ 
+ 
+ public class Startbildschirm {
+ 
+-    private AbstractController controller;
+-    private View view;
++
+ 
+ 
+     public Startbildschirm(AbstractController controller, View view, int viewWidth, int viewHeight) {
+Index: src/minigames/animalRun/Worldobject/Bldafsdfg.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalRun/Worldobject/Bldafsdfg.java b/src/minigames/animalRun/Worldobject/Bldafsdfg.java
+new file mode 100644
+--- /dev/null	(date 1757516264768)
++++ b/src/minigames/animalRun/Worldobject/Bldafsdfg.java	(date 1757516264768)
+@@ -0,0 +1,19 @@
++package minigames.animalrun.Worldobject;
++
++import sas.Sprite;
++import sas.Text;
++
++public class Bldafsdfg {
++
++    public void nothing() {
++        Text a = new Text(0,0,"a");
++        Text b = new Text(20,0,"b");
++        Text c = new Text(30,0,"c");
++
++        Sprite test = new Sprite();
++        test.add(a);
++        test.add(b);
++        test.add(c);
++        test.move(2);
++    }
++}
+Index: src/Hilfe/Rechteck_mit_runden_Ecken.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Hilfe/Rechteck_mit_runden_Ecken.java b/src/Hilfe/Rechteck_mit_runden_Ecken.java
+new file mode 100644
+--- /dev/null	(date 1757516264838)
++++ b/src/Hilfe/Rechteck_mit_runden_Ecken.java	(date 1757516264838)
+@@ -0,0 +1,33 @@
++package Hilfe;
++
++import sas.Circle;
++import sas.Rectangle;
++import sas.Sprite;
++
++import java.awt.*;
++
++public class Rechteck_mit_runden_Ecken extends Sprite {
++    Rectangle r1;
++    Rectangle r2;
++    Circle c1;
++    Circle c2;
++    Circle c3;
++    Circle c4;
++
++    public Rechteck_mit_runden_Ecken(int X, int Y, int Breite, int Höhe, Color c5) {
++        r1=new Rectangle(X,Y+30,Breite,Höhe-60,c5);
++        r2=new Rectangle(X+30,Y,Breite-60,Höhe,c5);
++        c1=new Circle(X ,Y, 30,c5);
++        c2=new Circle(X,Y+Höhe-60, 30,c5);
++        c3=new Circle(X+Breite-60,Y, 30,c5);
++        c4=new Circle(X+Breite-60,Y+Höhe-60, 30,c5);
++
++        add(r1);
++        add(r2);
++        add(c1);
++        add(c2);
++        add(c3);
++        add(c4);
++
++    }
++}
+Index: src/minigames/animalRun/EndScreen.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalRun/EndScreen.java b/src/minigames/animalRun/EndScreen.java
+new file mode 100644
+--- /dev/null	(date 1757521966146)
++++ b/src/minigames/animalRun/EndScreen.java	(date 1757521966146)
+@@ -0,0 +1,64 @@
++package minigames.animalrun;
++
++import Hilfe.Rechteck_mit_runden_Ecken;
++import common.ScalablePicture;
++import controller.AbstractController;
++import controller.TastaturController;
++import sas.Rectangle;
++import sas.Text;
++import sas.View;
++import mastercontroler.Mastercontrol;
++
++import java.awt.*;
++
++public class EndScreen {
++    public EndScreen(int x, int y, float transparency, View view, boolean Player1gewonnen, AbstractController controller) {
++        Rectangle recht1 = new Rectangle(x, y, view.getWidth(), view.getHeight(), new Color(81, 72, 72));
++        recht1.setTransparency(transparency);
++        Rechteck_mit_runden_Ecken r5 = new Rechteck_mit_runden_Ecken(view.getWidth() * 8 / 90, view.getHeight() / 12, view.getWidth() * 74 / 90, view.getWidth() * 11 / 90, new Color(43, 43, 43));
++        if(Player1gewonnen==true) {
++            Text text = new Text(view.getWidth() / 6, view.getHeight() * 4 / 60, "Player 1 Won!", new Color(250, 146, 6));
++            text.setFontSerif(true, view.getWidth() * 15 / 90);
++        }
++        else{
++            Text text = new Text(view.getWidth() / 6, view.getHeight() * 4 / 60, "Player 2 Won!", new Color(250, 146, 6));
++            text.setFontSerif(true, view.getWidth() * 15 / 90);
++        }
++        ScalablePicture btnRestart = new ScalablePicture(view.getWidth() * 2/ 16, view.getHeight() * 5/ 8, "resources/animalrun/REStartBUTTON.png");
++        btnRestart.scaleTo(view.getHeight() / 5, view.getHeight() * 2 / 15);
++        ScalablePicture btnHome = new ScalablePicture(view.getWidth() * 14/ 16 - 217 , view.getHeight() * 5/ 8, "resources/animalrun/HOMEBUTTON.png");
++        btnHome.scaleTo(view.getHeight() / 5, view.getHeight() * 2 / 15);
++        ScalablePicture trophäe = new ScalablePicture(view.getWidth()*58/100-443-view.getHeight()/100*12 , view.getHeight()*60/100-552- view.getHeight()/100*12,"resources/animalrun/Trophäe.png");
++        trophäe.scaleTo(view.getHeight() *1/4 , view.getHeight() * 1 / 4);
++        while(!controller.getLinksA()&&controller.getJoystickLinksX()==0) {
++            view.wait(10);
++        }
++        boolean rechts=true;
++        if(controller.getJoystickLinksX()<0) {
++            rechts = true;
++        }
++        if(controller.getJoystickLinksX()>0) {
++            rechts = false;
++        }
++        if(rechts==true&& controller.getLinksA()==true) {
++            view.remove(recht1);
++            view.remove(text);
++            view.remove(btnRestart);
++            view.remove(btnHome);
++            view.remove(trophäe);
++
++
++        }
++
++
++    }
++    public static void main(String[] args) {
++        View view = new View(900, 600, "bla");
++        AbstractController controller = new TastaturController(view);
++        new EndScreen(0, 0, 0.5f, view,false,controller);
++
++
++
++    }
++}
++

@@ -93,15 +93,6 @@ public class Platform extends Picture implements WorldObject {
         moveToByCenter (nextPlatformZone, getCenterX(), getCenterY());
     }
 
-    @Override
-    public void setView(View view) {
-
-    }
-
-    @Override
-    public void setXKameraVersatz(double versatz) {
-
-    }
 
     public void setImage(BufferedImage bImage) {
         BufferedImage sizedImage = new BufferedImage((int) getWidth(), (int) getHeight(), BufferedImage.TYPE_INT_RGB);
