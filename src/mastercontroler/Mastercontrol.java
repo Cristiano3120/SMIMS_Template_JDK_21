@@ -21,5 +21,12 @@ public class Mastercontrol {
         controller =new TastaturController(view);
         game =new AnimalRun(controller,view);
         game.start();
+
+        Monkey monkey = new Monkey(600, 200, 200, controller, true, view);
+        Monkey monkey2 = new Monkey(400, 200, 200, controller, false, view);
+
+        monkey.pictures1[0].hashCode();
+
+        loop(monkey, monkey2, view);
     }
 }
