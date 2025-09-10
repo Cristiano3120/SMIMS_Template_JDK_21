@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 
 public class Platform extends Picture implements WorldObject {
 
-
+    //Test
     private boolean summonNext;
     Point2D.Double pos;
     Rectangle rectTest;
