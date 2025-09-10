@@ -5,25 +5,24 @@ import sas.View;
 
 import java.util.Vector;
 
-public abstract class WorldObject extends Shapes {
+public interface WorldObject /*extends Shapes*/ {
 
-    protected double xKameraVersatz;
-    protected View view;
+    void setView(View view);
+    //double xKameraVersatz;
+    //protected View view;
 
-    protected WorldObject(double xPos, double yPos, double width, double height, String textur, View view) {
-        super(xPos, yPos, width, height, textur);
-        this.view = view;
-    }
+ //   protected WorldObject(double xPos, double yPos, double width, double height, String textur, View view) {
+ //       super(xPos, yPos, width, height, textur);
+  //      this.view = view;
+ //   }
 
-    public abstract void doThings(int tick);
+    public void doThings(int tick);
 
-    public abstract void updatePos();
+    public void updatePos();
 
     /* true wenn man darauf laufen kann */
-    public abstract boolean isSollit();
+    public boolean isSollit();
 
-    public void setXKameraVersatz(double versatz){
-        xKameraVersatz = versatz;
-    }
+    public void setXKameraVersatz(double versatz);
 }
 

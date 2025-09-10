@@ -20,5 +20,6 @@ public class Mastercontrol {
         view = new View(WIDTH,HEIGHT);
         controller =new TastaturController(view);
         game =new AnimalRun(controller,view);
+        game.start();
     }
 }
