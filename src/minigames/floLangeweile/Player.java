@@ -9,13 +9,16 @@ import java.io.IOException;
 
 public class Player extends Entity {
 
-    double speedX = 0;
-    double speedY = 0;
+    private double speedX = 0;
+    private double speedY = 0;
+    private boolean rechterPlayer;
+
 
     private static BufferedImage[] images;
 
     public Player(int x, int y, boolean rechts) {
         bounds = new Rectangle2D.Double(x, y, 50, 50);
+        rechterPlayer = rechts;
 
         if(images == null){
             images = new BufferedImage[4];
@@ -39,8 +42,20 @@ public class Player extends Entity {
 
 
         // Steuerung
-        speedX += JumpGame.controller.
+        steuerung();
 
+        //movment
+        tryToMove();
+
+    }
+    private void steuerung(){
+        System.out.println("test: "+ speedX + " " + JumpGame.controller.getJoystickLinksX());
+        if(rechterPlayer){
+            speedX += JumpGame.controller.getJoystickRechtsX();
+        }
+        else{
+            speedX += JumpGame.controller.getJoystickLinksX();
+        }
     }
 
     @Override

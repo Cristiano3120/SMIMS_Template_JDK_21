@@ -81,6 +81,7 @@ public class JumpGame extends AbstractGame {
             timeStamp = System.currentTimeMillis();
             update(tick);
             tick++;
+            if(tick > 2147483640) tick = 0;
             timeUntilNextCycle = milisPerCycle - (System.currentTimeMillis() - timeStamp);
             if (timeUntilNextCycle < 0) timeUntilNextCycle = 0;
             try {
@@ -100,7 +101,7 @@ public class JumpGame extends AbstractGame {
         objekteNew.clear();
         ///  ////
 
-
+        objekte.forEach(objekt -> objekt.doThings(tick));
 
 
         /// ////
