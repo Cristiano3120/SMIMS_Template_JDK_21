@@ -1,4 +1,4 @@
-package minigames.animalrun.Worldobject;
+package minigames.animalRun.Worldobject;
 
 import sas.Shapes;
 import sas.View;

@@ -2,20 +2,17 @@ package main;
 
 import controller.AbstractController;
 import controller.TastaturController;
-import minigames.animalrun.Startbildschirm;
-import sas.Shapes;
+import minigames.animalRun.Startbildschirm;
 import sas.View;
-
-import java.util.ArrayList;
 
 public class TestNico {
 
 
 
     public static void main(String[] args) {
-        View view = new View(500, 300);
+        View view = new View(1920, 1080);
         AbstractController controller = new TastaturController(view);
-        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);
+        //Startbildschirm test = new Startbildschirm(controller, view, 1920, 1080);
 
     }
 }

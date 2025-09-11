@@ -1,6 +1,6 @@
-package minigames.animalrun.Worldobject;
+package minigames.animalRun.Worldobject;
 
-import minigames.animalrun.AnimalRun;
+import minigames.animalRun.AnimalRun;
 import sas.Picture;
 import sas.Rectangle;
 import sas.View;
@@ -51,7 +51,7 @@ public class Platform extends Picture implements WorldObject {
         blockedZone.setTransparency(0.5F);
 
         nextPlatformZone = new Rectangle(0, 0, getShapeWidth() + view.getWidth() * 0.3, getShapeHeight() * 5, Color.yellow);
-        nextPlatformZone.setTransparency(0.5F);
+        nextPlatformZone.setTransparency(0F);
         setPosition();
 //        System.out.println("Platform: Test");
 

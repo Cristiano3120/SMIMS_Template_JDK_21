@@ -1,0 +1,81 @@
+Index: src/controller/arduinoReceiveData/KnopfSeite.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/arduinoReceiveData/KnopfSeite.java b/src/controller/arduinoReceiveData/KnopfSeite.java
+new file mode 100644
+--- /dev/null	(date 1757406588649)
++++ b/src/controller/arduinoReceiveData/KnopfSeite.java	(date 1757406588649)
+@@ -0,0 +1,9 @@
++package controller.arduinoReceiveData;
++
++public class KnopfSeite
++{
++    public int A;
++    public int B;
++    public int C;
++    public int D;
++}
+Index: src/controller/arduinoReceiveData/EmpfangendeDaten.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/arduinoReceiveData/EmpfangendeDaten.java b/src/controller/arduinoReceiveData/EmpfangendeDaten.java
+new file mode 100644
+--- /dev/null	(date 1757406576816)
++++ b/src/controller/arduinoReceiveData/EmpfangendeDaten.java	(date 1757406576816)
+@@ -0,0 +1,7 @@
++package controller.arduinoReceiveData;
++
++public class EmpfangendeDaten
++{
++    public KnopfSeite links;
++    public KnopfSeite rechts;
++}
+Index: src/main/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main;\r\n\r\nimport demo_and_test.SaSDemo;\r\n\r\npublic class Main {\r\n\r\n    public static void main(String[] args) {\r\n\r\n        // eine ganz simple Demo für SaS\r\n        SaSDemo demo = new SaSDemo();\r\n        demo.demo1();\r\n//        demo.demo2();\r\n\r\n        // ein einfaches Spiel in SaS\r\n//        View view = new View(800, 600, \"SMIMS\");\r\n//        AbstractController controller = new TastaturController(view);\r\n//        AbstractGame game = new FroggerGame(controller, view);\r\n//        game.start();\r\n\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/Main.java b/src/main/Main.java
+--- a/src/main/Main.java	(revision 2c9abe16b9a0eef0d3ddc270790c0df914c9b06e)
++++ b/src/main/Main.java	(date 1757339098764)
+@@ -1,21 +1,26 @@
+ package main;
+ 
++import controller.AbstractController;
++import controller.TastaturController;
+ import demo_and_test.SaSDemo;
++import minigames.AbstractGame;
++import minigames.frogger.FroggerGame;
++import sas.View;
+ 
+ public class Main {
+ 
+     public static void main(String[] args) {
+ 
+         // eine ganz simple Demo für SaS
+-        SaSDemo demo = new SaSDemo();
+-        demo.demo1();
+-//        demo.demo2();
++  //      SaSDemo demo = new SaSDemo();
++  //      demo.demo1();
++  //     demo.demo2();
+ 
+         // ein einfaches Spiel in SaS
+-//        View view = new View(800, 600, "SMIMS");
+-//        AbstractController controller = new TastaturController(view);
+-//        AbstractGame game = new FroggerGame(controller, view);
+-//        game.start();
++        View view = new View(800, 600, "SMIMS");
++        AbstractController controller = new TastaturController(view);
++        AbstractGame game = new FroggerGame(controller, view);
++        game.start();
+ 
+     }
+ }
+\ No newline at end of file

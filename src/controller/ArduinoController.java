@@ -80,8 +80,6 @@ public class ArduinoController extends AbstractController implements SerialPortE
         } catch (SerialPortException e) {
             throw new RuntimeException(e);
         }
-
-        System.out.println(json);
     }
 
     @Override
@@ -90,8 +88,6 @@ public class ArduinoController extends AbstractController implements SerialPortE
         {
             Gson gson = new Gson();
             empfangendeDaten =  gson.fromJson(json, EmpfangendeDaten.class);
-            System.out.println("PARSED: " + json);
-
             readJoystickOffset();
         }
         catch (Exception ex)

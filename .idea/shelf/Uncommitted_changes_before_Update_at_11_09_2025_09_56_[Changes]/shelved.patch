@@ -1,0 +1,459 @@
+Index: src/minigames/animalrun/Worldobject/Background.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun.Worldobject;\r\n\r\nimport common.ScalablePicture;\r\nimport minigames.AbstractGame;\r\n\r\npublic class Background extends ScalablePicture {\r\n    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES +\"background_game.png\";\r\n    public Background(int x, int y,int width,int height) {\r\n        super(x, y,width,height, PATH_IMAGE);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/Background.java b/src/minigames/animalrun/Worldobject/Background.java
+--- a/src/minigames/animalrun/Worldobject/Background.java	(revision 0dc235809ec6bcb96b20577eb57a7d049fe9a26b)
++++ b/src/minigames/animalrun/Worldobject/Background.java	(date 1757577226002)
+@@ -1,4 +1,4 @@
+-package minigames.animalrun.Worldobject;
++package minigames.animalRun.Worldobject;
+ 
+ import common.ScalablePicture;
+ import minigames.AbstractGame;
+Index: src/mastercontroler/Mastercontrol.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package mastercontroler;\r\n\r\nimport controller.AbstractController;\r\nimport controller.TastaturController;\r\nimport minigames.AbstractGame;\r\nimport minigames.animalrun.AnimalRun;\r\nimport minigames.animalRun.Monkey;\r\nimport sas.View;\r\n\r\nimport java.util.ArrayList;\r\n\r\nimport static java.lang.invoke.MethodHandles.loop;\r\n\r\npublic class Mastercontrol {\r\n    private static final int WIDTH = 600;\r\n    private static final int HEIGHT = 400;\r\n\r\n    protected AbstractController controller;\r\n    protected View view;\r\n    protected AbstractGame game;\r\n\r\n    public Mastercontrol() {\r\n        view = new View(WIDTH,HEIGHT);\r\n        controller =new TastaturController(view);\r\n        game =new AnimalRun(controller,view);\r\n        System.out.println(\"test--\");\r\n        game.start();\r\n        System.out.println(\"test--1\");\r\n        Monkey monkey = new Monkey(600, 200, 200, controller, true, view);\r\n        Monkey monkey2 = new Monkey(400, 200, 200, controller, false, view);\r\n\r\n        AnimalRun.addToWorldObjects(monkey);\r\n        AnimalRun.addToWorldObjects(monkey2);\r\n\r\n        System.out.println(\"test0\");\r\n        loop(monkey, monkey2, view);\r\n    }\r\n\r\n    private void loop(Monkey monkey, Monkey monkey2, View view) {\r\n        System.out.println(\"test1\");\r\n        monkey.pictures1[0].setHidden(true);\r\n        monkey2.pictures1[0].setHidden(true);\r\n\r\n        int i = 0;\r\n        while (true) {\r\n            System.out.println(\"test2\");\r\n            monkey.monkeyMove();\r\n            monkey2.monkeyMove();\r\n            monkey.monkeyJump();\r\n            monkey2.monkeyJump();\r\n            System.out.println(\"test3\");\r\n            monkey.pictures1[i].setHidden(true);\r\n            monkey2.pictures1[i].setHidden(true);\r\n\r\n            i = i >= 4 - 1\r\n                    ? 0\r\n                    : i + 1;\r\n\r\n            monkey.pictures1[i].setHidden(false);\r\n            monkey.currentIndex1 = i;\r\n\r\n            monkey2.pictures1[i].setHidden(false);\r\n            monkey2.currentIndex1 = i;\r\n\r\n            view.wait(180);\r\n\r\n            System.out.println(\"test\");\r\n        }\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/mastercontroler/Mastercontrol.java b/src/mastercontroler/Mastercontrol.java
+--- a/src/mastercontroler/Mastercontrol.java	(revision 0dc235809ec6bcb96b20577eb57a7d049fe9a26b)
++++ b/src/mastercontroler/Mastercontrol.java	(date 1757577226002)
+@@ -1,19 +1,15 @@
+ package mastercontroler;
+ 
+ import controller.AbstractController;
++import controller.ArduinoController;
+ import controller.TastaturController;
+ import minigames.AbstractGame;
+-import minigames.animalrun.AnimalRun;
+-import minigames.animalRun.Monkey;
++import minigames.animalRun.AnimalRun;
+ import sas.View;
+ 
+-import java.util.ArrayList;
+-
+-import static java.lang.invoke.MethodHandles.loop;
+-
+ public class Mastercontrol {
+-    private static final int WIDTH = 600;
+-    private static final int HEIGHT = 400;
++    private static final int WIDTH = 1920;
++    private static final int HEIGHT = 1080;
+ 
+     protected AbstractController controller;
+     protected View view;
+@@ -21,51 +17,9 @@
+ 
+     public Mastercontrol() {
+         view = new View(WIDTH,HEIGHT);
+-        controller =new TastaturController(view);
+-        game =new AnimalRun(controller,view);
+-        System.out.println("test--");
+-        game.start();
+-        System.out.println("test--1");
+-        Monkey monkey = new Monkey(600, 200, 200, controller, true, view);
+-        Monkey monkey2 = new Monkey(400, 200, 200, controller, false, view);
+-
+-        AnimalRun.addToWorldObjects(monkey);
+-        AnimalRun.addToWorldObjects(monkey2);
++        TastaturController controller = new TastaturController(view);
++        ArduinoController arduinoController = new ArduinoController();
+ 
+-        System.out.println("test0");
+-        loop(monkey, monkey2, view);
++        game = new AnimalRun(arduinoController, controller, view);
+     }
+-
+-    private void loop(Monkey monkey, Monkey monkey2, View view) {
+-        System.out.println("test1");
+-        monkey.pictures1[0].setHidden(true);
+-        monkey2.pictures1[0].setHidden(true);
+-
+-        int i = 0;
+-        while (true) {
+-            System.out.println("test2");
+-            monkey.monkeyMove();
+-            monkey2.monkeyMove();
+-            monkey.monkeyJump();
+-            monkey2.monkeyJump();
+-            System.out.println("test3");
+-            monkey.pictures1[i].setHidden(true);
+-            monkey2.pictures1[i].setHidden(true);
+-
+-            i = i >= 4 - 1
+-                    ? 0
+-                    : i + 1;
+-
+-            monkey.pictures1[i].setHidden(false);
+-            monkey.currentIndex1 = i;
+-
+-            monkey2.pictures1[i].setHidden(false);
+-            monkey2.currentIndex1 = i;
+-
+-            view.wait(180);
+-
+-            System.out.println("test");
+-        }
+-    }
+-
+ }
+Index: src/controller/ArduinoController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\nimport controller.arduinoReceiveData.EmpfangendeDaten;\r\nimport controller.arduinoSendData.LedData;\r\nimport jssc.SerialPort;\r\nimport jssc.SerialPortEvent;\r\nimport jssc.SerialPortEventListener;\r\nimport jssc.SerialPortException;\r\nimport com.google.gson.Gson;\r\n\r\npublic class ArduinoController extends AbstractController implements SerialPortEventListener {\r\n\r\n    /* Static Variables */\r\n\r\n    /* Static Methods */\r\n\r\n    /* Object Variables */\r\n    private SerialPort serialPort;\r\n    private final StringBuilder buffer = new StringBuilder();\r\n    private  EmpfangendeDaten empfangendeDaten = new EmpfangendeDaten();\r\n\r\n    boolean ersterLauf = true;\r\n    double offSetLinksX = 0;\r\n    double offSetLinksY = 0;\r\n    double offSetRechtsX = 0;\r\n    double offSetRechtsY = 0;\r\n\r\n    /* Constructors */\r\n    public ArduinoController()  {\r\n        initSerialPort();\r\n\r\n    }\r\n\r\n    /* Object Methods */\r\n    @Override\r\n    public void disconnect() {\r\n        try {\r\n            serialPort.closePort();\r\n        } catch (SerialPortException e) {\r\n            System.err.println(e);\r\n        }\r\n    }\r\n\r\n    public void serialEvent(SerialPortEvent e) {\r\n        try {\r\n            String incoming = serialPort.readString();\r\n\r\n            if (incoming != null) {\r\n                buffer.append(incoming);\r\n\r\n                int newLineIndex;\r\n                while ((newLineIndex = buffer.indexOf(\"\\n\")) != -1) {\r\n                    String line = buffer.substring(0, newLineIndex).trim();\r\n                    buffer.delete(0, newLineIndex +1);\r\n\r\n                    if (!line.isEmpty())\r\n                    {\r\n                        werteDatenAus(line);\r\n                    }\r\n                }\r\n            }\r\n        } catch (SerialPortException ex) {\r\n            ex.printStackTrace();\r\n        }\r\n\r\n    }\r\n\r\n    @Override\r\n    public void sendeDaten(LedData ledData) {\r\n        Gson gson = new Gson();\r\n        String json = gson.toJson(ledData);\r\n\r\n        try {\r\n            Thread.sleep(2000);\r\n        } catch (InterruptedException e) {\r\n            throw new RuntimeException(e);\r\n        }\r\n        try {\r\n            serialPort.writeString(json + \"\\n\");\r\n        } catch (SerialPortException e) {\r\n            throw new RuntimeException(e);\r\n        }\r\n\r\n        System.out.println(json);\r\n    }\r\n\r\n    @Override\r\n    protected void werteDatenAus(String json) {\r\n        try\r\n        {\r\n            Gson gson = new Gson();\r\n            empfangendeDaten =  gson.fromJson(json, EmpfangendeDaten.class);\r\n            System.out.println(\"PARSED: \" + json);\r\n\r\n            readJoystickOffset();\r\n        }\r\n        catch (Exception ex)\r\n        {\r\n            System.out.println(\"ERROR: \" + json);\r\n        }\r\n    }\r\n\r\n    private void initSerialPort() {\r\n        boolean funktioniert = false;\r\n\r\n        for (int i = 21; i > 1 && !funktioniert; i--) {\r\n            funktioniert = true;\r\n\r\n            try {\r\n                serialPort = new SerialPort(\"COM\" + i);\r\n                serialPort.openPort();\r\n                serialPort.setParams(9600, 8, 1, 0);\r\n                serialPort.addEventListener(this);\r\n            } catch (SerialPortException ex) {\r\n                funktioniert = false;\r\n            }\r\n        }\r\n    }\r\n\r\n    private void readJoystickOffset()\r\n    {\r\n        if(ersterLauf)\r\n        {\r\n            ersterLauf = false;\r\n\r\n            offSetLinksX = empfangendeDaten.getLinks().X - 512;\r\n            offSetLinksY = empfangendeDaten.getLinks().Y - 512;\r\n            offSetRechtsX = empfangendeDaten.getRechts().X - 512;\r\n            offSetRechtsY = empfangendeDaten.getRechts().Y - 512;\r\n        }\r\n    }\r\n\r\n    /* Getters and Setters */\r\n    @Override\r\n    public double getJoystickLinksX() {\r\n        double value = (empfangendeDaten.getLinks().X - 512 - offSetLinksX) / 512 ;\r\n        if(Math.abs(value) > 1) value = value / Math.abs(value);\r\n        return value;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickLinksY() {\r\n        double value = (empfangendeDaten.getLinks().Y - 512 - offSetLinksY) / 512 ;\r\n        if(Math.abs(value) > 1) value = value / Math.abs(value);\r\n        return value;\r\n    }\r\n    @Override\r\n    public double getJoystickRechtsX() {\r\n        double value = (empfangendeDaten.getRechts().X - 512 - offSetRechtsX) / 512 ;\r\n        if(Math.abs(value) > 1) value = value / Math.abs(value);\r\n        return value;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickRechtsY() {\r\n        double value = (empfangendeDaten.getRechts().Y - 512 - offSetRechtsY) / 512 ;\r\n        if(Math.abs(value) > 1) value = value / Math.abs(value);\r\n        return value;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksA() {\r\n        return empfangendeDaten.getLinks().A == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksB() {\r\n        return empfangendeDaten.getLinks().A == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksC() {\r\n        return empfangendeDaten.getLinks().C == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksD() {\r\n        return empfangendeDaten.getLinks().D == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsA() {\r\n        return empfangendeDaten.getRechts().A == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsB() {\r\n        return empfangendeDaten.getRechts().B == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsC() {\r\n        return empfangendeDaten.getRechts().C == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsD() {\r\n        return empfangendeDaten.getRechts().D == 1;\r\n    }\r\n    /* Inner Classes */\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/ArduinoController.java b/src/controller/ArduinoController.java
+--- a/src/controller/ArduinoController.java	(revision 0dc235809ec6bcb96b20577eb57a7d049fe9a26b)
++++ b/src/controller/ArduinoController.java	(date 1757577226002)
+@@ -80,8 +80,6 @@
+         } catch (SerialPortException e) {
+             throw new RuntimeException(e);
+         }
+-
+-        System.out.println(json);
+     }
+ 
+     @Override
+@@ -90,8 +88,6 @@
+         {
+             Gson gson = new Gson();
+             empfangendeDaten =  gson.fromJson(json, EmpfangendeDaten.class);
+-            System.out.println("PARSED: " + json);
+-
+             readJoystickOffset();
+         }
+         catch (Exception ex)
+Index: src/minigames/animalrun/Worldobject/Platform.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun.Worldobject;\r\n\r\nimport minigames.animalrun.AnimalRun;\r\nimport sas.Picture;\r\nimport sas.Rectangle;\r\nimport sas.View;\r\n\r\nimport java.awt.*;\r\nimport java.awt.geom.Point2D;\r\nimport java.awt.image.BufferedImage;\r\n\r\npublic class Platform extends Picture implements WorldObject {\r\n\r\n    //Test\r\n    private boolean summonNext;\r\n    Point2D.Double pos;\r\n    Rectangle rectTest;\r\n    Rectangle blockedZone;\r\n    Rectangle nextPlatformZone;\r\n    double xKameraVrsatz = 0;\r\n    View view;\r\n\r\n    public Platform(View view, boolean summonNext) {\r\n        //super(220, 100, 200, 200, \"resources/animalrun/platforms/testInsel.png\");\r\n        super(220, 100, 200, 200, \"resources/animalrun/platforms/InselTest2.png\");\r\n        this.summonNext = summonNext;\r\n        this.view = view;\r\n\r\n        pos = new Point2D.Double();\r\n        pos.x = view.getWidth() + AnimalRun.getXKameraVersatz();\r\n        pos.y = Math.random() * view.getHeight();\r\n\r\n        scaleTo(view.getWidth() * 0.3, view.getHeight() * 0.1);\r\n        System.out.println((view.getWidth() * 0.3) + \" / \" + view.getHeight() * 0.1 + \" -> \" + getShapeWidth() + \" \" + getShapeHeight());\r\n\r\n        //setImage(ImageIO.read(new File(\"resources/animalrun/platforms/testInsel.png\")));\r\n//        setImage(getImage());\r\n\r\n        rectTest = new Rectangle(getShapeX(), getShapeY(), getShapeWidth(), getShapeHeight(), Color.red);\r\n        rectTest.setTransparency(0.5F);\r\n\r\n        blockedZone = new Rectangle(0, 0, getShapeWidth(), getShapeHeight()*5, Color.blue);\r\n        blockedZone.setTransparency(0.5F);\r\n\r\n        nextPlatformZone = new Rectangle(0, 0, getShapeWidth() + view.getWidth()*0.3, getShapeHeight()*5, Color.yellow);\r\n        nextPlatformZone.setTransparency(0.5F);\r\n        setPosition();\r\n        System.out.println(\"Platform: Test\");\r\n\r\n\r\n    }\r\n\r\n    private Platform(double xPos, double yPos, double width, double height, String textur, View view) {\r\n        super(xPos, yPos, width, height, textur);\r\n\r\n    }\r\n\r\n\r\n    public void doThings(int tick) {\r\n        System.out.println(\"Platform: doThings \" + (getCenterX()));\r\n        System.out.println(\"Test------ \" + (getShapeX()+getShapeWidth() - AnimalRun.getXKameraVersatz())+ \" \" + getShapeWidth() + \" \" + view.getWidth());\r\n        if(summonNext && getShapeX()+getShapeWidth() - AnimalRun.getXKameraVersatz() + 250 < view.getWidth()) summonNext();\r\n    }\r\n\r\n    void summonNext() {\r\n        summonNext = false;\r\n        Platform p = null;\r\n        do{\r\n            if(p != null) view.remove(p);\r\n            p = new Platform(view,true);\r\n            view.remove(p);\r\n        } while (p.intersects(nextPlatformZone));\r\n\r\n        AnimalRun.addToWorldObjects(p);\r\n    }\r\n\r\n    public void updatePos() {\r\n        setPosition();\r\n    }\r\n\r\n    public boolean isSollit() {\r\n        return false;\r\n    }\r\n\r\n\r\n    protected void setPosition() {\r\n\r\n        moveTo(pos.x - AnimalRun.getXKameraVersatz(), pos.y);\r\n        System.out.println(\"Platform: TestTTTTTT\" + pos.x + \" \" + getXPosition());\r\n        //rectTest.moveTo(pos.x - AnimalRun.getXKameraVersatz(), getYPosition());\r\n        rectTest.moveTo(pos.x - AnimalRun.getXKameraVersatz(), getShapeY());\r\n        moveToByCenter (blockedZone, getCenterX(), getCenterY());\r\n        moveToByCenter (nextPlatformZone, getCenterX(), getCenterY());\r\n    }\r\n\r\n\r\n    public void setImage(BufferedImage bImage) {\r\n        BufferedImage sizedImage = new BufferedImage((int) getWidth(), (int) getHeight(), BufferedImage.TYPE_INT_RGB);\r\n        Graphics2D g2 = (Graphics2D) sizedImage.getGraphics();\r\n        Image image = bImage.getScaledInstance((int) getWidth(), (int) getHeight(), Image.SCALE_SMOOTH);\r\n        g2.drawImage(bImage, 0, 0, (int) getWidth(), (int) getHeight(), null);\r\n        g2.dispose();\r\n        super.setImage(sizedImage);\r\n    }\r\n\r\n    void moveToByCenter(Rectangle r, double x, double y) {\r\n        r.moveTo(x - r.getShapeWidth()/2, y - r.getShapeHeight()/2);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/Platform.java b/src/minigames/animalrun/Worldobject/Platform.java
+--- a/src/minigames/animalrun/Worldobject/Platform.java	(revision 0dc235809ec6bcb96b20577eb57a7d049fe9a26b)
++++ b/src/minigames/animalrun/Worldobject/Platform.java	(date 1757577226002)
+@@ -1,6 +1,6 @@
+-package minigames.animalrun.Worldobject;
++package minigames.animalRun.Worldobject;
+ 
+-import minigames.animalrun.AnimalRun;
++import minigames.animalRun.AnimalRun;
+ import sas.Picture;
+ import sas.Rectangle;
+ import sas.View;
+Index: src/main/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main;\r\n\r\nimport controller.ArduinoController;\r\nimport controller.arduinoSendData.LedData;\r\n\r\npublic class Main {\r\n\r\n    public static void main(String[] args) {\r\n        ArduinoController arduinoController = new ArduinoController();\r\n        while (true) {\r\n            arduinoController.sendeDaten(new LedData(20, 20, 20, true));\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/Main.java b/src/main/Main.java
+--- a/src/main/Main.java	(revision 0dc235809ec6bcb96b20577eb57a7d049fe9a26b)
++++ b/src/main/Main.java	(date 1757577226002)
+@@ -2,13 +2,22 @@
+ 
+ import controller.ArduinoController;
+ import controller.arduinoSendData.LedData;
++import mastercontroler.Mastercontrol;
++import minigames.animalRun.Startbildschirm;
++
++import java.util.Random;
+ 
+ public class Main {
+ 
+     public static void main(String[] args) {
+         ArduinoController arduinoController = new ArduinoController();
+-        while (true) {
+-            arduinoController.sendeDaten(new LedData(20, 20, 20, true));
+-        }
++
++        LedData ledData1 = new LedData(255, 198, 207, true);
++        LedData ledData2 = new LedData(0, 0, 255, false);
++
++        arduinoController.sendeDaten(ledData1);
++        arduinoController.sendeDaten(ledData2);
++
++        Mastercontrol mastercontrol = new Mastercontrol();
+     }
+ }
+\ No newline at end of file
+Index: src/minigames/animalRun/Monkey.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalRun;\r\n\r\nimport common.ScalablePicture;\r\nimport controller.AbstractController;\r\nimport minigames.animalrun.Worldobject.WorldObject;\r\nimport org.slf4j.Logger;\r\nimport org.slf4j.LoggerFactory;\r\nimport sas.Circle;\r\nimport sas.Shapes;\r\nimport sas.View;\r\n\r\nimport javax.imageio.ImageIO;\r\nimport java.awt.*;\r\nimport java.awt.image.BufferedImage;\r\nimport java.io.File;\r\nimport java.io.IOException;\r\n\r\nimport static java.nio.file.Files.move;\r\n\r\npublic class Monkey extends Circle implements WorldObject {\r\n\r\n    private static final Logger log = LoggerFactory.getLogger(Monkey.class);\r\n    /* Static Variables */\r\n    protected static double MONKEY_MOVEMENT = 5.0;\r\n    protected static int baseLevelX = 0;\r\n\r\n    /* Object Variables */\r\n    private AbstractController controller;\r\n    public final ScalablePicture[] pictures1 = new ScalablePicture[4];\r\n    public int currentIndex1;\r\n    private boolean isMonkey1;\r\n    private boolean turnedLeft = true;\r\n    private View view;\r\n\r\n    /* Constructors */\r\n    public Monkey(double yp, double w, double h, AbstractController controller, boolean isMonkey1, View view) {\r\n        super(100, yp , 0.1);\r\n        this.controller = controller;\r\n        this.isMonkey1 = isMonkey1;\r\n        this.view = view;\r\n        this.currentIndex1 = 0;\r\n        setHidden(true);\r\n\r\n        if (isMonkey1) {\r\n            setupMonkey1();\r\n        }\r\n        else {\r\n            setupMonkey2();\r\n        }\r\n    }\r\n\r\n    public void setupMonkey1(){\r\n        for (int i = 1; i <= 4; i++){\r\n            ScalablePicture scalablePicture = new ScalablePicture(10, 200, 150, 150,\"resources/animalrun/monkey\" + (i) + \".png\");\r\n            scalablePicture.setHidden(true);\r\n\r\n            pictures1[i-1] = scalablePicture;\r\n        }\r\n    }\r\n\r\n    private void setupMonkey2(){\r\n        for (int i = 1; i <= 4; i++){\r\n            ScalablePicture scalablePicture = new ScalablePicture(10, 200, 150, 150,\"resources/animalrun/monkey\" + (i + 4) + \".png\");\r\n            scalablePicture.setHidden(true);\r\n\r\n            pictures1[i-1] = scalablePicture;\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public boolean intersects(Shapes shape) {\r\n        return pictures1[currentIndex1].intersects(shape);\r\n    }\r\n\r\n    /* Object Methods */\r\n    public void monkeyMove() {\r\n        if (isMonkey1) {\r\n            double joystickVal = controller.getJoystickRechtsX();\r\n            flip(joystickVal);\r\n        } else {\r\n            double joystickVal = controller.getJoystickLinksX();\r\n            flip(joystickVal);\r\n        }\r\n    }\r\n\r\n    private void flip(double joystickVal) {\r\n        if (joystickVal < 0) {\r\n            if (!turnedLeft) {\r\n                for (ScalablePicture scalablePicture : pictures1) {\r\n                    scalablePicture.flipHorizontal();\r\n                }\r\n                turnedLeft = true;\r\n            }\r\n        } else if (joystickVal > 0) {\r\n            if (turnedLeft) {\r\n                for (ScalablePicture scalablePicture : pictures1) {\r\n                    scalablePicture.flipHorizontal();\r\n                }\r\n                turnedLeft = false;\r\n            }\r\n        }\r\n\r\n        move(MONKEY_MOVEMENT * joystickVal);\r\n        for (int i = 0; i < 4; i++) {\r\n            pictures1[i].move(MONKEY_MOVEMENT * joystickVal * 6);\r\n        }\r\n    }\r\n\r\n    public void monkeyJump() {\r\n    if (isMonkey1) {\r\n            double velocity = 0;\r\n            if (controller.getRechtsA()) {\r\n                velocity = 200;\r\n                for (int i = 0; i < pictures1.length; i++) {\r\n                    pictures1[i].move(MONKEY_MOVEMENT * controller.getJoystickRechtsX() * 20, -velocity);\r\n                }\r\n                view.wait(200);\r\n                for (int i = 0; i < pictures1.length; i++) {\r\n                    pictures1[i].move(MONKEY_MOVEMENT * controller.getJoystickRechtsX() * 20, velocity);\r\n                }\r\n            }\r\n        } else {\r\n            double velocity = 0;\r\n        if (controller.getLinksA()) {\r\n            velocity = 200;\r\n            for (int i = 0; i < pictures1.length; i++) {\r\n                pictures1[i].move(MONKEY_MOVEMENT * controller.getJoystickLinksX() * 20, -velocity);\r\n            }\r\n            view.wait(200);\r\n            for (int i = 0; i < pictures1.length; i++) {\r\n                pictures1[i].move(MONKEY_MOVEMENT * controller.getJoystickLinksX() * 20, velocity);\r\n            }\r\n        }\r\n        }\r\n\r\n    }\r\n\r\n    @Override\r\n    public void doThings(int tick) {\r\n\r\n    }\r\n\r\n    @Override\r\n    public void updatePos() {\r\n\r\n    }\r\n\r\n    @Override\r\n    public boolean isSollit() {\r\n        return false;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalRun/Monkey.java b/src/minigames/animalRun/Monkey.java
+--- a/src/minigames/animalRun/Monkey.java	(revision 0dc235809ec6bcb96b20577eb57a7d049fe9a26b)
++++ b/src/minigames/animalRun/Monkey.java	(date 1757577226002)
+@@ -2,7 +2,7 @@
+ 
+ import common.ScalablePicture;
+ import controller.AbstractController;
+-import minigames.animalrun.Worldobject.WorldObject;
++import minigames.animalRun.Worldobject.WorldObject;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import sas.Circle;
+Index: src/minigames/animalrun/AnimalRun.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun;\r\n\r\nimport controller.AbstractController;\r\nimport minigames.AbstractGame;\r\nimport minigames.animalrun.Worldobject.Platform;\r\nimport minigames.animalrun.Worldobject.WorldObject;\r\nimport sas.Shapes;\r\nimport sas.View;\r\n\r\nimport java.util.Collections;\r\nimport java.util.HashSet;\r\nimport java.util.Set;\r\nimport java.util.stream.Collectors;\r\n\r\npublic class AnimalRun extends AbstractGame implements Runnable {\r\n    private static final int tickRate = 60;\r\n    private static final int WIDTH = 1000 / 2;\r\n    private static final int HEIGHT = 600 / 2;\r\n    private boolean gameRuns = true;\r\n    private int tick = 0;\r\n\r\n    private World currentWorld;\r\n\r\n    public AnimalRun(AbstractController controller, View view) {\r\n        super(controller, view);\r\n    }\r\n\r\n    @Override\r\n    protected void initView() {\r\n        view.setSize(WIDTH, HEIGHT);\r\n        view.setName(\"AnimalRun\");\r\n\r\n        new Startbildschirm(controller, view, WIDTH, HEIGHT);\r\n\r\n        currentWorld = new World(controller, view);\r\n    }\r\n\r\n    @Override\r\n    protected void runGame() {\r\n        new Thread(this).start();;\r\n    }\r\n\r\n    @Override\r\n    public void run() {\r\n\r\n\r\n        System.out.println(\"Welcome to AnimalRun\");\r\n\r\n        long milisPerCycle = 1000 / tickRate;\r\n        long timeStamp = System.currentTimeMillis();\r\n        long timeUntilNextCycle;\r\n\r\n        while (gameRuns) {\r\n            timeStamp = System.currentTimeMillis();\r\n            update();\r\n            timeUntilNextCycle = milisPerCycle - (System.currentTimeMillis() - timeStamp);\r\n            if (timeUntilNextCycle < 0) timeUntilNextCycle = 0;\r\n            try {\r\n                Thread.sleep(timeUntilNextCycle);\r\n                //view.wait(timeUntilNextCycle);\r\n            } catch (InterruptedException e) {\r\n                throw new RuntimeException(e);\r\n            }\r\n        }\r\n    }\r\n\r\n    private void update() {\r\n        currentWorld.update(tick);\r\n        tick++;\r\n    }\r\n\r\n    public static double getXKameraVersatz() {\r\n        return World.xKameraVersatz;\r\n    }\r\n\r\n    public static Set<WorldObject> getWorldObjects() {\r\n        return World.worldObjects;\r\n    }\r\n    public static void addToWorldObjects(WorldObject o) {\r\n        World.summoneNextRoundObjects.add(o);\r\n        //double d = new Platform(view, true).getShapeWidth();\r\n    }\r\n\r\n\r\n\r\n\r\n    private class World {\r\n        public static double xKameraVersatz = 0;\r\n        double xKameraSpeed = 1;\r\n\r\n        //Picture background = new Picture(0,0,WIDTH,HEIGHT,\"resources/animalrun/background_game.png\");\r\n\r\n        public static Set<WorldObject> worldObjects = new HashSet<WorldObject>();\r\n        public static Set<WorldObject> summoneNextRoundObjects = new HashSet<>();\r\n        // instanzen der playerklasse\r\n\r\n        public World(AbstractController controller, View view) {\r\n\r\n        }\r\n\r\n        void update(int tick) {\r\n            worldObjects.addAll(summoneNextRoundObjects);\r\n            shapesToRemove.addAll( summoneNextRoundObjects.stream()\r\n                    .filter(o -> o instanceof Shapes)\r\n                    .map(o -> (Shapes) o)\r\n                    .collect(Collectors.toSet()));;\r\n            xKameraVersatz += xKameraSpeed;\r\n\r\n            System.out.println(\"xKameraVersatz = \");\r\n\r\n            worldObjects.stream().forEach(w -> {\r\n                w.doThings(tick);\r\n                w.updatePos();\r\n            });\r\n\r\n            if (controller.getLinksB()) {\r\n                newWorldObjekt(new Platform(view,true));\r\n                view.wait(50);\r\n            }\r\n        }\r\n\r\n        void newWorldObjekt(Object o) {\r\n            if (o instanceof WorldObject)\r\n                worldObjects.add((WorldObject) o);\r\n            if (o instanceof Shapes) {\r\n                shapesToRemove.add((Shapes) o);\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/AnimalRun.java b/src/minigames/animalrun/AnimalRun.java
+--- a/src/minigames/animalrun/AnimalRun.java	(revision 0dc235809ec6bcb96b20577eb57a7d049fe9a26b)
++++ b/src/minigames/animalrun/AnimalRun.java	(date 1757577226002)
+@@ -1,38 +1,38 @@
+-package minigames.animalrun;
++package minigames.animalRun;
+ 
+ import controller.AbstractController;
++import controller.ArduinoController;
++import controller.TastaturController;
+ import minigames.AbstractGame;
+-import minigames.animalrun.Worldobject.Platform;
+-import minigames.animalrun.Worldobject.WorldObject;
++import minigames.animalRun.Worldobject.Platform;
++import minigames.animalRun.Worldobject.WorldObject;
+ import sas.Shapes;
+ import sas.View;
+ 
+-import java.util.Collections;
+ import java.util.HashSet;
+ import java.util.Set;
+ import java.util.stream.Collectors;
+ 
+ public class AnimalRun extends AbstractGame implements Runnable {
+     private static final int tickRate = 60;
+-    private static final int WIDTH = 1000 / 2;
+-    private static final int HEIGHT = 600 / 2;
++    private ArduinoController arduinoController;
+     private boolean gameRuns = true;
+     private int tick = 0;
+ 
+     private World currentWorld;
+ 
+-    public AnimalRun(AbstractController controller, View view) {
+-        super(controller, view);
++    public AnimalRun(ArduinoController arduinoController, TastaturController tastaturController, View view) {
++        super(tastaturController, view);
+     }
+ 
+     @Override
+     protected void initView() {
+-        view.setSize(WIDTH, HEIGHT);
+         view.setName("AnimalRun");
+ 
+-        new Startbildschirm(controller, view, WIDTH, HEIGHT);
+-
++        new Startbildschirm(controller, view);
+         currentWorld = new World(controller, view);
++
++        start();
+     }
+ 
+     @Override
+@@ -42,14 +42,19 @@
+ 
+     @Override
+     public void run() {
+-
+-
+         System.out.println("Welcome to AnimalRun");
+ 
++        Monkey monkey = new Monkey(600, 200, 200, controller, true, view);
++        Monkey monkey2 = new Monkey(400, 200, 200, controller, false, view);
++
++        AnimalRun.addToWorldObjects(monkey);
++        AnimalRun.addToWorldObjects(monkey2);
++
+         long milisPerCycle = 1000 / tickRate;
+         long timeStamp = System.currentTimeMillis();
+         long timeUntilNextCycle;
+ 
++        int i = 0;
+         while (gameRuns) {
+             timeStamp = System.currentTimeMillis();
+             update();
+@@ -57,6 +62,26 @@
+             if (timeUntilNextCycle < 0) timeUntilNextCycle = 0;
+             try {
+                 Thread.sleep(timeUntilNextCycle);
++
++                monkey.monkeyMove();
++                monkey2.monkeyMove();
++                monkey.monkeyJump();
++                monkey2.monkeyJump();
++                monkey.pictures1[i].setHidden(true);
++                monkey2.pictures1[i].setHidden(true);
++
++                i = i >= 4 - 1
++                        ? 0
++                        : i + 1;
++
++                monkey.pictures1[i].setHidden(false);
++                monkey.currentIndex1 = i;
++
++                monkey2.pictures1[i].setHidden(false);
++                monkey2.currentIndex1 = i;
++
++                view.wait(180);
++
+                 //view.wait(timeUntilNextCycle);
+             } catch (InterruptedException e) {
+                 throw new RuntimeException(e);
+@@ -81,9 +106,6 @@
+         //double d = new Platform(view, true).getShapeWidth();
+     }
+ 
+-
+-
+-
+     private class World {
+         public static double xKameraVersatz = 0;
+         double xKameraSpeed = 1;
+Index: src/minigames/animalrun/Worldobject/Fallen.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun.Worldobject;\r\n\r\nimport common.ScalablePicture;\r\nimport minigames.AbstractGame;\r\nimport sas.Rectangle;\r\n\r\npublic abstract class Fallen extends Rectangle {\r\n    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES +\"frogger/goblet.png\";\r\n\r\n    protected Fallen(double xPos, double yPos, double width, double height, String textur, sas.View view) {\r\n        super(xPos, yPos, width, height, textur);\r\n    }\r\n    //public Fallen(int x, int y) {\r\n    //    super(x, y, PATH_IMAGE);\r\n    //}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/Fallen.java b/src/minigames/animalrun/Worldobject/Fallen.java
+--- a/src/minigames/animalrun/Worldobject/Fallen.java	(revision 0dc235809ec6bcb96b20577eb57a7d049fe9a26b)
++++ b/src/minigames/animalrun/Worldobject/Fallen.java	(date 1757577226002)
+@@ -1,4 +1,4 @@
+-package minigames.animalrun.Worldobject;
++package minigames.animalRun.Worldobject;
+ 
+ import common.ScalablePicture;
+ import minigames.AbstractGame;
+Index: src/minigames/animalrun/Worldobject/WorldObject.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun.Worldobject;\r\n\r\nimport sas.Shapes;\r\nimport sas.View;\r\n\r\nimport java.util.Vector;\r\n\r\npublic interface WorldObject /*extends Shapes*/ {\r\n\r\n    //double xKameraVersatz;\r\n    //protected View view;\r\n\r\n //   protected WorldObject(double xPos, double yPos, double width, double height, String textur, View view) {\r\n //       super(xPos, yPos, width, height, textur);\r\n  //      this.view = view;\r\n //   }\r\n\r\n    public void doThings(int tick);\r\n\r\n    public void updatePos();\r\n\r\n    /* true wenn man darauf laufen kann */\r\n    public boolean isSollit();\r\n\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/WorldObject.java b/src/minigames/animalrun/Worldobject/WorldObject.java
+--- a/src/minigames/animalrun/Worldobject/WorldObject.java	(revision 0dc235809ec6bcb96b20577eb57a7d049fe9a26b)
++++ b/src/minigames/animalrun/Worldobject/WorldObject.java	(date 1757577226002)
+@@ -1,4 +1,4 @@
+-package minigames.animalrun.Worldobject;
++package minigames.animalRun.Worldobject;
+ 
+ import sas.Shapes;
+ import sas.View;
+Index: src/main/TestNico.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main;\r\n\r\nimport controller.AbstractController;\r\nimport controller.TastaturController;\r\nimport minigames.animalrun.Startbildschirm;\r\nimport sas.Shapes;\r\nimport sas.View;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class TestNico {\r\n\r\n\r\n\r\n    public static void main(String[] args) {\r\n        View view = new View(500, 300);\r\n        AbstractController controller = new TastaturController(view);\r\n        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);\r\n\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/TestNico.java b/src/main/TestNico.java
+--- a/src/main/TestNico.java	(revision 0dc235809ec6bcb96b20577eb57a7d049fe9a26b)
++++ b/src/main/TestNico.java	(date 1757577226002)
+@@ -2,20 +2,17 @@
+ 
+ import controller.AbstractController;
+ import controller.TastaturController;
+-import minigames.animalrun.Startbildschirm;
+-import sas.Shapes;
++import minigames.animalRun.Startbildschirm;
+ import sas.View;
+ 
+-import java.util.ArrayList;
+-
+ public class TestNico {
+ 
+ 
+ 
+     public static void main(String[] args) {
+-        View view = new View(500, 300);
++        View view = new View(1920, 1080);
+         AbstractController controller = new TastaturController(view);
+-        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);
++        //Startbildschirm test = new Startbildschirm(controller, view, 1920, 1080);
+ 
+     }
+ }
+Index: src/minigames/animalrun/Startbildschirm.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun;\r\n\r\nimport minigames.AbstractGame;\r\nimport sas.*;\r\nimport common.ScalablePicture;\r\nimport controller.AbstractController;\r\nimport java.util.ArrayList;\r\n\r\n\r\npublic class Startbildschirm {\r\n\r\n\r\n\r\n\r\n    public Startbildschirm(AbstractController controller, View view, int viewWidth, int viewHeight) {\r\n\r\n        view.setSize(viewWidth, viewHeight);\r\n        view.setName(\"Startbildschirm Animalrun\");\r\n//test\r\n        ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), \"resources/animalrun/background.png\");\r\n        ScalablePicture pressA_button = new ScalablePicture(0, 0, \"resources/animalrun/pressA_button.png\");\r\n        ScalablePicture headline = new ScalablePicture(0, 0, \"resources/animalrun/headline.png\");\r\n\r\n        pressA_button.scaleTo(view.getHeight() / 8 * 3);\r\n        headline.scaleTo(view.getHeight() / 8 * 5);\r\n\r\n        pressA_button.moveTo(view.getWidth() / 2 - (pressA_button.getShapeWidth() / 2), view.getHeight() / 2);\r\n        headline.moveTo(view.getWidth() / 2 - (headline.getShapeWidth() / 2), 0);\r\n\r\n\r\n        // hier auf button warten\r\n        while(!controller.getLinksA()) {\r\n            view.wait(10);\r\n        }\r\n\r\n        background.setHidden(true);\r\n        pressA_button.setHidden(true);\r\n        headline.setHidden(true);\r\n\r\n        view.remove(background);\r\n        view.remove(pressA_button);\r\n        view.remove(headline);\r\n\r\n    }\r\n\r\n    // TODO: Das muss hier weg und ins Game.\r\n    private void moveBackground(double offsetX) {\r\n\r\n        ScalablePicture[] backgrounds = new ScalablePicture[4];// TODO: Das hier richtig machen.\r\n        for (int j = 0; j < backgrounds.length; j++) { // Gehe durch alle Bodenelemente durch ...\r\n            backgrounds[j].move(-offsetX, 0); // ... und bewege das jeweils aktuelle Element nach links.\r\n            if (backgrounds[j].getShapeX() + backgrounds[j].getShapeWidth() < 0) { // Sind wir links über den Rand hinaus?\r\n                System.out.println(\"moving \" + j);\r\n                int prevIndex = j <= 0 ? backgrounds.length - 1 : j - 1; // bestimme den Index des vorherigen Bodenelements\r\n                backgrounds[j].moveTo(backgrounds[prevIndex].getShapeX() + backgrounds[prevIndex].getShapeWidth(), backgrounds[j].getShapeY()); // \"teleportiere\" das ELement hinter seinen Vorgänger, sprich: ganz nach rechts\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Startbildschirm.java b/src/minigames/animalrun/Startbildschirm.java
+--- a/src/minigames/animalrun/Startbildschirm.java	(revision 0dc235809ec6bcb96b20577eb57a7d049fe9a26b)
++++ b/src/minigames/animalrun/Startbildschirm.java	(date 1757577226002)
+@@ -1,46 +1,32 @@
+-package minigames.animalrun;
++package minigames.animalRun;
+ 
+-import minigames.AbstractGame;
+ import sas.*;
+ import common.ScalablePicture;
+ import controller.AbstractController;
+-import java.util.ArrayList;
+-
+ 
+ public class Startbildschirm {
+-
+-
+-
++    public Startbildschirm(AbstractController controller, View view) {
++        int viewHeight = view.getHeight();
++        int viewWidth = view.getWidth();
+ 
+-    public Startbildschirm(AbstractController controller, View view, int viewWidth, int viewHeight) {
+-
+-        view.setSize(viewWidth, viewHeight);
+-        view.setName("Startbildschirm Animalrun");
+-//test
+-        ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), "resources/animalrun/background.png");
++        ScalablePicture background = new ScalablePicture(0, 0, viewWidth, viewHeight, "resources/animalrun/background.png");
+         ScalablePicture pressA_button = new ScalablePicture(0, 0, "resources/animalrun/pressA_button.png");
+         ScalablePicture headline = new ScalablePicture(0, 0, "resources/animalrun/headline.png");
+ 
+-        pressA_button.scaleTo(view.getHeight() / 8 * 3);
+-        headline.scaleTo(view.getHeight() / 8 * 5);
++        pressA_button.scaleTo((double) viewHeight / 8 * 3);
++        headline.scaleTo((double) viewHeight / 8 * 5);
+ 
+-        pressA_button.moveTo(view.getWidth() / 2 - (pressA_button.getShapeWidth() / 2), view.getHeight() / 2);
+-        headline.moveTo(view.getWidth() / 2 - (headline.getShapeWidth() / 2), 0);
++        pressA_button.moveTo((double) viewWidth / 2 - (pressA_button.getShapeWidth() / 2), (double) viewHeight / 2);
++        headline.moveTo((double) viewWidth / 2 - (headline.getShapeWidth() / 2), 0);
+ 
+ 
+-        // hier auf button warten
+         while(!controller.getLinksA()) {
+             view.wait(10);
+         }
+ 
+-        background.setHidden(true);
+-        pressA_button.setHidden(true);
+-        headline.setHidden(true);
+-
+         view.remove(background);
+         view.remove(pressA_button);
+         view.remove(headline);
+-
+     }
+ 
+     // TODO: Das muss hier weg und ins Game.

@@ -1,0 +1,116 @@
+Index: src/controller/ArduinoController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\nimport controller.arduinoReceiveData.EmpfangendeDaten;\r\nimport jssc.SerialPort;\r\nimport jssc.SerialPortEvent;\r\nimport jssc.SerialPortEventListener;\r\nimport jssc.SerialPortException;\r\nimport com.google.gson.Gson;\r\n\r\npublic class ArduinoController extends AbstractController implements SerialPortEventListener {\r\n\r\n    /* Static Variables */\r\n\r\n    /* Static Methods */\r\n\r\n    /* Object Variables */\r\n    private SerialPort serialPort;\r\n    private final StringBuilder buffer = new StringBuilder();\r\n    private  EmpfangendeDaten empfangendeDaten;\r\n\r\n\r\n    /* Constructors */\r\n    public ArduinoController() {\r\n        initSerialPort();\r\n    }\r\n\r\n    /* Object Methods */\r\n    @Override\r\n    public void disconnect() {\r\n        try {\r\n            serialPort.closePort();\r\n        } catch (SerialPortException e) {\r\n            System.err.println(e);\r\n        }\r\n    }\r\n\r\n    public void serialEvent(SerialPortEvent e) {\r\n        try {\r\n            String incoming = serialPort.readString();\r\n            if (incoming != null) {\r\n                buffer.append(incoming);\r\n\r\n                int newLineIndex;\r\n                while ((newLineIndex = buffer.indexOf(\"\\n\")) != -1) {\r\n                    String line = buffer.substring(0, newLineIndex).trim();\r\n                    buffer.delete(0, newLineIndex +1);\r\n\r\n                    if (!line.isEmpty())\r\n                    {\r\n                        werteDatenAus(line);\r\n                    }\r\n                }\r\n            }\r\n        } catch (SerialPortException ex) {\r\n            System.out.println(ex);\r\n        }\r\n\r\n    }\r\n\r\n    @Override\r\n    protected void werteDatenAus(String json) {\r\n        System.out.println(\"data: \" + json);\r\n\r\n        try\r\n        {\r\n            Gson gson = new Gson();\r\n            empfangendeDaten =  gson.fromJson(json, EmpfangendeDaten.class);\r\n        }\r\n        catch (Exception ex) {System.out.println(\"FEHLER: \" + json);}\r\n    }\r\n\r\n    private void initSerialPort() {\r\n        boolean funktioniert = false;\r\n        for (int i = 21; i > 1 && !funktioniert; i--) {\r\n            funktioniert = true;\r\n            try {\r\n                serialPort = new SerialPort(\"COM\" + i);\r\n                serialPort.openPort();\r\n                serialPort.setParams(9600, 8, 1, 0);\r\n                serialPort.addEventListener(this);\r\n            } catch (SerialPortException ex) {\r\n                funktioniert = false;\r\n            }\r\n        }\r\n    }\r\n\r\n    /* Getters and Setters */\r\n    @Override\r\n    public double getJoystickLinksX() {\r\n        return (empfangendeDaten.links.X - 512) / 512 ;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickLinksY() {\r\n        return (empfangendeDaten.links.Y - 512) / 512 ;\r\n    }\r\n    @Override\r\n    public double getJoystickRechtsX() {\r\n        return (empfangendeDaten.rechts.X - 512) / 512 ;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickRechtsY() {\r\n        return (empfangendeDaten.rechts.Y - 512) / 512 ;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksA() {\r\n        return empfangendeDaten.links.A == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksB() {\r\n        return empfangendeDaten.links.B == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksC() {\r\n        return empfangendeDaten.links.C == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksD() {\r\n        return empfangendeDaten.links.D == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsA() {\r\n        return empfangendeDaten.rechts.A == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsB() {\r\n        return empfangendeDaten.rechts.B == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsC() {\r\n        return empfangendeDaten.rechts.C == 1;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsD() {\r\n        return empfangendeDaten.rechts.D == 1;\r\n    }\r\n    /* Inner Classes */\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/ArduinoController.java b/src/controller/ArduinoController.java
+--- a/src/controller/ArduinoController.java	(revision e283ac0456914692a22d02f3b6b7472593d3d9e9)
++++ b/src/controller/ArduinoController.java	(date 1757433157044)
+@@ -16,8 +16,7 @@
+     /* Object Variables */
+     private SerialPort serialPort;
+     private final StringBuilder buffer = new StringBuilder();
+-    private  EmpfangendeDaten empfangendeDaten;
+-
++    private EmpfangendeDaten empfangendeDaten = new EmpfangendeDaten();
+ 
+     /* Constructors */
+     public ArduinoController() {
+@@ -40,13 +39,12 @@
+             if (incoming != null) {
+                 buffer.append(incoming);
+ 
+-                int newLineIndex;
+-                while ((newLineIndex = buffer.indexOf("\n")) != -1) {
+-                    String line = buffer.substring(0, newLineIndex).trim();
+-                    buffer.delete(0, newLineIndex +1);
++                int newlineIndex;
++                while ((newlineIndex = buffer.indexOf("\n")) != -1) {
++                    String line = buffer.substring(0, newlineIndex).trim();
++                    buffer.delete(0, newlineIndex + 1);
+ 
+-                    if (!line.isEmpty())
+-                    {
++                    if (!line.isEmpty()) {
+                         werteDatenAus(line);
+                     }
+                 }
+@@ -54,7 +52,6 @@
+         } catch (SerialPortException ex) {
+             System.out.println(ex);
+         }
+-
+     }
+ 
+     @Override
+@@ -64,9 +61,13 @@
+         try
+         {
+             Gson gson = new Gson();
+-            empfangendeDaten =  gson.fromJson(json, EmpfangendeDaten.class);
++            empfangendeDaten = gson.fromJson(json, EmpfangendeDaten.class);
++            System.out.println("JOYSTICK: " + getJoystickLinksX());
+         }
+-        catch (Exception ex) {System.out.println("FEHLER: " + json);}
++        catch (Exception ex)
++        {
++            System.out.println("FEHLER: " + json);
++        }
+     }
+ 
+     private void initSerialPort() {
+@@ -87,21 +88,22 @@
+     /* Getters and Setters */
+     @Override
+     public double getJoystickLinksX() {
+-        return (empfangendeDaten.links.X - 512) / 512 ;
++        return (empfangendeDaten.links.X - 512) / 512;
+     }
+ 
+     @Override
+     public double getJoystickLinksY() {
+-        return (empfangendeDaten.links.Y - 512) / 512 ;
++        return (empfangendeDaten.links.Y - 512) / 512;
+     }
++
+     @Override
+     public double getJoystickRechtsX() {
+-        return (empfangendeDaten.rechts.X - 512) / 512 ;
++        return (empfangendeDaten.rechts.X - 512) / 512;
+     }
+ 
+     @Override
+     public double getJoystickRechtsY() {
+-        return (empfangendeDaten.rechts.Y - 512) / 512 ;
++        return (empfangendeDaten.rechts.Y - 512) / 512;
+     }
+ 
+     @Override
+@@ -143,6 +145,7 @@
+     public boolean getRechtsD() {
+         return empfangendeDaten.rechts.D == 1;
+     }
++
+     /* Inner Classes */
+ 
+ }
+Index: src/main/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main;\r\n\r\nimport controller.AbstractController;\r\nimport controller.ArduinoController;\r\nimport controller.TastaturController;\r\nimport demo_and_test.SaSDemo;\r\nimport minigames.AbstractGame;\r\nimport minigames.frogger.FroggerGame;\r\nimport sas.View;\r\n\r\npublic class Main {\r\n\r\n    public static void main(String[] args) {\r\n\r\n        // eine ganz simple Demo für SaS\r\n  //      SaSDemo demo = new SaSDemo();\r\n  //      demo.demo1();\r\n  //     demo.demo2();\r\n\r\n        // ein einfaches Spiel in SaS\r\n        //View view = new View(800, 600, \"SMIMS\");\r\n        //AbstractController controller = new TastaturController(view);\r\n        //AbstractGame game = new FroggerGame(controller, view);\r\n        //game.start();\r\n\r\n        ArduinoController arduinoController = new ArduinoController();\r\n\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/Main.java b/src/main/Main.java
+--- a/src/main/Main.java	(revision e283ac0456914692a22d02f3b6b7472593d3d9e9)
++++ b/src/main/Main.java	(date 1757432765110)
+@@ -24,6 +24,5 @@
+         //game.start();
+ 
+         ArduinoController arduinoController = new ArduinoController();
+-
+     }
+ }
+\ No newline at end of file
