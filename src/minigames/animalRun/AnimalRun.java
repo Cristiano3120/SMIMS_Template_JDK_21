@@ -2,12 +2,18 @@ package minigames.animalRun;
 
 import controller.AbstractController;
 import minigames.AbstractGame;
+import minigames.animalRun.Worldobject.Background;
 import minigames.animalRun.Worldobject.Platform;
 import minigames.animalRun.Worldobject.WorldObject;
 import sas.Picture;
 import sas.Shapes;
 import sas.View;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,7 +21,7 @@ import java.util.stream.Collectors;
 public class AnimalRun extends AbstractGame implements Runnable {
     private static final int tickRate = 100;
     private static final int WIDTH = 1000 ;
-    private static final int HEIGHT = 600 ;
+    private static final int HEIGHT = 600  ;
     private boolean gameRuns = true;
     private int tick = 0;
 
@@ -54,7 +60,10 @@ public class AnimalRun extends AbstractGame implements Runnable {
             timeStamp = System.currentTimeMillis();
             update();
             timeUntilNextCycle = milisPerCycle - (System.currentTimeMillis() - timeStamp);
-            if (timeUntilNextCycle < 0) timeUntilNextCycle = 0;
+            if (timeUntilNextCycle < 0){
+                System.out.println("AnimalRun: " + timeUntilNextCycle);
+                timeUntilNextCycle = 0;
+            }
             try {
                 Thread.sleep(timeUntilNextCycle);
                 //view.wait(timeUntilNextCycle);
@@ -81,26 +90,30 @@ public class AnimalRun extends AbstractGame implements Runnable {
         //double d = new Platform(view, true).getShapeWidth();
     }
 
-    public void Background(){
 
-    }
 
 
     private class World {
         public static double xKameraVersatz = 0;
         double xKameraSpeed = view.getWidth()* 0.003;
 
-        Picture background = new Picture(0,0,WIDTH,HEIGHT,"resources/animalrun/background_game.png");
+        Background background = new Background(0,0,WIDTH,HEIGHT);
 
+        BufferedImage hintergrundImage;
         public static Set<WorldObject> worldObjects = new HashSet<WorldObject>();
         public static Set<WorldObject> summoneNextRoundObjects = new HashSet<>();
         // instanzen der playerklasse
 
         public World(AbstractController controller, View view) {
-
+            //new Picture(0,-50,view.getWidth(),view.getHeight(),"resources/animalrun/animalRunBackgroundSchmal.png");
         }
 
+
+
+
+
         void update(int tick) {
+            background.moveBackground(tick);
             worldObjects.stream()
                     .filter(o -> o.getDeleatMe())
                     .collect(Collectors.toCollection(HashSet::new))
@@ -120,7 +133,7 @@ public class AnimalRun extends AbstractGame implements Runnable {
 //            System.out.println("xKameraVersatz = ");
 
             worldObjects.stream().forEach(w -> {
-                w.doThings(tick);
+                //w.doThings(tick);
                 w.updatePos();
             });
 

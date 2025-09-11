@@ -143,7 +143,7 @@ public class Platform extends Picture implements WorldObject {
     }
 
     protected void setPosition() {
-
+        if(true) return;
         moveTo(pos.x - AnimalRun.getXKameraVersatz(), pos.y);
 //        System.out.println("Platform: TestTTTTTT" + pos.x + " " + getXPosition());
         //rectTest.moveTo(pos.x - AnimalRun.getXKameraVersatz(), getYPosition());
@@ -154,6 +154,7 @@ public class Platform extends Picture implements WorldObject {
 
 
     public void setImage(BufferedImage bImage) {
+
         BufferedImage sizedImage = new BufferedImage((int) (getShapeWidth()*1.5), (int) (getShapeHeight()*1.5), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = (Graphics2D) sizedImage.getGraphics();
        // Image image = bImage.getScaledInstance((int) (getShapeWidth()*1.5), (int) (getShapeHeight()*1.5), Image.SCALE_SMOOTH);
