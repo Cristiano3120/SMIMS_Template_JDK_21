@@ -7,9 +7,11 @@ import minigames.animalRun.AnimalRun;
 import minigames.animalRun.Monkey;
 import sas.View;
 
+import java.util.ArrayList;
+
 public class Mastercontrol {
-    private static final int WIDTH = 600;
-    private static final int HEIGHT = 400;
+    private static final int WIDTH = 1920;
+    private static final int HEIGHT = 1080;
 
     protected AbstractController controller;
     protected View view;
@@ -28,23 +30,22 @@ public class Mastercontrol {
         AnimalRun.addToWorldObjects(monkey);
         AnimalRun.addToWorldObjects(monkey2);
 
-//        System.out.println("test0");
         loop(monkey, monkey2, view);
+
     }
 
     private void loop(Monkey monkey, Monkey monkey2, View view) {
-//        System.out.println("test1");
+
         monkey.pictures1[0].setHidden(true);
         monkey2.pictures1[0].setHidden(true);
 
         int i = 0;
         while (true) {
-//            System.out.println("test2");
             monkey.monkeyMove();
             monkey2.monkeyMove();
             monkey.monkeyJump();
             monkey2.monkeyJump();
-//            System.out.println("test3");
+
             monkey.pictures1[i].setHidden(true);
             monkey2.pictures1[i].setHidden(true);
 
@@ -59,9 +60,6 @@ public class Mastercontrol {
             monkey2.currentIndex1 = i;
 
             view.wait(180);
-
-//            System.out.println("test");
         }
     }
-
 }
