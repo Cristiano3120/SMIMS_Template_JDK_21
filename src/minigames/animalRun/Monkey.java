@@ -150,17 +150,17 @@ public class Monkey extends Circle implements WorldObject {
                     pictures1[i].moveTo(jumpPicture.getCenterX(), jumpPicture.getCenterY() - 147.85);
                 }
 
-                System.out.println(pictures1[0].getCenterY());
             }
         } else {
             double velocity = 0;
 
             if (controller.getLinksA()) {
-                jumpPicture.moveTo(pictures1[currentIndex1].getShapeX(), pictures1[currentIndex1].getShapeY());
+                jumpPicture.moveTo(pictures1[currentIndex1].getCenterX(), pictures1[currentIndex1].getCenterY() );
                 pictures1[currentIndex1].setHidden(true);
                 jumpPicture.setHidden(false);
 
                 velocity = 250;
+                jumpFlip();
                 jumpPicture.move(MONKEY_MOVEMENT * controller.getJoystickLinksX() * 10, -velocity);
 
 
@@ -183,7 +183,7 @@ public class Monkey extends Circle implements WorldObject {
                 jumpPicture.setHidden(true);
                 pictures1[currentIndex1].setHidden(false);
                 for(int i = 0; i < pictures1.length; i++) {
-                    pictures1[i].moveTo(jumpPicture.getCenterX(), jumpPicture.getCenterY()-200);
+                    pictures1[i].moveTo(jumpPicture.getCenterX(), jumpPicture.getCenterY()-99.5);
                 }
             }
 
@@ -199,5 +199,20 @@ public class Monkey extends Circle implements WorldObject {
                 jumpPicture.flipHorizontal();
                 jumpTurnedLeft = true;
         }
+    }
+
+    @Override
+    public void doThings(int tick) {
+
+    }
+
+    @Override
+    public void updatePos() {
+
+    }
+
+    @Override
+    public boolean isSollit() {
+        return false;
     }
 }

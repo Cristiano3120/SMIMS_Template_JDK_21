@@ -130,4 +130,8 @@ public class AnimalRun extends AbstractGame implements Runnable {
 //            }
 //        }
     }
+
+    public void fallen(){
+
+    }
 }

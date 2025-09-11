@@ -30,7 +30,6 @@ public class Mastercontrol {
         AnimalRun.addToWorldObjects(monkey);
         AnimalRun.addToWorldObjects(monkey2);
 
-//        System.out.println("test0");
         loop(monkey, monkey2, view);
 
     }
