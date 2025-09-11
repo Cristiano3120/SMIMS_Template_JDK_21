@@ -1,5 +1,6 @@
 package minigames.animalRun;
 
+import common.Util;
 import controller.AbstractController;
 import controller.ArduinoController;
 import minigames.AbstractGame;
@@ -26,6 +27,7 @@ public class AnimalRun extends AbstractGame {
     private Monkey[] monkeys;
     private Set<WorldObject> worldObjects;
     private Set<WorldObject> summonNextRoundObjects;
+    private int tick;
 
     public AnimalRun(AbstractController controller, View view) {
         super(controller, view);
@@ -40,6 +42,7 @@ public class AnimalRun extends AbstractGame {
 
     @Override
     protected void runGame() {
+
 
         monkeys = new Monkey[2];
         try {
@@ -57,11 +60,23 @@ public class AnimalRun extends AbstractGame {
         long timeStamp = System.currentTimeMillis();
         long timeUntilNextCycle;
 
+        //summonNextRoundObjects.add(new Platform(view,true));
+
         while (gameRuns) {
 
             // Setze Zeitstempel (alias "starte Stoppuhr"), lasse alle Objekte ihre Aktionen durchführen und
             // warte anschließend den Tick ab.
             timeStamp = System.currentTimeMillis();
+            //MonkeyCollision
+            for (Monkey monkey : monkeys) {
+                boolean collision =
+                    worldObjects.stream()
+                        .filter(o -> o instanceof Platform)
+                        .map(p -> (Platform) p)
+                        .filter(p -> Util.getRectengle2DFrom(p).intersects(Util.getRectengle2DFrom(monkey)))
+                        .anyMatch(p -> p.getShapeY() > monkey.getShapeY()+monkey.getShapeHeight());
+                if(collision) monkey.signalCollision();
+            }
 
             // Füge eventuelle Objekte, die diesen Tick im set stehen, der Welt hinzu.
             worldObjects.addAll(summonNextRoundObjects);
@@ -76,13 +91,16 @@ public class AnimalRun extends AbstractGame {
                 w.updatePos();
             });
 
+            if(tick % 200 == 0)
+                summonNextRoundObjects.add(new Platform(view,false));
+
             checkPlatformCollision();
 
             timeUntilNextCycle = milisPerCycle - (System.currentTimeMillis() - timeStamp);
             if (timeUntilNextCycle < 0) timeUntilNextCycle = 0;
 
             view.wait((int) timeUntilNextCycle);
-
+            tick++;
         }
     }
 

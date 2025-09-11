@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 
 public class Platform extends Picture implements WorldObject {
 
-    public static final double PLATFORM_SPEED = 10.0;
+    public static final double PLATFORM_SPEED = 3.0;
 
     //Test
     private boolean summonNext;
@@ -47,12 +47,15 @@ public class Platform extends Picture implements WorldObject {
         nextPlatformZone.setTransparency(0F);
         setPosition();
 
+        System.out.println("Platform created");
+
     }
 
 
     @Override
     public void doThings() {
-        // TODO
+        pos.x -= PLATFORM_SPEED;
+        System.out.println("Platform moved" + pos.x);
     }
 
     public void updatePos() {
@@ -66,7 +69,7 @@ public class Platform extends Picture implements WorldObject {
 
     protected void setPosition() {
 
-        moveTo(pos.x - PLATFORM_SPEED, pos.y);
+        moveTo(pos.x, pos.y);
 //        System.out.println("Platform: TestTTTTTT" + pos.x + " " + getXPosition());
         //rectTest.moveTo(pos.x - AnimalRun.getXKameraVersatz(), getYPosition());
         rectTest.moveTo(pos.x - PLATFORM_SPEED, getShapeY());
@@ -76,10 +79,10 @@ public class Platform extends Picture implements WorldObject {
 
 
     public void setImage(BufferedImage bImage) {
-        BufferedImage sizedImage = new BufferedImage((int) getWidth(), (int) getHeight(), BufferedImage.TYPE_INT_RGB);
+        BufferedImage sizedImage = new BufferedImage((int) getShapeWidth(), (int) getShapeHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics2D g2 = (Graphics2D) sizedImage.getGraphics();
-        Image image = bImage.getScaledInstance((int) getWidth(), (int) getHeight(), Image.SCALE_SMOOTH);
-        g2.drawImage(bImage, 0, 0, (int) getWidth(), (int) getHeight(), null);
+        Image image = bImage.getScaledInstance((int) getShapeWidth(), (int) getShapeHeight(), Image.SCALE_SMOOTH);
+        g2.drawImage(bImage, 0, 0, (int) getShapeWidth(), (int) getShapeHeight(), null);
         g2.dispose();
         super.setImage(sizedImage);
     }

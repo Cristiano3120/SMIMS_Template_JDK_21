@@ -17,7 +17,7 @@ public class BLasdatest {
 
         Monkey monkey1 = new Monkey(50, 200, controller, true);
         Monkey monkey2 = new Monkey(50, 200, controller, false);
-        for (int i = 0; i < 200; i++) {
+        while(true){
 
             monkey1.doThings();
             monkey2.doThings();

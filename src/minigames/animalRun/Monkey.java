@@ -186,7 +186,7 @@ public class Monkey extends Circle implements WorldObject {
         currentMovement = new FunktionAufBoden();
     }
 
-    public void signaleCollision() {
+    public void signalCollision() {
         currentMovement = new FunktionSprung(true);
     }
 
