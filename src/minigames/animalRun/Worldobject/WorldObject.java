@@ -1,10 +1,5 @@
 package minigames.animalRun.Worldobject;
 
-import sas.Shapes;
-import sas.View;
-
-import java.util.Vector;
-
 public interface WorldObject /*extends Shapes*/ {
 
     //double xKameraVersatz;
