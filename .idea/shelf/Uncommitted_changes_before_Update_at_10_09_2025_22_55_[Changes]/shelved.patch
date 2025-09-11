@@ -1,0 +1,399 @@
+Index: src/minigames/animalrun/Worldobject/Platform.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun.Worldobject;\r\n\r\nimport minigames.animalrun.AnimalRun;\r\nimport sas.Picture;\r\nimport sas.Rectangle;\r\nimport sas.View;\r\n\r\nimport java.awt.*;\r\nimport java.awt.geom.Point2D;\r\nimport java.awt.image.BufferedImage;\r\n\r\npublic class Platform extends Picture implements WorldObject {\r\n\r\n    //Test\r\n    private boolean summonNext;\r\n    Point2D.Double pos;\r\n    Rectangle rectTest;\r\n    Rectangle blockedZone;\r\n    Rectangle nextPlatformZone;\r\n    double xKameraVrsatz = 0;\r\n    View view;\r\n\r\n    public Platform(View view, boolean summonNext) {\r\n        //super(220, 100, 200, 200, \"resources/animalrun/platforms/testInsel.png\");\r\n        super(220, 100, 200, 200, \"resources/animalrun/platforms/InselTest2.png\");\r\n        this.summonNext = summonNext;\r\n        this.view = view;\r\n\r\n        pos = new Point2D.Double();\r\n        pos.x = view.getWidth() + AnimalRun.getXKameraVersatz();\r\n        pos.y = Math.random() * view.getHeight();\r\n\r\n        scaleTo(view.getWidth() * 0.3, view.getHeight() * 0.1);\r\n        System.out.println((view.getWidth() * 0.3) + \" / \" + view.getHeight() * 0.1 + \" -> \" + getShapeWidth() + \" \" + getShapeHeight());\r\n\r\n        //setImage(ImageIO.read(new File(\"resources/animalrun/platforms/testInsel.png\")));\r\n//        setImage(getImage());\r\n\r\n        rectTest = new Rectangle(getShapeX(), getShapeY(), getShapeWidth(), getShapeHeight(), Color.red);\r\n        rectTest.setTransparency(0.5F);\r\n\r\n        blockedZone = new Rectangle(0, 0, getShapeWidth(), getShapeHeight()*5, Color.blue);\r\n        blockedZone.setTransparency(0.5F);\r\n\r\n        nextPlatformZone = new Rectangle(0, 0, getShapeWidth() + view.getWidth()*0.3, getShapeHeight()*5, Color.yellow);\r\n        nextPlatformZone.setTransparency(0.5F);\r\n        setPosition();\r\n        System.out.println(\"Platform: Test\");\r\n\r\n\r\n    }\r\n\r\n    private Platform(double xPos, double yPos, double width, double height, String textur, View view) {\r\n        super(xPos, yPos, width, height, textur);\r\n\r\n    }\r\n\r\n\r\n    public void doThings(int tick) {\r\n        System.out.println(\"Platform: doThings \" + (getCenterX()));\r\n        System.out.println(\"Test------ \" + (getShapeX()+getShapeWidth() - AnimalRun.getXKameraVersatz())+ \" \" + getShapeWidth() + \" \" + view.getWidth());\r\n        if(summonNext && getShapeX()+getShapeWidth() - AnimalRun.getXKameraVersatz() + 250 < view.getWidth()) summonNext();\r\n    }\r\n\r\n    void summonNext() {\r\n        summonNext = false;\r\n        Platform p = null;\r\n        do{\r\n            if(p != null) view.remove(p);\r\n            p = new Platform(view,true);\r\n            view.remove(p);\r\n        } while (p.intersects(nextPlatformZone));\r\n\r\n        AnimalRun.addToWorldObjects(p);\r\n    }\r\n\r\n    public void updatePos() {\r\n        setPosition();\r\n    }\r\n\r\n    public boolean isSollit() {\r\n        return false;\r\n    }\r\n\r\n\r\n    protected void setPosition() {\r\n\r\n        moveTo(pos.x - AnimalRun.getXKameraVersatz(), pos.y);\r\n        System.out.println(\"Platform: TestTTTTTT\" + pos.x + \" \" + getXPosition());\r\n        //rectTest.moveTo(pos.x - AnimalRun.getXKameraVersatz(), getYPosition());\r\n        rectTest.moveTo(pos.x - AnimalRun.getXKameraVersatz(), getShapeY());\r\n        moveToByCenter (blockedZone, getCenterX(), getCenterY());\r\n        moveToByCenter (nextPlatformZone, getCenterX(), getCenterY());\r\n    }\r\n\r\n    @Override\r\n    public void setView(View view) {\r\n\r\n    }\r\n\r\n    @Override\r\n    public void setXKameraVersatz(double versatz) {\r\n\r\n    }\r\n\r\n    public void setImage(BufferedImage bImage) {\r\n        BufferedImage sizedImage = new BufferedImage((int) getWidth(), (int) getHeight(), BufferedImage.TYPE_INT_RGB);\r\n        Graphics2D g2 = (Graphics2D) sizedImage.getGraphics();\r\n        Image image = bImage.getScaledInstance((int) getWidth(), (int) getHeight(), Image.SCALE_SMOOTH);\r\n        g2.drawImage(bImage, 0, 0, (int) getWidth(), (int) getHeight(), null);\r\n        g2.dispose();\r\n        super.setImage(sizedImage);\r\n    }\r\n\r\n    void moveToByCenter(Rectangle r, double x, double y) {\r\n        r.moveTo(x - r.getShapeWidth()/2, y - r.getShapeHeight()/2);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/Platform.java b/src/minigames/animalrun/Worldobject/Platform.java
+--- a/src/minigames/animalrun/Worldobject/Platform.java	(revision d330c02732089d702aa4bec5ab292cccb89a8705)
++++ b/src/minigames/animalrun/Worldobject/Platform.java	(date 1757518868161)
+@@ -98,10 +98,7 @@
+ 
+     }
+ 
+-    @Override
+-    public void setXKameraVersatz(double versatz) {
+ 
+-    }
+ 
+     public void setImage(BufferedImage bImage) {
+         BufferedImage sizedImage = new BufferedImage((int) getWidth(), (int) getHeight(), BufferedImage.TYPE_INT_RGB);
+Index: src/minigames/animalrun/Worldobject/Fallen.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun.Worldobject;\r\n\r\nimport common.ScalablePicture;\r\nimport minigames.AbstractGame;\r\nimport sas.Rectangle;\r\n\r\npublic abstract class Fallen extends Rectangle {\r\n    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES +\"frogger/goblet.png\";\r\n\r\n    protected Fallen(double xPos, double yPos, double width, double height, String textur, sas.View view) {\r\n        super(xPos, yPos, width, height, textur);\r\n    }\r\n    //public Fallen(int x, int y) {\r\n    //    super(x, y, PATH_IMAGE);\r\n    //}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/Fallen.java b/src/minigames/animalrun/Worldobject/Fallen.java
+--- a/src/minigames/animalrun/Worldobject/Fallen.java	(revision d330c02732089d702aa4bec5ab292cccb89a8705)
++++ b/src/minigames/animalrun/Worldobject/Fallen.java	(date 1757518868172)
+@@ -2,15 +2,10 @@
+ 
+ import common.ScalablePicture;
+ import minigames.AbstractGame;
+-import sas.Rectangle;
+ 
+-public abstract class Fallen extends Rectangle {
++public class Fallen extends ScalablePicture {
+     private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES +"frogger/goblet.png";
+-
+-    protected Fallen(double xPos, double yPos, double width, double height, String textur, sas.View view) {
+-        super(xPos, yPos, width, height, textur);
++    public Fallen(int x, int y) {
++        super(x, y, PATH_IMAGE);
+     }
+-    //public Fallen(int x, int y) {
+-    //    super(x, y, PATH_IMAGE);
+-    //}
+ }
+Index: src/minigames/animalrun/Startbildschirm.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun;\r\n\r\nimport minigames.AbstractGame;\r\nimport sas.*;\r\nimport common.ScalablePicture;\r\nimport controller.AbstractController;\r\n\r\nimport java.util.ArrayList;\r\n\r\n\r\npublic class Startbildschirm {\r\n\r\n    private AbstractController controller;\r\n    private View view;\r\n\r\n\r\n    public Startbildschirm(AbstractController controller, View view, int viewWidth, int viewHeight) {\r\n\r\n        view.setSize(viewWidth, viewHeight);\r\n        view.setName(\"Startbildschirm Animalrun\");\r\n//test\r\n        ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), \"resources/animalrun/background.png\");\r\n        ScalablePicture pressA_button = new ScalablePicture(0, 0, \"resources/animalrun/pressA_button.png\");\r\n        ScalablePicture headline = new ScalablePicture(0, 0, \"resources/animalrun/headline.png\");\r\n\r\n        pressA_button.scaleTo(view.getHeight() / 8 * 3);\r\n        headline.scaleTo(view.getHeight() / 8 * 5);\r\n\r\n        pressA_button.moveTo(view.getWidth() / 2 - (pressA_button.getShapeWidth() / 2), view.getHeight() / 2);\r\n        headline.moveTo(view.getWidth() / 2 - (headline.getShapeWidth() / 2), 0);\r\n\r\n\r\n        // hier auf button warten\r\n        while(!controller.getLinksA()) {\r\n            view.wait(10);\r\n        }\r\n\r\n        background.setHidden(true);\r\n        pressA_button.setHidden(true);\r\n        headline.setHidden(true);\r\n\r\n        view.remove(background);\r\n        view.remove(pressA_button);\r\n        view.remove(headline);\r\n\r\n    }\r\n\r\n    // TODO: Das muss hier weg und ins Game.\r\n    private void moveBackground(double offsetX) {\r\n\r\n        ScalablePicture[] backgrounds = new ScalablePicture[4];// TODO: Das hier richtig machen.\r\n        for (int j = 0; j < backgrounds.length; j++) { // Gehe durch alle Bodenelemente durch ...\r\n            backgrounds[j].move(-offsetX, 0); // ... und bewege das jeweils aktuelle Element nach links.\r\n            if (backgrounds[j].getShapeX() + backgrounds[j].getShapeWidth() < 0) { // Sind wir links über den Rand hinaus?\r\n                System.out.println(\"moving \" + j);\r\n                int prevIndex = j <= 0 ? backgrounds.length - 1 : j - 1; // bestimme den Index des vorherigen Bodenelements\r\n                backgrounds[j].moveTo(backgrounds[prevIndex].getShapeX() + backgrounds[prevIndex].getShapeWidth(), backgrounds[j].getShapeY()); // \"teleportiere\" das ELement hinter seinen Vorgänger, sprich: ganz nach rechts\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Startbildschirm.java b/src/minigames/animalrun/Startbildschirm.java
+--- a/src/minigames/animalrun/Startbildschirm.java	(revision d330c02732089d702aa4bec5ab292cccb89a8705)
++++ b/src/minigames/animalrun/Startbildschirm.java	(date 1757518868183)
+@@ -1,12 +1,8 @@
+ package minigames.animalrun;
+-
+-import minigames.AbstractGame;
+ import sas.*;
+ import common.ScalablePicture;
+ import controller.AbstractController;
+ 
+-import java.util.ArrayList;
+-
+ 
+ public class Startbildschirm {
+ 
+Index: src/minigames/animalrun/Worldobject/WorldObject.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun.Worldobject;\r\n\r\nimport sas.Shapes;\r\nimport sas.View;\r\n\r\nimport java.util.Vector;\r\n\r\npublic interface WorldObject /*extends Shapes*/ {\r\n\r\n    void setView(View view);\r\n    //double xKameraVersatz;\r\n    //protected View view;\r\n\r\n //   protected WorldObject(double xPos, double yPos, double width, double height, String textur, View view) {\r\n //       super(xPos, yPos, width, height, textur);\r\n  //      this.view = view;\r\n //   }\r\n\r\n    public void doThings(int tick);\r\n\r\n    public void updatePos();\r\n\r\n    /* true wenn man darauf laufen kann */\r\n    public boolean isSollit();\r\n\r\n    public void setXKameraVersatz(double versatz);\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/WorldObject.java b/src/minigames/animalrun/Worldobject/WorldObject.java
+--- a/src/minigames/animalrun/Worldobject/WorldObject.java	(revision d330c02732089d702aa4bec5ab292cccb89a8705)
++++ b/src/minigames/animalrun/Worldobject/WorldObject.java	(date 1757518868192)
+@@ -7,14 +7,13 @@
+ 
+ public interface WorldObject /*extends Shapes*/ {
+ 
+-    void setView(View view);
+     //double xKameraVersatz;
+     //protected View view;
+ 
+- //   protected WorldObject(double xPos, double yPos, double width, double height, String textur, View view) {
+- //       super(xPos, yPos, width, height, textur);
+-  //      this.view = view;
+- //   }
++    //   protected WorldObject(double xPos, double yPos, double width, double height, String textur, View view) {
++    //       super(xPos, yPos, width, height, textur);
++    //      this.view = view;
++    //   }
+ 
+     public void doThings(int tick);
+ 
+@@ -22,7 +21,5 @@
+ 
+     /* true wenn man darauf laufen kann */
+     public boolean isSollit();
+-
+-    public void setXKameraVersatz(double versatz);
+ }
+ 
+Index: src/main/TestNico.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main;\r\n\r\nimport controller.AbstractController;\r\nimport controller.TastaturController;\r\nimport minigames.animalrun.Startbildschirm;\r\nimport sas.Shapes;\r\nimport sas.View;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class TestNico {\r\n\r\n\r\n\r\n    public static void main(String[] args) {\r\n        View view = new View(500, 300);\r\n        AbstractController controller = new TastaturController(view);\r\n        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);\r\n\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/TestNico.java b/src/main/TestNico.java
+--- a/src/main/TestNico.java	(revision d330c02732089d702aa4bec5ab292cccb89a8705)
++++ b/src/main/TestNico.java	(date 1757518868202)
+@@ -1,22 +1,123 @@
+ package main;
+ 
++import common.ScalablePicture;
+ import controller.AbstractController;
+ import controller.TastaturController;
+ import minigames.animalrun.Startbildschirm;
++import sas.Circle;
+ import sas.Shapes;
+ import sas.View;
+ 
++import java.awt.*;
+ import java.util.ArrayList;
+ 
+ public class TestNico {
+ 
+-
++    private AbstractController controller;
++    private View view;
+ 
+     public static void main(String[] args) {
+-        View view = new View(500, 300);
++        View view = new View(800, 600);
++        view.setName("Startbildschirm Animalrun");
+         AbstractController controller = new TastaturController(view);
+-        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);
++////        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);
++//
++//        ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), "resources/animalrun/background.png");
++//        ScalablePicture pressA_button = new ScalablePicture(0, 0, "resources/animalrun/pressA_button.png");
++//        ScalablePicture headline = new ScalablePicture(0, 0, "resources/animalrun/headline.png");
++//
++//        pressA_button.scaleTo(view.getHeight() / 8 * 3);
++//        headline.scaleTo(view.getHeight() / 8 * 5);
++//
++//        pressA_button.moveTo(view.getWidth() / 2 - (pressA_button.getShapeWidth() / 2), view.getHeight() / 2);
++//        headline.moveTo(view.getWidth() / 2 - (headline.getShapeWidth() / 2), 0);
++//
++//        // hier auf button warten
++//        while (!controller.getLinksA()) {
++//            view.wait(10);
++//        }
++//
++//
++//        background.setHidden(true);
++//        pressA_button.setHidden(true);
++//        headline.setHidden(true);
++//
++//        view.remove(background);
++//        view.remove(pressA_button);
++//        view.remove(headline);
++
++//        Circle loewe = new Circle(50,50,30, new Color(0,0,255));
++//        Circle monkey = new Circle(200,100,30, new Color(255,0,0));
++//
++//
++//        while (!controller.getLinksA()) {
++//            view.wait(10);
++//        }
++//
++//        if (monkey.getShapeY() > loewe.getShapeY()) {
++//            while(monkey.getShapeY() != loewe.getShapeY()) {
++//                loewe.move(0, 1);
++//                view.wait(4);
++//            }
++//        } else if (monkey.getShapeY() < loewe.getShapeY()) {
++//            while(monkey.getShapeY() != loewe.getShapeY()) {
++//                loewe.move(0, -1);
++//            }
++//        }
++//
++//        while (!monkey.intersects(loewe)) {
++//            monkey.move(-1, 0);
++//        }
++//
++//        while (!controller.getLinksA()) {
++//            view.wait(10);
++//        }
++//
++//        if (monkey.intersects(loewe)) {
++//            for (int i = 0; i < 40; i++) {
++//                monkey.move(1,-1);
++//                view.wait(3);
++//            }
++//            for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {
++//                monkey.move(0,1);
++//                view.wait(1);
++//            }
++//            monkey.setHidden(true);
++//            view.remove(monkey);
++//        }
++        Circle monkey = new Circle(200,100,30, new Color(255,0,0));
++        Circle tumbleweed = new Circle(50,100,30, new Color(204,153,51));
++        tumbleweed.moveTo(view.getWidth(), 100);
++        for (int i = 0; i < view.getWidth() + tumbleweed.getShapeWidth(); i++) {
++            tumbleweed.move(-1,0);
++            tumbleweed.turn(45);
++            view.wait(20);
++            if (tumbleweed.intersects(monkey)) {
++                break;
++            }
++        }
++        if (tumbleweed.getShapeX() < 0) {
++            tumbleweed.setHidden(true);
++            view.remove(tumbleweed);
++        }
+ 
++        if (monkey.intersects(tumbleweed)) {
++            Circle monkey1 = new Circle(0,0,30, new Color(255,0,0));
++            monkey1.moveTo(monkey.getShapeX(), monkey.getShapeY());
++            monkey.setHidden(true);
++            view.remove(monkey);
++            for (int i = 0; i < 40; i++) {
++                monkey1.move(1,-1);
++                view.wait(3);
++            }
++            for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {
++                monkey1.move(0,1);
++                view.wait(1);
++            }
++            monkey1.setHidden(true);
++            view.remove(monkey1);
++        }
+     }
++
+ }
+ 
+Index: src/minigames/animalRun/Worldobject/Tumbleweed.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalRun/Worldobject/Tumbleweed.java b/src/minigames/animalRun/Worldobject/Tumbleweed.java
+new file mode 100644
+--- /dev/null	(date 1757520492400)
++++ b/src/minigames/animalRun/Worldobject/Tumbleweed.java	(date 1757520492400)
+@@ -0,0 +1,93 @@
++package minigames.animalrun.Worldobject;
++
++import minigames.animalrun.*;
++import sas.Circle;
++import common.ScalablePicture;
++import controller.AbstractController;
++import sas.Picture;
++import sas.View;
++
++import java.awt.*;
++import java.util.stream.Collector;
++
++public abstract class Tumbleweed extends Picture implements WorldObject {
++
++    private minigames.animalRun.Monkey monkeys[];
++    private View view;
++
++    public Tumbleweed(double xp, double yp, String name, View view) {
++        super(xp, yp, name);
++        moveTo(view.getWidth(), 100);
++    }
++
++
++    @Override
++    public void doThings(int tick) {
++
++        move(-1, 0);
++
++
++        // Sind wir links aus dem Bild raus? Dann lösche dieses tumble wheet.
++        if (getShapeX() + getShapeWidth() <= 0) {
++            setHidden(true);
++            view.remove(this);
++        }
++
++        monkeys = (minigames.animalRun.Monkey[]) AnimalRun.getWorldObjects().stream().filter(o -> o instanceof minigames.animalRun.Monkey).toArray();
++
++        for (int i = 0; i < view.getWidth() + tumbleweed.getShapeWidth(); i++) {
++            tumbleweed.move(-1, 0);
++            tumbleweed.turn(45);
++            view.wait(20);
++            if (tumbleweed.intersects(monkeys[0])) {
++                break;
++            } else if (tumbleweed.intersects(monkeys[1])) {
++                break;
++            }
++        }
++        if (tumbleweed.getShapeX() < 0) {
++            tumbleweed.setHidden(true);
++            view.remove(tumbleweed);
++        }
++
++        if (monkeys[0].intersects(tumbleweed)) {
++            monkeys[2].moveTo(monkeys[0].getShapeX(), monkeys[0].getShapeY());
++            monkeys[0].setHidden(true);
++            view.remove(monkeys[0]);
++            for (int i = 0; i < 40; i++) {
++                monkeys[2].move(1, -1);
++                view.wait(3);
++            }
++            for (int i = 0; i < view.getHeight() + monkeys[2].getShapeHeight(); i++) {
++                monkeys[2].move(0, 1);
++                view.wait(1);
++            }
++            monkeys[2].setHidden(true);
++            view.remove(monkeys[2]);
++        } else if (monkeys[1].intersects(tumbleweed)) {
++            monkeys[2].moveTo(monkeys[1].getShapeX(), monkeys[1].getShapeY());
++            monkeys[1].setHidden(true);
++            view.remove(monkeys[1]);
++            for (int i = 0; i < 40; i++) {
++                monkeys[2].move(1, -1);
++                view.wait(3);
++            }
++            for (int i = 0; i < view.getHeight() + monkeys[2].getShapeHeight(); i++) {
++                monkeys[2].move(0, 1);
++                view.wait(1);
++            }
++            monkeys[2].setHidden(true);
++            view.remove(monkeys[2]);
++        }
++    }
++
++    @Override
++    public void updatePos() {
++
++    }
++
++    @Override
++    public boolean isSollit() {
++        return false;
++    }
++}
+Index: src/minigames/animalRun/Worldobject/Loewe.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalRun/Worldobject/Loewe.java b/src/minigames/animalRun/Worldobject/Loewe.java
+new file mode 100644
+--- /dev/null	(date 1757518868221)
++++ b/src/minigames/animalRun/Worldobject/Loewe.java	(date 1757518868221)
+@@ -0,0 +1,15 @@
++package minigames.animalrun.Worldobject;
++import sas.Circle;
++
++import java.awt.*;
++
++public class Loewe {
++
++
++    Circle loewe = new Circle(50,50,30, new Color(0,0,255));
++    Circle monkey = new Circle(50,100,30, new Color(255,0,0));
++
++    public Loewe() {
++
++    }
++}
+Index: trash/BeweglicherBoden.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/trash/BeweglicherBoden.java b/trash/BeweglicherBoden.java
+new file mode 100644
+--- /dev/null	(date 1757518868230)
++++ b/trash/BeweglicherBoden.java	(date 1757518868230)
+@@ -0,0 +1,13 @@
++// TODO: Das muss hier weg und ins Game.
++private void moveBackground(double offsetX) {
++
++    ScalablePicture[] backgrounds = new ScalablePicture[4];// TODO: Das hier richtig machen.
++    for (int j = 0; j < backgrounds.length; j++) { // Gehe durch alle Bodenelemente durch ...
++        backgrounds[j].move(-offsetX, 0); // ... und bewege das jeweils aktuelle Element nach links.
++        if (backgrounds[j].getShapeX() + backgrounds[j].getShapeWidth() < 0) { // Sind wir links über den Rand hinaus?
++            System.out.println("moving " + j);
++            int prevIndex = j <= 0 ? backgrounds.length - 1 : j - 1; // bestimme den Index des vorherigen Bodenelements
++            backgrounds[j].moveTo(backgrounds[prevIndex].getShapeX() + backgrounds[prevIndex].getShapeWidth(), backgrounds[j].getShapeY()); // "teleportiere" das ELement hinter seinen Vorgänger, sprich: ganz nach rechts
++        }
++    }
++}
+\ No newline at end of file

@@ -17,7 +17,7 @@ public abstract class AbstractGame {
     /* Object Variables */
     protected AbstractController controller;
     protected View view;
-    protected ArrayList<Shapes> shapesToRemove;
+    protected static ArrayList<Shapes> shapesToRemove;
 
     /* Constructors */
     public AbstractGame(AbstractController controller, View view) {

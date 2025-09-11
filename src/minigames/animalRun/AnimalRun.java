@@ -1,19 +1,18 @@
-package minigames.animalrun;
+package minigames.animalRun;
 
 import controller.AbstractController;
 import minigames.AbstractGame;
-import minigames.animalrun.Worldobject.Platform;
-import minigames.animalrun.Worldobject.WorldObject;
+import minigames.animalRun.Worldobject.Platform;
+import minigames.animalRun.Worldobject.WorldObject;
 import sas.Shapes;
 import sas.View;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class AnimalRun extends AbstractGame implements Runnable {
-    private static final int tickRate = 60;
+    private static final int tickRate = 100;
     private static final int WIDTH = 1000 ;
     private static final int HEIGHT = 600 ;
     private boolean gameRuns = true;
@@ -81,7 +80,10 @@ public class AnimalRun extends AbstractGame implements Runnable {
         //double d = new Platform(view, true).getShapeWidth();
     }
 
-
+    public static void addToPlatformObjects(WorldObject o) {
+        World.summoneNextRoundObjects.add(o);
+        //double d = new Platform(view, true).getShapeWidth();
+    }
 
 
     private class World {
@@ -104,6 +106,7 @@ public class AnimalRun extends AbstractGame implements Runnable {
                     .filter(o -> o instanceof Shapes)
                     .map(o -> (Shapes) o)
                     .collect(Collectors.toSet()));;
+            summoneNextRoundObjects.clear();
             xKameraVersatz += xKameraSpeed;
 
 //            System.out.println("xKameraVersatz = ");
@@ -114,17 +117,17 @@ public class AnimalRun extends AbstractGame implements Runnable {
             });
 
             if (controller.getLinksB()) {
-                newWorldObjekt(new Platform(view,true));
+                summoneNextRoundObjects.add(new Platform(view,true));
                 view.wait(50);
             }
         }
 
-        void newWorldObjekt(Object o) {
-            if (o instanceof WorldObject)
-                worldObjects.add((WorldObject) o);
-            if (o instanceof Shapes) {
-                shapesToRemove.add((Shapes) o);
-            }
-        }
+//        public void newWorldObjekt(Object o) {
+//            if (o instanceof WorldObject)
+//                worldObjects.add((WorldObject) o);
+//            if (o instanceof Shapes) {
+//                shapesToRemove.add((Shapes) o);
+//            }
+//        }
     }
 }

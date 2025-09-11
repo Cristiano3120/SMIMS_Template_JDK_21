@@ -1,0 +1,83 @@
+Index: src/main/TestNico.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main;\r\n\r\nimport controller.AbstractController;\r\nimport controller.TastaturController;\r\nimport minigames.animalrun.Startbildschirm;\r\nimport sas.Shapes;\r\nimport sas.View;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class TestNico {\r\n\r\n\r\n\r\n    public static void main(String[] args) {\r\n        View view = new View(500, 300);\r\n        AbstractController controller = new TastaturController(view);\r\n        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);\r\n\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/TestNico.java b/src/main/TestNico.java
+--- a/src/main/TestNico.java	(revision 524e94a7e2ff2ed1109b4b3ba3aed65d28dd4d6f)
++++ b/src/main/TestNico.java	(date 1757491220612)
+@@ -1,5 +1,6 @@
+ package main;
+ 
++import common.ScalablePicture;
+ import controller.AbstractController;
+ import controller.TastaturController;
+ import minigames.animalrun.Startbildschirm;
+@@ -10,12 +11,38 @@
+ 
+ public class TestNico {
+ 
+-
++    private AbstractController controller;
++    private View view;
+ 
+     public static void main(String[] args) {
+-        View view = new View(500, 300);
++        View view = new View(800, 600);
++        view.setName("Startbildschirm Animalrun");
+         AbstractController controller = new TastaturController(view);
+-        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);
++//        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);
++
++        ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), "resources/animalrun/background.png");
++        ScalablePicture pressA_button = new ScalablePicture(0, 0, "resources/animalrun/pressA_button.png");
++        ScalablePicture headline = new ScalablePicture(0, 0, "resources/animalrun/headline.png");
++
++        pressA_button.scaleTo(view.getHeight() / 8 * 3);
++        headline.scaleTo(view.getHeight() / 8 * 5);
++
++        pressA_button.moveTo(view.getWidth() / 2 - (pressA_button.getShapeWidth() / 2), view.getHeight() / 2);
++        headline.moveTo(view.getWidth() / 2 - (headline.getShapeWidth() / 2), 0);
++
++        // hier auf button warten
++        while (!controller.getLinksA()) {
++            view.wait(10);
++        }
++
++
++        background.setHidden(true);
++        pressA_button.setHidden(true);
++        headline.setHidden(true);
++
++        view.remove(background);
++        view.remove(pressA_button);
++        view.remove(headline);
+ 
+     }
+ }
+Index: trash/BeweglicherBoden.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/trash/BeweglicherBoden.java b/trash/BeweglicherBoden.java
+new file mode 100644
+--- /dev/null	(date 1757442893285)
++++ b/trash/BeweglicherBoden.java	(date 1757442893285)
+@@ -0,0 +1,13 @@
++// TODO: Das muss hier weg und ins Game.
++private void moveBackground(double offsetX) {
++
++    ScalablePicture[] backgrounds = new ScalablePicture[4];// TODO: Das hier richtig machen.
++    for (int j = 0; j < backgrounds.length; j++) { // Gehe durch alle Bodenelemente durch ...
++        backgrounds[j].move(-offsetX, 0); // ... und bewege das jeweils aktuelle Element nach links.
++        if (backgrounds[j].getShapeX() + backgrounds[j].getShapeWidth() < 0) { // Sind wir links über den Rand hinaus?
++            System.out.println("moving " + j);
++            int prevIndex = j <= 0 ? backgrounds.length - 1 : j - 1; // bestimme den Index des vorherigen Bodenelements
++            backgrounds[j].moveTo(backgrounds[prevIndex].getShapeX() + backgrounds[prevIndex].getShapeWidth(), backgrounds[j].getShapeY()); // "teleportiere" das ELement hinter seinen Vorgänger, sprich: ganz nach rechts
++        }
++    }
++}
+\ No newline at end of file

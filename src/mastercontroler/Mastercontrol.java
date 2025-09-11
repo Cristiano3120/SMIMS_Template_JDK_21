@@ -3,14 +3,15 @@ package mastercontroler;
 import controller.AbstractController;
 import controller.TastaturController;
 import minigames.AbstractGame;
+import minigames.animalRun.AnimalRun;
 import minigames.animalRun.Monkey;
 import sas.View;
 
 import java.util.ArrayList;
 
 public class Mastercontrol {
-    private static final int WIDTH = 1080;
-    private static final int HEIGHT = 1920;
+    private static final int WIDTH = 1920;
+    private static final int HEIGHT = 1080;
 
     protected AbstractController controller;
     protected View view;
@@ -19,10 +20,17 @@ public class Mastercontrol {
     public Mastercontrol() {
         view = new View(WIDTH, HEIGHT);
         controller = new TastaturController(view);
+        game = new AnimalRun(controller, view);
+//        System.out.println("test--");
+        game.start();
+//        System.out.println("test--1");
+        Monkey monkey = new Monkey(100, 600, controller, true, view);
+        Monkey monkey2 = new Monkey(100, 400, controller, false, view);
 
-        Monkey monkey = new Monkey(200, 200, 200, controller, true, view);
-        Monkey monkey2 = new Monkey(400, 200, 200, controller, false, view);
-        System.out.println(monkey.pictures1[0].getCenterY());
+        AnimalRun.addToWorldObjects(monkey);
+        AnimalRun.addToWorldObjects(monkey2);
+
+//        System.out.println("test0");
         loop(monkey, monkey2, view);
 
     }

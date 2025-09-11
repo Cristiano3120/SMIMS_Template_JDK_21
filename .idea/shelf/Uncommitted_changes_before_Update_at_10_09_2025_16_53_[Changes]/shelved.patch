@@ -1,0 +1,266 @@
+Index: src/minigames/animalrun/Worldobject/Fallen.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun.Worldobject;\r\n\r\nimport common.ScalablePicture;\r\nimport minigames.AbstractGame;\r\n\r\npublic class Fallen extends ScalablePicture {\r\n    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES +\"frogger/goblet.png\";\r\n    public Fallen(int x, int y) {\r\n        super(x, y, PATH_IMAGE);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/Fallen.java b/src/minigames/animalrun/Worldobject/Fallen.java
+--- a/src/minigames/animalrun/Worldobject/Fallen.java	(revision dd785f34848ebc48bdf527794b56d5ff017c929f)
++++ b/src/minigames/animalrun/Worldobject/Fallen.java	(date 1757513220880)
+@@ -8,4 +8,5 @@
+     public Fallen(int x, int y) {
+         super(x, y, PATH_IMAGE);
+     }
++
+ }
+Index: src/minigames/animalrun/Startbildschirm.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun;\r\n\r\nimport minigames.AbstractGame;\r\nimport sas.*;\r\nimport common.ScalablePicture;\r\nimport controller.AbstractController;\r\n\r\nimport java.util.ArrayList;\r\n\r\n\r\npublic class Startbildschirm {\r\n\r\n    private AbstractController controller;\r\n    private View view;\r\n\r\n\r\n    public Startbildschirm(AbstractController controller, View view, int viewWidth, int viewHeight) {\r\n\r\n        view.setSize(viewWidth, viewHeight);\r\n        view.setName(\"Startbildschirm Animalrun\");\r\n//test\r\n        ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), \"resources/animalrun/background.png\");\r\n        ScalablePicture pressA_button = new ScalablePicture(0, 0, \"resources/animalrun/pressA_button.png\");\r\n        ScalablePicture headline = new ScalablePicture(0, 0, \"resources/animalrun/headline.png\");\r\n\r\n        pressA_button.scaleTo(view.getHeight() / 8 * 3);\r\n        headline.scaleTo(view.getHeight() / 8 * 5);\r\n\r\n        pressA_button.moveTo(view.getWidth() / 2 - (pressA_button.getShapeWidth() / 2), view.getHeight() / 2);\r\n        headline.moveTo(view.getWidth() / 2 - (headline.getShapeWidth() / 2), 0);\r\n\r\n        // hier auf button warten\r\n        while(!controller.getLinksA()) {\r\n            view.wait(10);\r\n        }\r\n\r\n        background.setHidden(true);\r\n        pressA_button.setHidden(true);\r\n        headline.setHidden(true);\r\n\r\n        view.remove(background);\r\n        view.remove(pressA_button);\r\n        view.remove(headline);\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Startbildschirm.java b/src/minigames/animalrun/Startbildschirm.java
+--- a/src/minigames/animalrun/Startbildschirm.java	(revision dd785f34848ebc48bdf527794b56d5ff017c929f)
++++ b/src/minigames/animalrun/Startbildschirm.java	(date 1757495114944)
+@@ -1,12 +1,8 @@
+ package minigames.animalrun;
+-
+-import minigames.AbstractGame;
+ import sas.*;
+ import common.ScalablePicture;
+ import controller.AbstractController;
+ 
+-import java.util.ArrayList;
+-
+ 
+ public class Startbildschirm {
+ 
+Index: src/main/TestNico.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main;\r\n\r\nimport controller.AbstractController;\r\nimport controller.TastaturController;\r\nimport minigames.animalrun.Startbildschirm;\r\nimport sas.Shapes;\r\nimport sas.View;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class TestNico {\r\n\r\n\r\n\r\n    public static void main(String[] args) {\r\n        View view = new View(500, 300);\r\n        AbstractController controller = new TastaturController(view);\r\n        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);\r\n\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/TestNico.java b/src/main/TestNico.java
+--- a/src/main/TestNico.java	(revision dd785f34848ebc48bdf527794b56d5ff017c929f)
++++ b/src/main/TestNico.java	(date 1757515704564)
+@@ -1,22 +1,123 @@
+ package main;
+ 
++import common.ScalablePicture;
+ import controller.AbstractController;
+ import controller.TastaturController;
+ import minigames.animalrun.Startbildschirm;
++import sas.Circle;
+ import sas.Shapes;
+ import sas.View;
+ 
++import java.awt.*;
+ import java.util.ArrayList;
+ 
+ public class TestNico {
+ 
+-
++    private AbstractController controller;
++    private View view;
+ 
+     public static void main(String[] args) {
+-        View view = new View(500, 300);
++        View view = new View(800, 600);
++        view.setName("Startbildschirm Animalrun");
+         AbstractController controller = new TastaturController(view);
+-        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);
++////        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);
++//
++//        ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), "resources/animalrun/background.png");
++//        ScalablePicture pressA_button = new ScalablePicture(0, 0, "resources/animalrun/pressA_button.png");
++//        ScalablePicture headline = new ScalablePicture(0, 0, "resources/animalrun/headline.png");
++//
++//        pressA_button.scaleTo(view.getHeight() / 8 * 3);
++//        headline.scaleTo(view.getHeight() / 8 * 5);
++//
++//        pressA_button.moveTo(view.getWidth() / 2 - (pressA_button.getShapeWidth() / 2), view.getHeight() / 2);
++//        headline.moveTo(view.getWidth() / 2 - (headline.getShapeWidth() / 2), 0);
++//
++//        // hier auf button warten
++//        while (!controller.getLinksA()) {
++//            view.wait(10);
++//        }
++//
++//
++//        background.setHidden(true);
++//        pressA_button.setHidden(true);
++//        headline.setHidden(true);
++//
++//        view.remove(background);
++//        view.remove(pressA_button);
++//        view.remove(headline);
++
++//        Circle loewe = new Circle(50,50,30, new Color(0,0,255));
++//        Circle monkey = new Circle(200,100,30, new Color(255,0,0));
++//
++//
++//        while (!controller.getLinksA()) {
++//            view.wait(10);
++//        }
++//
++//        if (monkey.getShapeY() > loewe.getShapeY()) {
++//            while(monkey.getShapeY() != loewe.getShapeY()) {
++//                loewe.move(0, 1);
++//                view.wait(4);
++//            }
++//        } else if (monkey.getShapeY() < loewe.getShapeY()) {
++//            while(monkey.getShapeY() != loewe.getShapeY()) {
++//                loewe.move(0, -1);
++//            }
++//        }
++//
++//        while (!monkey.intersects(loewe)) {
++//            monkey.move(-1, 0);
++//        }
++//
++//        while (!controller.getLinksA()) {
++//            view.wait(10);
++//        }
++//
++//        if (monkey.intersects(loewe)) {
++//            for (int i = 0; i < 40; i++) {
++//                monkey.move(1,-1);
++//                view.wait(3);
++//            }
++//            for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {
++//                monkey.move(0,1);
++//                view.wait(1);
++//            }
++//            monkey.setHidden(true);
++//            view.remove(monkey);
++//        }
++        Circle monkey = new Circle(200,100,30, new Color(255,0,0));
++        Circle tumbleweed = new Circle(50,100,30, new Color(204,153,51));
++        tumbleweed.moveTo(view.getWidth(), 100);
++        for (int i = 0; i < view.getWidth() + tumbleweed.getShapeWidth(); i++) {
++            tumbleweed.move(-1,0);
++            tumbleweed.turn(45);
++            view.wait(20);
++            if (tumbleweed.intersects(monkey)) {
++                break;
++            }
++        }
++        if (tumbleweed.getShapeX() < 0) {
++            tumbleweed.setHidden(true);
++            view.remove(tumbleweed);
++        }
+ 
++        if (monkey.intersects(tumbleweed)) {
++            Circle monkey1 = new Circle(0,0,30, new Color(255,0,0));
++            monkey1.moveTo(monkey.getShapeX(), monkey.getShapeY());
++            monkey.setHidden(true);
++            view.remove(monkey);
++            for (int i = 0; i < 40; i++) {
++                monkey1.move(1,-1);
++                view.wait(3);
++            }
++            for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {
++                monkey1.move(0,1);
++                view.wait(1);
++            }
++            monkey1.setHidden(true);
++            view.remove(monkey1);
++        }
+     }
++
+ }
+ 
+Index: src/minigames/animalrun/Worldobject/Tumbleweed.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/Tumbleweed.java b/src/minigames/animalrun/Worldobject/Tumbleweed.java
+new file mode 100644
+--- /dev/null	(date 1757515998915)
++++ b/src/minigames/animalrun/Worldobject/Tumbleweed.java	(date 1757515998915)
+@@ -0,0 +1,31 @@
++package minigames.animalrun.Worldobject;
++
++import sas.Circle;
++import common.ScalablePicture;
++import controller.AbstractController;
++import sas.View;
++
++import java.awt.*;
++
++public class Tumbleweed extends Circle implements WorldObject {
++    public Tumbleweed(View view, int viewWidth, int viewHeight) {
++        view.setSize(viewWidth, viewHeight);
++        Circle tumbleweed = new Circle(50,50,30, new Color(204,153,51));
++        for (int i = 0; i < view.getWidth() + tumbleweed.getShapeWidth(); i++) {
++            tumbleweed.move(-1,0);
++            tumbleweed.turn(45);
++        }
++        tumbleweed.setHidden(true);
++        view.remove(tumbleweed);
++    }
++
++    @Override
++    public void doThings(int tick) {
++
++    }
++
++    @Override
++    public void updatePos() {
++
++    }
++}
+Index: trash/BeweglicherBoden.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/trash/BeweglicherBoden.java b/trash/BeweglicherBoden.java
+new file mode 100644
+--- /dev/null	(date 1757491554822)
++++ b/trash/BeweglicherBoden.java	(date 1757491554822)
+@@ -0,0 +1,13 @@
++// TODO: Das muss hier weg und ins Game.
++private void moveBackground(double offsetX) {
++
++    ScalablePicture[] backgrounds = new ScalablePicture[4];// TODO: Das hier richtig machen.
++    for (int j = 0; j < backgrounds.length; j++) { // Gehe durch alle Bodenelemente durch ...
++        backgrounds[j].move(-offsetX, 0); // ... und bewege das jeweils aktuelle Element nach links.
++        if (backgrounds[j].getShapeX() + backgrounds[j].getShapeWidth() < 0) { // Sind wir links über den Rand hinaus?
++            System.out.println("moving " + j);
++            int prevIndex = j <= 0 ? backgrounds.length - 1 : j - 1; // bestimme den Index des vorherigen Bodenelements
++            backgrounds[j].moveTo(backgrounds[prevIndex].getShapeX() + backgrounds[prevIndex].getShapeWidth(), backgrounds[j].getShapeY()); // "teleportiere" das ELement hinter seinen Vorgänger, sprich: ganz nach rechts
++        }
++    }
++}
+\ No newline at end of file
+Index: src/minigames/animalrun/Worldobject/Loewe.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/Loewe.java b/src/minigames/animalrun/Worldobject/Loewe.java
+new file mode 100644
+--- /dev/null	(date 1757503328622)
++++ b/src/minigames/animalrun/Worldobject/Loewe.java	(date 1757503328622)
+@@ -0,0 +1,15 @@
++package minigames.animalrun.Worldobject;
++import sas.Circle;
++
++import java.awt.*;
++
++public class Loewe {
++
++
++    Circle loewe = new Circle(50,50,30, new Color(0,0,255));
++    Circle monkey = new Circle(50,100,30, new Color(255,0,0));
++
++    public Loewe() {
++
++    }
++}
