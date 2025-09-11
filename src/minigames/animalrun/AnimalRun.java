@@ -16,7 +16,9 @@ import java.util.stream.Collectors;
 public class AnimalRun extends AbstractGame implements Runnable {
 
     /* Static Variables */
+    public static final double GRAVITY = -1.0;
     private static final int TICK_RATE = 100;
+
 
     /* Static Methods */
     // TODO: alles nicht-static machen
@@ -66,11 +68,11 @@ public class AnimalRun extends AbstractGame implements Runnable {
         System.out.println("Welcome to AnimalRun");
 
         monkeys = new Monkey[2];
-        monkeys[0] = new Monkey(1000, 200, 200, 200, controller, true, view);
-        monkeys[1] = new Monkey(1000, 200, 200, 200, controller, false, view);
+        monkeys[0] = new Monkey(1000, 200, controller, true);
+        monkeys[1] = new Monkey(1000, 200, controller, false);
 
         AnimalRun.addToWorldObjects(monkeys[0]);
-        AnimalRun.addToWorldObjects( monkeys[1]);
+        AnimalRun.addToWorldObjects(monkeys[1]);
 
         long milisPerCycle = 1000 / TICK_RATE;
         long timeStamp = System.currentTimeMillis();
@@ -105,11 +107,11 @@ public class AnimalRun extends AbstractGame implements Runnable {
                     if (monkey.intersects(platform) && monkey.getShapeY() + monkey.getShapeHeight() >= platform.getShapeY()) {
 
                         // ... kann der Affe darauf laufen.
-                        monkey.onGround = true;
+                        monkey.setOnGround(true);
                     }
 
                     // Der Affe ist offensichtlich in der Luft.
-                    monkey.onGround = false;
+                    monkey.setOnGround(false);
                 }
             }
         }
@@ -144,7 +146,7 @@ public class AnimalRun extends AbstractGame implements Runnable {
                     .filter(o -> o instanceof Shapes)
                     .map(o -> (Shapes) o)
                     .collect(Collectors.toSet()));
-            ;
+
             xKameraVersatz += xKameraSpeed;
 
             System.out.println("xKameraVersatz = ");
