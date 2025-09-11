@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class AnimalRun extends AbstractGame {
 
     /* Static Variables */
-    public static final double GRAVITY = -1.0;
+    public static final double GRAVITY = 4.0;
     private static final int TICK_RATE = 100;
 
     /* Static Methods */
@@ -40,8 +40,6 @@ public class AnimalRun extends AbstractGame {
 
     @Override
     protected void runGame() {
-
-//        new Startbildschirm(controller, view);
 
         monkeys = new Monkey[2];
         try {

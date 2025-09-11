@@ -5,72 +5,65 @@ import controller.AbstractController;
 import minigames.animalRun.Worldobject.WorldObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sas.Circle;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 
-public class Monkey extends ScalablePicture implements WorldObject {
+public class Monkey extends Circle implements WorldObject {
 
     private static final Logger log = LoggerFactory.getLogger(Monkey.class);
 
     /* Static Variables */
-    protected static double MONKEY_MOVEMENT = 5.0;
-    protected static int baseLevelX = 0;
+    protected static double MONKEY_MOVEMENT = 10.0;
     private static final int IMAGE_HEIGHT = 250;
-    private static final int IMAGE_WIDTH = (int) (IMAGE_HEIGHT * 1.44);
 
     /* Static Methods */
-    private static BufferedImage scaleImage(BufferedImage tempImage) {
-        BufferedImage sizedImage = new BufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = (Graphics2D) sizedImage.getGraphics();
-        Image image = tempImage.getScaledInstance(IMAGE_WIDTH, IMAGE_HEIGHT, Image.SCALE_SMOOTH);
-        g2.drawImage(image, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, null);
-        g2.dispose();
-        return sizedImage;
-    }
 
     /* Object Variables */
     private AbstractController controller;
-    private final BufferedImage[] MONKEY_IMAGES = new BufferedImage[4];
-    private final BufferedImage[] MONKEY_IMAGES_JUMP = new BufferedImage[2];
+    private final ScalablePicture[] MONKEY_IMAGES;
+    private final ScalablePicture[] MONKEY_IMAGES_JUMP;
     private boolean isMonkey1;
     private boolean turnedLeft;
-    private boolean onGround;
-    private int indexImageRegular = 0;
-    private int indexImageJump = 0;
+    private int indexImageRegular;
     private MovementFunction currentMovement;
+    private boolean nextTickSetFallImage;
 
     /* Constructors */
     public Monkey(double xp, double yp, AbstractController controller, boolean isMonkey1) throws IOException {
-        super(xp, yp, "resources/animalrun/monkey1.png");
+        super(xp, yp, 0.1);
+        this.MONKEY_IMAGES = new ScalablePicture[4];
+        this.MONKEY_IMAGES_JUMP = new ScalablePicture[2];
         this.controller = controller;
         this.isMonkey1 = isMonkey1;
         this.turnedLeft = true;
-        this.currentMovement = new FunktionSprung(true);
+        this.indexImageRegular = 0;
+        this.currentMovement = new FunktionAufBoden(); // TODO
+        this.nextTickSetFallImage = false;
+        setHidden(true);
 
         prepareMonkeyImages();
-        //setImage(1,true); // setze das erste Bild als Start
         moveTo(xp, yp);
+        MONKEY_IMAGES[0].setHidden(false);
+        MONKEY_IMAGES[0].moveTo(xp, yp);
 
     }
 
-    public void prepareMonkeyImages() throws IOException {
+    public void prepareMonkeyImages() {
 
         // Zuerst laden wir die regulären Bilder.
         int summand = isMonkey1 ? 0 : 4;
-        BufferedImage tempImage;
+        ScalablePicture tempPic;
+
         for (int i = 0; i < MONKEY_IMAGES.length; i++) {
 
-            // Lade das Bild.
-            tempImage = ImageIO.read(new File("resources/animalrun/monkey" + (i + 1 + summand) + ".png"));
-            System.out.println("resources/animalrun/monkey" + (i + 1 + summand) + ".png");
+            tempPic = new ScalablePicture(0, 0, "resources/animalrun/monkey" + (i + 1 + summand) + ".png");
+            tempPic.scaleTo(IMAGE_HEIGHT);
+            tempPic.moveTo(getShapeX(), getShapeY());
+            tempPic.setHidden(true);
 
-            // Passe die Größe an.
-            MONKEY_IMAGES[i] = scaleImage(tempImage);
+            MONKEY_IMAGES[i] = tempPic;
 
         }
 
@@ -78,23 +71,34 @@ public class Monkey extends ScalablePicture implements WorldObject {
         summand = isMonkey1 ? 0 : 2;
         for (int i = 0; i < MONKEY_IMAGES_JUMP.length; i++) {
 
-            // Lade das Bild.
-            tempImage = ImageIO.read(new File("resources/animalrun/monkey" + (i + 9 + summand) + ".png"));
-            System.out.println("resources/animalrun/monkey" + (i + 9 + summand) + ".png");
+            tempPic = new ScalablePicture(0, 0, "resources/animalrun/monkey" + (i + 9 + summand) + ".png");
+            tempPic.scaleTo(IMAGE_HEIGHT);
+            tempPic.moveTo(getShapeX(), getShapeY());
+            tempPic.setHidden(true);
 
-            // Passe die Größe an.
-            MONKEY_IMAGES_JUMP[i] = scaleImage(tempImage);
+            MONKEY_IMAGES_JUMP[i] = tempPic;
         }
     }
 
     /* Object Methods */
     private void flip(double joystickVal) {
+
         if (joystickVal < 0 && !turnedLeft) {
-            flipHorizontal();
+            flipAll();
             turnedLeft = true;
         } else if (joystickVal > 0 && turnedLeft) {
-            flipHorizontal();
+            flipAll();
             turnedLeft = false;
+        }
+
+    }
+
+    private void flipAll() {
+        for (ScalablePicture pic : MONKEY_IMAGES) {
+            pic.flipHorizontal();
+        }
+        for (ScalablePicture pic : MONKEY_IMAGES_JUMP) {
+            pic.flipHorizontal();
         }
     }
 
@@ -105,45 +109,85 @@ public class Monkey extends ScalablePicture implements WorldObject {
     @Override
     public void doThings() {
 
-        System.out.println(getShapeX()+ ", " + getShapeY());
-
         // Get the x-position of the correct joystick.
-        double joystickVal = isMonkey1 ? controller.getJoystickRechtsX() : controller.getJoystickLinksX();
+        double joystickVal = isMonkey1 ? controller.getJoystickLinksX() : controller.getJoystickRechtsX();
         flip(joystickVal);
-        System.out.println("joystickVal: " + joystickVal); // TODO remove
 
         // Does the player want to jump?
         boolean jumpButtonPressed = isMonkey1
                 ? controller.getLinksA()
                 : controller.getRechtsA();
 
-        System.out.println("jumpButton " + jumpButtonPressed);
-
-        if (jumpButtonPressed && currentMovement instanceof FunktionAufBoden) {
-            currentMovement = new FunktionSprung(true);
-            System.out.println(currentMovement);
+        if (jumpButtonPressed && currentMovement instanceof FunktionAufBoden /* TODO BODEN VERLOREN */) {
+            currentMovement = new FunktionSprung(false);
+            for (ScalablePicture pic : MONKEY_IMAGES) {
+                pic.setHidden(true);
+            }
+            for (ScalablePicture pic : MONKEY_IMAGES_JUMP) {
+                pic.setHidden(true);
+            }
+            MONKEY_IMAGES_JUMP[0].setHidden(false);
+            nextTickSetFallImage = true;
         }
 
-        // Choose the right animation.
-        if (currentMovement instanceof FunktionAufBoden) {
-            setImage(indexImageRegular, false);
-            indexImageRegular = indexImageRegular >= MONKEY_IMAGES.length - 1
-                    ? 0
-                    : indexImageRegular + 1;
-        } else {
-            setImage(indexImageJump, true);
-            indexImageJump = 1;
+        // Berechne die Zielkoordinaten.
+        Vector vector = currentMovement.computeNextVector();
+        move(vector.x, vector.y);
+
+        // Falls sich die X-Koordinate nicht ändert, fallen wir entweder senkrecht oder stehen auf der Stelle. In beiden
+        // Fällen brauchen wir das Bild nicht zu ändern, selbst wenn die Y-Koordinate sich unterscheidet.
+        if (vector.x == 0) {
+            for (ScalablePicture pic : MONKEY_IMAGES) {
+                pic.moveTo(getShapeX(), getShapeY());
+            }
+            for (ScalablePicture pic : MONKEY_IMAGES_JUMP) {
+                pic.moveTo(getShapeX(), getShapeY());
+            }
+            if (nextTickSetFallImage) {
+                MONKEY_IMAGES_JUMP[0].setHidden(true);
+                MONKEY_IMAGES_JUMP[1].setHidden(false);
+                nextTickSetFallImage = false;
+            }
+            return;
         }
 
-        Coordinates coords = currentMovement.computeNextVector();
-        move(coords.x, coords.y);
+        nextTickSetFallImage = false;
 
+        // Wir müssen also das Bild ändern und den Affen bewegen. Entweder fallen wir gerade oder laufen. Fallen zuerst:
+        if (currentMovement instanceof FunktionSprung) {
+            for (ScalablePicture pic : MONKEY_IMAGES) {
+                pic.setHidden(true);
+            }
+            MONKEY_IMAGES_JUMP[0].setHidden(true);
+            MONKEY_IMAGES_JUMP[1].setHidden(false);
+            MONKEY_IMAGES_JUMP[1].moveTo(getShapeX(), getShapeY());
+            return;
+        }
+
+        // An diesem Punkt können wir nur noch regulär gehen.
+        indexImageRegular = indexImageRegular >= MONKEY_IMAGES.length - 1
+                ? 0
+                : indexImageRegular + 1;
+        for (int i = 0; i < MONKEY_IMAGES.length; i++) {
+            if (i == indexImageRegular) {
+                MONKEY_IMAGES[i].setHidden(false);
+                MONKEY_IMAGES[i].moveTo(getShapeX(), getShapeY());
+            } else {
+                MONKEY_IMAGES[i].setHidden(true);
+            }
+        }
+        for (ScalablePicture pic : MONKEY_IMAGES_JUMP) {
+            pic.setHidden(true);
+        }
     }
 
 
     public void signalOnGround(boolean onGround) {
         currentMovement = new FunktionAufBoden();
-        this.onGround = onGround;
+    }
+
+    public void signaleCollision() {
+        currentMovement = new FunktionSprung(true);
     }
 
     @Override
@@ -151,43 +195,24 @@ public class Monkey extends ScalablePicture implements WorldObject {
 
     }
 
-    public boolean isOnGround() {
-        return onGround;
-    }
-
     @Override
     public boolean isSollit() {
         return false;
     }
 
-    public void setImage(int index, boolean jump) {
-        if (jump) {
-            super.setImage(MONKEY_IMAGES_JUMP[index]);
-        } else {
-            super.setImage(MONKEY_IMAGES[index]);
-        }
-    }
-
-
-    @Override
-    protected void setImage(BufferedImage image) {
-        super.setImage(image);
-    }
-
-
     /* Inner classes */
-    private static class Coordinates {
+    private static class Vector {
         private double x;
         private double y;
 
-        private Coordinates(double x, double y) {
+        private Vector(double x, double y) {
             this.x = x;
             this.y = y;
         }
     }
 
     private interface MovementFunction {
-        public Coordinates computeNextVector();
+        public Vector computeNextVector();
     }
 
     private class FunktionAufBoden implements MovementFunction {
@@ -197,8 +222,8 @@ public class Monkey extends ScalablePicture implements WorldObject {
         }
 
         @Override
-        public Coordinates computeNextVector() {
-            return new Coordinates(MONKEY_MOVEMENT * getJoystickX(), 0);
+        public Vector computeNextVector() {
+            return new Vector(MONKEY_MOVEMENT * getJoystickX(), 0);
         }
     }
 
@@ -213,15 +238,14 @@ public class Monkey extends ScalablePicture implements WorldObject {
          *              werden.
          */
         private FunktionSprung(boolean sturz) {
-            this.tickCounter = sturz ? -1 : -100;
-            indexImageJump = sturz ? 1 : 0; // Wir springen direkt zum zweiten Bild.
+            this.tickCounter = sturz ? -1 : -15;
         }
 
         @Override
-        public Coordinates computeNextVector() {
+        public Vector computeNextVector() {
             // -g * t Geschwindigkeit nach Zeit t (Sekunden)
             tickCounter++;
-            return new Coordinates(MONKEY_MOVEMENT * getJoystickX(), AnimalRun.GRAVITY * tickCounter);
+            return new Vector(MONKEY_MOVEMENT * getJoystickX(), AnimalRun.GRAVITY * tickCounter);
         }
     }
 
