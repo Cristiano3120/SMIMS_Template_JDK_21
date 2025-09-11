@@ -1,0 +1,8 @@
+für Sound; Achtung blocking! -> Thread
+
+ try (FileInputStream fis = new FileInputStream("test.mp3")) {
+    Player player = new Player(fis);
+    player.play(); // blockiert, solange die Datei spielt
+} catch (Exception e) {
+    e.printStackTrace();
+}
