@@ -6,6 +6,7 @@ import minigames.animalRun.Worldobject.WorldObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sas.Circle;
+import sas.View;
 
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ public class Monkey extends Circle implements WorldObject {
     /* Static Methods */
 
     /* Object Variables */
+    private View view;
     private AbstractController controller;
     private final ScalablePicture[] MONKEY_IMAGES;
     private final ScalablePicture[] MONKEY_IMAGES_JUMP;
@@ -31,10 +33,11 @@ public class Monkey extends Circle implements WorldObject {
     private boolean nextTickSetFallImage;
 
     /* Constructors */
-    public Monkey(double xp, double yp, AbstractController controller, boolean isMonkey1) throws IOException {
+    public Monkey(double xp, double yp, View view, AbstractController controller, boolean isMonkey1) throws IOException {
         super(xp, yp, 0.1);
         this.MONKEY_IMAGES = new ScalablePicture[4];
         this.MONKEY_IMAGES_JUMP = new ScalablePicture[2];
+        this.view = view;
         this.controller = controller;
         this.isMonkey1 = isMonkey1;
         this.turnedLeft = true;
@@ -188,6 +191,24 @@ public class Monkey extends Circle implements WorldObject {
 
     public void signalCollision() {
         currentMovement = new FunktionSprung(true);
+    }
+
+    public void signalKill() {
+
+        // Spiele Sterbeanimation
+        currentMovement = new FunktionSprung(true);
+        for (ScalablePicture pic : MONKEY_IMAGES) {
+            pic.setHidden(true);
+        }
+        MONKEY_IMAGES_JUMP[0].setHidden(true);
+        MONKEY_IMAGES_JUMP[1].setHidden(false);
+
+        while (getShapeY() <= view.getHeight()) {
+            Vector vector = currentMovement.computeNextVector();
+            move(vector.x, vector.y);
+            MONKEY_IMAGES_JUMP[1].moveTo(getShapeX(), getShapeY());
+            view.wait(10);
+        }
     }
 
     @Override
