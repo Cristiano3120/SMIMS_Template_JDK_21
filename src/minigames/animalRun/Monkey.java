@@ -5,9 +5,11 @@ import controller.AbstractController;
 import minigames.animalRun.Worldobject.WorldObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sas.Picture;
 import sas.Shapes;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -20,14 +22,12 @@ public class Monkey extends ScalablePicture implements WorldObject {
     /* Static Variables */
     protected static double MONKEY_MOVEMENT = 5.0;
     protected static int baseLevelX = 0;
-    private static final int IMAGE_WIDTH = 40;
-    private static final int IMAGE_HEIGHT= 100;
+    private static final int IMAGE_WIDTH = 250;
+    private static final int IMAGE_HEIGHT = 200;
 
     /* Object Variables */
     private AbstractController controller;
-    private final ScalablePicture[] pictures1 = new ScalablePicture[4];
     private final BufferedImage[] MONKEY_IMAGES = new BufferedImage[4];
-    private int currentIndex1;
     private boolean isMonkey1;
     private boolean turnedLeft;
     private boolean onGround;
@@ -36,35 +36,38 @@ public class Monkey extends ScalablePicture implements WorldObject {
     /* Constructors */
     public Monkey(double xp, double yp, AbstractController controller, boolean isMonkey1) throws IOException {
         super(xp, yp, "resources/animalrun/monkey1.png");
+
         this.controller = controller;
         this.isMonkey1 = isMonkey1;
         this.turnedLeft = true;
-        this.currentIndex1 = 0;
 
         prepareMonkeyImages();
         setImage(0); // setze das erste Bild als Start
+        moveTo(xp, yp);
 
     }
 
     public void prepareMonkeyImages() throws IOException {
+
         int summand = isMonkey1 ? 0 : 4;
-        for (int i = 1; i <= 4; i++) {
-            MONKEY_IMAGES[i - 1] = ImageIO.read(new File("resources/animalrun/monkey" + (i + summand) + ".png"));
+        BufferedImage tempImage;
+        for (int i = 0; i < MONKEY_IMAGES.length; i++) {
+
+            // Lade das Bild.
+            tempImage = ImageIO.read(new File("resources/animalrun/monkey" + (i + 1 + summand) + ".png"));
+
+            // Passe die Größe an.
+            BufferedImage sizedImage = new BufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2 = (Graphics2D) sizedImage.getGraphics();
+            Image image = tempImage.getScaledInstance(IMAGE_WIDTH, IMAGE_HEIGHT, Image.SCALE_SMOOTH);
+            g2.drawImage(image, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, null);
+            g2.dispose();
+            MONKEY_IMAGES[i] = sizedImage;
+
         }
     }
 
-    @Override
-    public boolean intersects(Shapes shape) {
-        return pictures1[currentIndex1].intersects(shape);
-    }
-
     /* Object Methods */
-    public void monkeyMove() {
-        double joystickVal = isMonkey1 ? controller.getJoystickRechtsX() : controller.getJoystickLinksX();
-        flip(joystickVal);
-        handleMovement();
-    }
-
     private void handleMovement() {
 
         // TODO
@@ -80,20 +83,12 @@ public class Monkey extends ScalablePicture implements WorldObject {
     }
 
     private void flip(double joystickVal) {
-        if (joystickVal < 0) {
-            if (!turnedLeft) {
-                for (ScalablePicture scalablePicture : pictures1) {
-                    scalablePicture.flipHorizontal();
-                }
-                turnedLeft = true;
-            }
-        } else if (joystickVal > 0) {
-            if (turnedLeft) {
-                for (ScalablePicture scalablePicture : pictures1) {
-                    scalablePicture.flipHorizontal();
-                }
-                turnedLeft = false;
-            }
+        if (joystickVal < 0 && !turnedLeft) {
+            flipHorizontal();
+            turnedLeft = true;
+        } else if (joystickVal > 0 && turnedLeft) {
+            flipHorizontal();
+            turnedLeft = false;
         }
     }
 
@@ -101,23 +96,20 @@ public class Monkey extends ScalablePicture implements WorldObject {
         return isMonkey1 ? controller.getJoystickLinksX() : controller.getJoystickRechtsX();
     }
 
-
     @Override
-    public void doThings(int tick) {
-        monkeyMove();
+    public void doThings() {
 
-        final int animDelay = 8;
-        if (tick % animDelay == 0) {
-            pictures1[animIndex].setHidden(true);
+        // Get the x-position of the correct joystick.
+        double joystickVal = isMonkey1 ? controller.getJoystickRechtsX() : controller.getJoystickLinksX();
+        flip(joystickVal);
+        handleMovement();
 
-            animIndex = animIndex >= 4 - 1
-                    ? 0
-                    : animIndex + 1;
+        animIndex = animIndex >= MONKEY_IMAGES.length - 1
+                ? 0
+                : animIndex + 1;
 
-            pictures1[animIndex].setHidden(false);
-            currentIndex1 = animIndex;
-        }
     }
+
 
     @Override
     public void updatePos() {
@@ -139,6 +131,11 @@ public class Monkey extends ScalablePicture implements WorldObject {
 
     private void setImage(int index) {
         super.setImage(MONKEY_IMAGES[index]);
+    }
+
+    @Override
+    protected void setImage(BufferedImage image){
+        super.setImage(image);
     }
 
 
@@ -185,6 +182,5 @@ public class Monkey extends ScalablePicture implements WorldObject {
             return new Coordinates(MONKEY_MOVEMENT * getJoystickX(), AnimalRun.GRAVITY * tickCounter);
         }
     }
-
 
 }

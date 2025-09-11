@@ -6,9 +6,7 @@ import controller.TastaturController;
 import minigames.AbstractGame;
 import minigames.animalRun.Worldobject.Platform;
 import minigames.animalRun.Worldobject.WorldObject;
-import sas.Shapes;
-import sas.Tools;
-import sas.View;
+import sas.*;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -21,68 +19,67 @@ public class AnimalRun extends AbstractGame {
     public static final double GRAVITY = -1.0;
     private static final int TICK_RATE = 100;
 
-    // TODO: Kamerabewegung
-
     /* Static Methods */
-    public static Set<WorldObject> getWorldObjects() {
-        return World.worldObjects;
-    }
-
-    public static void addToWorldObjects(WorldObject o) {
-        World.summonNextRoundObjects.add(o);
-        //double d = new Platform(view, true).getShapeWidth();
-    }
 
     /* Object Variables */
     private ArduinoController arduinoController;
     private boolean gameRuns = true;
-    private int tick = 0;
-    private World currentWorld;
     private Monkey[] monkeys;
+    private Set<WorldObject> worldObjects;
+    private Set<WorldObject> summonNextRoundObjects;
 
-    public AnimalRun(ArduinoController arduinoController, TastaturController tastaturController, View view) {
-        super(tastaturController, view);
+    public AnimalRun(AbstractController controller, View view) {
+        super(controller, view);
+        this.worldObjects = new HashSet<>();
+        this.summonNextRoundObjects = new HashSet<>();
     }
 
     @Override
     protected void initView() {
         view.setName("AnimalRun");
-
-        new Startbildschirm(controller, view);
-        currentWorld = new World(controller, view);
-
-        AnimalRun.addToWorldObjects(new Platform(view, true));
-
-        start();
     }
 
     @Override
     protected void runGame() {
-        System.out.println("Welcome to AnimalRun");
+
+//        new Startbildschirm(controller, view);
 
         monkeys = new Monkey[2];
         try {
-            monkeys[0] = new Monkey(1000, 200, controller, true);
-            monkeys[1] = new Monkey(1000, 200, controller, false);
+            monkeys[0] = new Monkey(50, 100, controller, true);
+            monkeys[1] = new Monkey(150, 200, controller, false);
+            System.out.println("monkeys jetzt da"); // TODO remove
+
+            summonNextRoundObjects.add(monkeys[0]);
+            summonNextRoundObjects.add(monkeys[1]);
         } catch (IOException e) {
             Tools.confirmDialog("Das Spiel kann nicht starten, weil Bilder nicht geladen werden konnten!");
             throw new RuntimeException(e);
         }
 
-        AnimalRun.addToWorldObjects(monkeys[0]);
-        AnimalRun.addToWorldObjects(monkeys[1]);
-
         long milisPerCycle = 1000 / TICK_RATE;
         long timeStamp = System.currentTimeMillis();
         long timeUntilNextCycle;
 
-        int i = 0;
         while (gameRuns) {
 
             // Setze Zeitstempel (alias "starte Stoppuhr"), lasse alle Objekte ihre Aktionen durchführen und
             // warte anschließend den Tick ab.
             timeStamp = System.currentTimeMillis();
-            update();
+
+            // Füge eventuelle Objekte, die diesen Tick im set stehen, der Welt hinzu.
+            worldObjects.addAll(summonNextRoundObjects);
+            shapesToRemove.addAll(summonNextRoundObjects.stream()
+                    .filter(o -> o instanceof Shapes)
+                    .map(o -> (Shapes) o)
+                    .collect(Collectors.toSet()));
+            summonNextRoundObjects.clear();
+
+            worldObjects.stream().forEach(w -> {
+                w.doThings();
+                w.updatePos();
+            });
+
             checkPlatformCollision();
 
             timeUntilNextCycle = milisPerCycle - (System.currentTimeMillis() - timeStamp);
@@ -97,7 +94,7 @@ public class AnimalRun extends AbstractGame {
      * Diese Methode prüft, ob die Affen auf einer Plattform sind, bzw. ob sie gegen eine dotzen.
      */
     private void checkPlatformCollision() {
-        for (WorldObject object : World.worldObjects) {
+        for (WorldObject object : worldObjects) {
             if (object instanceof Platform platform) {
                 for (Monkey monkey : monkeys) {
 
@@ -115,52 +112,8 @@ public class AnimalRun extends AbstractGame {
         }
     }
 
-    private void update() {
-        currentWorld.update(tick);
-        tick++;
-    }
-
     public Monkey[] getMonkeys() {
         return monkeys;
     }
 
-    public class World {
-
-        //Picture background = new Picture(0,0,WIDTH,HEIGHT,"resources/animalrun/background_game.png");
-
-        public static Set<WorldObject> worldObjects = new HashSet<WorldObject>();
-        public static Set<WorldObject> summonNextRoundObjects = new HashSet<>();
-        // instanzen der playerklasse
-
-        public World(AbstractController controller, View view) {
-
-        }
-
-        void update(int tick) {
-            worldObjects.addAll(summonNextRoundObjects);
-            shapesToRemove.addAll(summonNextRoundObjects.stream()
-                    .filter(o -> o instanceof Shapes)
-                    .map(o -> (Shapes) o)
-                    .collect(Collectors.toSet()));
-            worldObjects.clear();
-
-            worldObjects.stream().forEach(w -> {
-                w.doThings(tick);
-                w.updatePos();
-            });
-
-            if (controller.getLinksB()) { // TODO: remove?
-                newWorldObjekt(new Platform(view, true));
-                view.wait(50);
-            }
-        }
-
-        void newWorldObjekt(Object o) {
-            if (o instanceof WorldObject)
-                worldObjects.add((WorldObject) o);
-            if (o instanceof Shapes) {
-                shapesToRemove.add((Shapes) o);
-            }
-        }
-    }
 }

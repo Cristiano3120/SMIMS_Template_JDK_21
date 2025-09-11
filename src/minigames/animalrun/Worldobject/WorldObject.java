@@ -15,7 +15,7 @@ public interface WorldObject /*extends Shapes*/ {
   //      this.view = view;
  //   }
 
-    public void doThings(int tick);
+    public void doThings();
 
     public void updatePos();
 

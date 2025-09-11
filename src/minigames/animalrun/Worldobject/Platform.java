@@ -49,34 +49,10 @@ public class Platform extends Picture implements WorldObject {
 
     }
 
-    public void doThings(int tick) {
 
-        if (summonNext && getShapeX() + getShapeWidth() <= view.getWidth()) {
-            summonNext();
-        }
-    }
-
-    private void summonNext() {
-        summonNext = false;
-        Platform p = null;
-        do {
-
-            //  view.getWidth() + AnimalRun.getXKameraVersatz(),
-            //            Math.random() * view.getHeight(),
-            //              view.getWidth() * 0.3,
-            //                view.getHeight() * 0.1);
-            if (p != null) {
-                p.deleateMe();
-                p = null;
-            }
-            //System.out.println(id + " neue Plattform");
-            p = new Platform(view, true);
-//            p.setHidden(true);
-            //view.remove(p);
-
-        } while (!p.intersects(nextPlatformZone));
-
-        AnimalRun.addToWorldObjects(p);
+    @Override
+    public void doThings() {
+        // TODO
     }
 
     public void updatePos() {

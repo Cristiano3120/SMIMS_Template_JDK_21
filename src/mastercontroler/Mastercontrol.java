@@ -8,18 +8,17 @@ import minigames.animalRun.AnimalRun;
 import sas.View;
 
 public class Mastercontrol {
-    private static final int WIDTH = 1920;
-    private static final int HEIGHT = 1080;
+    private static final int WIDTH = 500;
+    private static final int HEIGHT = 400;
 
     protected AbstractController controller;
     protected View view;
     protected AbstractGame game;
 
     public Mastercontrol() {
-        view = new View(WIDTH,HEIGHT);
-        TastaturController controller = new TastaturController(view);
-        ArduinoController arduinoController = new ArduinoController();
-
-        game = new AnimalRun(arduinoController, controller, view);
+        view = new View(WIDTH, HEIGHT);
+        AbstractController controller = new TastaturController(view);
+        game = new AnimalRun(controller, view);
+        game.start();
     }
 }
