@@ -104,6 +104,7 @@ public class AnimalRun extends AbstractGame implements Runnable {
                     .filter(o -> o instanceof Shapes)
                     .map(o -> (Shapes) o)
                     .collect(Collectors.toSet()));;
+            summoneNextRoundObjects.clear();
             xKameraVersatz += xKameraSpeed;
 
 //            System.out.println("xKameraVersatz = ");
@@ -114,17 +115,17 @@ public class AnimalRun extends AbstractGame implements Runnable {
             });
 
             if (controller.getLinksB()) {
-                newWorldObjekt(new Platform(view,true));
+                summoneNextRoundObjects.add(new Platform(view,true));
                 view.wait(50);
             }
         }
 
-        void newWorldObjekt(Object o) {
-            if (o instanceof WorldObject)
-                worldObjects.add((WorldObject) o);
-            if (o instanceof Shapes) {
-                shapesToRemove.add((Shapes) o);
-            }
-        }
+//        public void newWorldObjekt(Object o) {
+//            if (o instanceof WorldObject)
+//                worldObjects.add((WorldObject) o);
+//            if (o instanceof Shapes) {
+//                shapesToRemove.add((Shapes) o);
+//            }
+//        }
     }
 }

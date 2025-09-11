@@ -5,10 +5,13 @@ import sas.Picture;
 import sas.Rectangle;
 import sas.View;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Platform extends Picture implements WorldObject {
 
@@ -23,6 +26,7 @@ public class Platform extends Picture implements WorldObject {
     private double xKameraVrsatz = 0;
     private View view;
     private int id;
+    private int size;
 
     public Platform(View view, boolean summonNext) {
         //super(220, 100, 200, 200, "resources/animalrun/platforms/testInsel.png");
@@ -30,6 +34,24 @@ public class Platform extends Picture implements WorldObject {
         this.summonNext = summonNext;
         this.view = view;
         this.id = counter++;
+        size = (int) (Math.random()* 4);
+        BufferedImage image = new BufferedImage(1077+1028+1795*size, 1223, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = (Graphics2D) image.getGraphics();
+
+        try {
+            BufferedImage front = ImageIO.read(new File("resources/animalrun/platforms/platformLinks.png"));
+            BufferedImage back = ImageIO.read(new File("resources/animalrun/platforms/platformRechts.png"));
+            BufferedImage center = ImageIO.read(new File("resources/animalrun/platforms/InselMiatte.png"));
+            g2.drawImage(front,0,0,null);
+            for(int i = 0; i < size; i++){
+                g2.drawImage(front,1077 + x*,0,null);
+            }
+
+            g2.drawImage(front,0,0,null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
 
         scaleTo(view.getWidth() * 0.3, view.getHeight() * 0.1);
 
@@ -107,6 +129,17 @@ public class Platform extends Picture implements WorldObject {
         return false;
     }
 
+    public Point2D.Double getPos(){
+        return pos;
+    }
+
+    public double getWidth(){
+        return getShapeWidth();
+    }
+
+    public double getHeight(){
+        return getShapeHeight();
+    }
 
     protected void setPosition() {
 
