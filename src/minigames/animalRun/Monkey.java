@@ -159,6 +159,7 @@ public class Monkey extends Circle implements WorldObject {
                 MONKEY_IMAGES_JUMP[1].setHidden(false);
                 nextTickSetFallImage = false;
             }
+            hitbox.moveTo(getShapeX(), getShapeY());
             return;
         }
 
@@ -172,6 +173,7 @@ public class Monkey extends Circle implements WorldObject {
             MONKEY_IMAGES_JUMP[0].setHidden(true);
             MONKEY_IMAGES_JUMP[1].setHidden(false);
             MONKEY_IMAGES_JUMP[1].moveTo(getShapeX(), getShapeY());
+            hitbox.moveTo(getShapeX(), getShapeY());
             return;
         }
 
@@ -190,6 +192,7 @@ public class Monkey extends Circle implements WorldObject {
         for (ScalablePicture pic : MONKEY_IMAGES_JUMP) {
             pic.setHidden(true);
         }
+        hitbox.moveTo(getShapeX(), getShapeY());
     }
 
 

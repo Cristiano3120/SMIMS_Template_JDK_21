@@ -2,6 +2,7 @@ package minigames.animalRun.Worldobject;
 
 import common.ScalablePicture;
 import minigames.animalRun.Monkey;
+import sas.Shapes;
 
 public class Loewe implements WorldObject {
 
@@ -31,16 +32,25 @@ public class Loewe implements WorldObject {
     @Override
     public void doThings() {
 
+
         Monkey linkerAffe = monkeys[0].getShapeX() < monkeys[1].getShapeX() ? monkeys[0] : monkeys[1];
 
         double differenceY = linkerAffe.getShapeY() - loeweClosed.getShapeY();
         loeweClosed.move(0, differenceY * 0.2);
-        if (linkerAffe.intersects(loeweClosed)) {
+        if (linkerAffe.getHitbox().intersects(loeweClosed)) {
             loeweOpen.moveTo(loeweClosed.getShapeX(), loeweClosed.getShapeY());
             loeweOpen.setHidden(false);
             loeweClosed.setHidden(true);
         }
 
+    }
+
+    public boolean intersects(Shapes shape) {
+        if (loeweClosed.getHidden()) {
+            return loeweOpen.intersects(shape);
+        } else {
+            return loeweClosed.intersects(shape);
+        }
     }
 
     @Override

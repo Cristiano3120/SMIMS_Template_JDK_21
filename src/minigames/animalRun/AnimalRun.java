@@ -48,8 +48,8 @@ public class AnimalRun extends AbstractGame {
 
         monkeys = new Monkey[2];
         try {
-            monkeys[0] = new Monkey(50, 100, view, controller, true);
-            monkeys[1] = new Monkey(150, 200, view, controller, false);
+            monkeys[0] = new Monkey(250, 100, view, controller, true);
+            monkeys[1] = new Monkey(300, 200, view, controller, false);
 
             summonNextRoundObjects.add(monkeys[0]);
             summonNextRoundObjects.add(monkeys[1]);
@@ -59,6 +59,7 @@ public class AnimalRun extends AbstractGame {
         }
 
         this.loewe = new Loewe(monkeys);
+        summonNextRoundObjects.add(loewe);
 
         long milisPerCycle = 1000 / TICK_RATE;
         long timeStamp = System.currentTimeMillis();
@@ -87,8 +88,23 @@ public class AnimalRun extends AbstractGame {
 //                }
 //            }
 
-            // Füge eventuelle Objekte, die diesen Tick im set stehen, der Welt hinzu.
-            worldObjects.addAll(summonNextRoundObjects);
+            // Hat der Löwe einen erwischt? Oder ist ein Affe aus der Map gefallen?
+            for (Monkey monkey : monkeys) {
+                if (loewe.intersects(monkey)) {
+                    monkey.signalKill();
+                    gameRuns = false;
+                    return;
+                }
+                if(monkey.getHitbox().getShapeX() > view.getHeight()) {
+                    gameRuns = false;
+                    return;
+                }
+            }
+
+            // Ist ein Affe aus der Map gefallen?
+
+                // Füge eventuelle Objekte, die diesen Tick im set stehen, der Welt hinzu.
+                worldObjects.addAll(summonNextRoundObjects);
             shapesToRemove.addAll(summonNextRoundObjects.stream()
                     .filter(o -> o instanceof Shapes)
                     .map(o -> (Shapes) o)
@@ -143,18 +159,21 @@ public class AnimalRun extends AbstractGame {
      */
     private void checkPlatformCollision() {
         for (WorldObject object : worldObjects) {
+
+
             if (object instanceof Platform platform) {
 
 
-                System.out.println(platform.getShapeX() + ", " + platform.getShapeY() + ", " + platform.getShapeHeight() + ", " + platform.getShapeHeight());
+//                System.out.println(platform.getShapeX() + ", " + platform.getShapeY() + ", " + platform.getShapeHeight() + ", " + platform.getShapeHeight());
                 for (Monkey monkey : monkeys) {
                     System.out.println(">>" + monkey.getShapeX() + ", " + monkey.getShapeY() + ", " + monkey.getMonkeyWidth() + ", " + monkey.getMonkeyHeight());
 
                     // Wenn der Affe die Plattform von oben berührt ...
 //                    if (monkey.intersects(platform) && monkey.getShapeY() + monkey.getMonkeyHeight() >= platform.getShapeY()) {
-                    boolean affeAufOderInPlattform = monkey.intersects(platform) && monkey.getShapeX() > platform.getShapeX()
+                    boolean affeAufOderInPlattform = monkey.getHitbox().intersects(platform)
+                            && monkey.getShapeX() > platform.getShapeX()
                             && monkey.getShapeX() + monkey.getMonkeyWidth() < platform.getShapeX() + platform.getWidth();
-                    System.out.println(monkey.intersects(platform));
+//                    System.out.println(monkey.intersects(platform));
                     if (affeAufOderInPlattform) {
                         // ... kann der Affe darauf laufen.
                         monkey.moveTo(monkey.getShapeX(), platform.getShapeY() - Monkey.IMAGE_HEIGHT + 55);
