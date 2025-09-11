@@ -7,14 +7,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class MusicOrSoundPlayerThread extends Thread {
+public class SoundThread extends Thread {
 
     private FileInputStream inputStream;
     private String file;
     private Player player;
     private boolean loop;
 
-    private MusicOrSoundPlayerThread(String file, boolean loop) throws FileNotFoundException, JavaLayerException {
+    private SoundThread(String file, boolean loop) throws FileNotFoundException, JavaLayerException {
         this.file = file;
         this.inputStream = new FileInputStream(file);
         this.player = new Player(inputStream);
@@ -47,7 +47,7 @@ public class MusicOrSoundPlayerThread extends Thread {
         // Do we have to start a new player thread?
         if (loop) {
             try {
-                new MusicOrSoundPlayerThread(file, loop).start();
+                new SoundThread(file, loop).start();
             } catch (FileNotFoundException | JavaLayerException e) {
                 e.printStackTrace();
             }
