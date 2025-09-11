@@ -2,15 +2,15 @@ package minigames.animalRun.Worldobject;
 
 import common.ScalablePicture;
 import controller.AbstractController;
-import controller.TastaturController;
 import minigames.animalRun.AnimalRun;
 import minigames.animalRun.Monkey;
-import sas.Circle;
 import sas.View;
 
 import java.awt.*;
 
 public class Loewe implements WorldObject {
+
+    private static final int LION_SPAWN_X = 10;
 
     private Monkey monkeys[];
     private View view;
@@ -23,8 +23,8 @@ public class Loewe implements WorldObject {
         this.view = view;
         this.controller = controller;
 
-        this.loeweClosed = new ScalablePicture(0, 0, "resources/animalrun/loeweClosed.png");
-        this.loeweOpen = new ScalablePicture(0, 0, "resources/animalrun/loeweOpen.png");
+        this.loeweClosed = new ScalablePicture(LION_SPAWN_X, 0, "resources/animalrun/loeweClosed.png");
+        this.loeweOpen = new ScalablePicture(LION_SPAWN_X, 0, "resources/animalrun/loeweOpen.png");
         this.monkeys = (Monkey[]) AnimalRun.getWorldObjects().stream().filter(o -> o instanceof Monkey).toArray();
 
         loeweOpen.setHidden(true);
