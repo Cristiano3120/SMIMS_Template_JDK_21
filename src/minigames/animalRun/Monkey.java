@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import sas.Picture;
 import sas.Shapes;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -44,8 +45,11 @@ public class Monkey extends Picture implements WorldObject {
 
     public void setupMonkeyImages(double xp, double yp) {
 
+
+
         BufferedImage sizedImage = new BufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2 = (Graphics2D) sizedImage.getGraphics();
+
         Image image = bImage.getScaledInstance((int) getWidth(), (int) getHeight(), Image.SCALE_SMOOTH);
         g2.drawImage(bImage, 0, 0, (int) getWidth(), (int) getHeight(), null);
         g2.dispose();
@@ -53,7 +57,15 @@ public class Monkey extends Picture implements WorldObject {
 
 
         int summand = isMonkey1 ? 0 : 4;
+        BufferedImage image;
         for (int i = 1; i <= 4; i++) {
+             image = ImageIO.read(new File("resources/animalrun/monkey" + (i + summand) + ".png"));
+
+
+
+
+
+
             ScalablePicture scalablePicture = new ScalablePicture(xp, yp, 150, 150, "resources/animalrun/monkey" + (i + summand) + ".png");
             scalablePicture.setHidden(true);
 
