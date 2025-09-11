@@ -8,8 +8,8 @@ import minigames.animalRun.AnimalRun;
 import sas.View;
 
 public class Mastercontrol {
-    private static final int WIDTH = 500;
-    private static final int HEIGHT = 400;
+    private static final int WIDTH = 1850;
+    private static final int HEIGHT = 630;
 
     protected AbstractController controller;
     protected View view;

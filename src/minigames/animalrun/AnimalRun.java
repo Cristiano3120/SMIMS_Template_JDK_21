@@ -2,7 +2,6 @@ package minigames.animalRun;
 
 import controller.AbstractController;
 import controller.ArduinoController;
-import controller.TastaturController;
 import minigames.AbstractGame;
 import minigames.animalRun.Worldobject.Platform;
 import minigames.animalRun.Worldobject.WorldObject;
@@ -48,7 +47,6 @@ public class AnimalRun extends AbstractGame {
         try {
             monkeys[0] = new Monkey(50, 100, controller, true);
             monkeys[1] = new Monkey(150, 200, controller, false);
-            System.out.println("monkeys jetzt da"); // TODO remove
 
             summonNextRoundObjects.add(monkeys[0]);
             summonNextRoundObjects.add(monkeys[1]);
@@ -102,11 +100,11 @@ public class AnimalRun extends AbstractGame {
                     if (monkey.intersects(platform) && monkey.getShapeY() + monkey.getShapeHeight() >= platform.getShapeY()) {
 
                         // ... kann der Affe darauf laufen.
-                        monkey.setOnGround(true);
+                        monkey.signalOnGround(true);
                     }
 
                     // Der Affe ist offensichtlich in der Luft.
-                    monkey.setOnGround(false);
+                    monkey.signalOnGround(false);
                 }
             }
         }
