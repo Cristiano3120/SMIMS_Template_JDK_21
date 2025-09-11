@@ -1,0 +1,42 @@
+Index: src/minigames/animalrun/AnimalRun.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun;\r\n\r\nimport controller.AbstractController;\r\nimport minigames.AbstractGame;\r\nimport minigames.animalrun.Worldobject.Platform;\r\nimport minigames.animalrun.Worldobject.WorldObject;\r\nimport sas.Shapes;\r\nimport sas.View;\r\n\r\nimport java.util.Collections;\r\nimport java.util.HashSet;\r\nimport java.util.Set;\r\nimport java.util.stream.Collectors;\r\n\r\npublic class AnimalRun extends AbstractGame implements Runnable {\r\n    private static final int tickRate = 60;\r\n    private static final int WIDTH = 1000 / 2;\r\n    private static final int HEIGHT = 600 / 2;\r\n    private boolean gameRuns = true;\r\n    private int tick = 0;\r\n\r\n    private World currentWorld;\r\n\r\n    public AnimalRun(AbstractController controller, View view) {\r\n        super(controller, view);\r\n    }\r\n\r\n    @Override\r\n    protected void initView() {\r\n        view.setSize(WIDTH, HEIGHT);\r\n        view.setName(\"AnimalRun\");\r\n\r\n        new Startbildschirm(controller, view, WIDTH, HEIGHT);\r\n\r\n        currentWorld = new World(controller, view);\r\n    }\r\n\r\n    @Override\r\n    protected void runGame() {\r\n        new Thread(this).start();;\r\n    }\r\n\r\n    @Override\r\n    public void run() {\r\n\r\n\r\n        System.out.println(\"Welcome to AnimalRun\");\r\n\r\n        long milisPerCycle = 1000 / tickRate;\r\n        long timeStamp = System.currentTimeMillis();\r\n        long timeUntilNextCycle;\r\n\r\n        while (gameRuns) {\r\n            timeStamp = System.currentTimeMillis();\r\n            update();\r\n            timeUntilNextCycle = milisPerCycle - (System.currentTimeMillis() - timeStamp);\r\n            if (timeUntilNextCycle < 0) timeUntilNextCycle = 0;\r\n            try {\r\n                Thread.sleep(timeUntilNextCycle);\r\n                //view.wait(timeUntilNextCycle);\r\n            } catch (InterruptedException e) {\r\n                throw new RuntimeException(e);\r\n            }\r\n        }\r\n    }\r\n\r\n    private void update() {\r\n        currentWorld.update(tick);\r\n        tick++;\r\n    }\r\n\r\n    public static double getXKameraVersatz() {\r\n        return World.xKameraVersatz;\r\n    }\r\n\r\n    public static Set<WorldObject> getWorldObjects() {\r\n        return World.worldObjects;\r\n    }\r\n    public static void addToWorldObjects(WorldObject o) {\r\n        World.summoneNextRoundObjects.add(o);\r\n        //double d = new Platform(view, true).getShapeWidth();\r\n    }\r\n\r\n\r\n\r\n\r\n    private class World {\r\n        public static double xKameraVersatz = 0;\r\n        double xKameraSpeed = 1;\r\n\r\n        //Picture background = new Picture(0,0,WIDTH,HEIGHT,\"resources/animalrun/background_game.png\");\r\n\r\n        public static Set<WorldObject> worldObjects = new HashSet<WorldObject>();\r\n        public static Set<WorldObject> summoneNextRoundObjects = new HashSet<>();\r\n        // instanzen der playerklasse\r\n\r\n        public World(AbstractController controller, View view) {\r\n\r\n        }\r\n\r\n        void update(int tick) {\r\n            worldObjects.addAll(summoneNextRoundObjects);\r\n            shapesToRemove.addAll( summoneNextRoundObjects.stream()\r\n                    .filter(o -> o instanceof Shapes)\r\n                    .map(o -> (Shapes) o)\r\n                    .collect(Collectors.toSet()));;\r\n            xKameraVersatz += xKameraSpeed;\r\n\r\n            System.out.println(\"xKameraVersatz = \");\r\n\r\n            worldObjects.stream().forEach(w -> {\r\n                w.doThings(tick);\r\n                w.updatePos();\r\n            });\r\n\r\n            if (controller.getLinksB()) {\r\n                newWorldObjekt(new Platform(view,true));\r\n                view.wait(50);\r\n            }\r\n        }\r\n\r\n        void newWorldObjekt(Object o) {\r\n            if (o instanceof WorldObject)\r\n                worldObjects.add((WorldObject) o);\r\n            if (o instanceof Shapes) {\r\n                shapesToRemove.add((Shapes) o);\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/AnimalRun.java b/src/minigames/animalrun/AnimalRun.java
+--- a/src/minigames/animalrun/AnimalRun.java	(revision f09e2bfeb7146ca0b97fe477317b95fec55a28b3)
++++ b/src/minigames/animalrun/AnimalRun.java	(date 1757575328550)
+@@ -14,8 +14,8 @@
+ 
+ public class AnimalRun extends AbstractGame implements Runnable {
+     private static final int tickRate = 60;
+-    private static final int WIDTH = 1000 / 2;
+-    private static final int HEIGHT = 600 / 2;
++    private static final int WIDTH = 1100 ;
++    private static final int HEIGHT = 700 ;
+     private boolean gameRuns = true;
+     private int tick = 0;
+ 
+Index: src/mastercontroler/Mastercontrol.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package mastercontroler;\r\n\r\nimport controller.AbstractController;\r\nimport controller.TastaturController;\r\nimport minigames.AbstractGame;\r\nimport minigames.animalrun.AnimalRun;\r\nimport minigames.animalRun.Monkey;\r\nimport sas.View;\r\n\r\nimport java.util.ArrayList;\r\n\r\nimport static java.lang.invoke.MethodHandles.loop;\r\n\r\npublic class Mastercontrol {\r\n    private static final int WIDTH = 600;\r\n    private static final int HEIGHT = 400;\r\n\r\n    protected AbstractController controller;\r\n    protected View view;\r\n    protected AbstractGame game;\r\n\r\n    public Mastercontrol() {\r\n        view = new View(WIDTH,HEIGHT);\r\n        controller =new TastaturController(view);\r\n        game =new AnimalRun(controller,view);\r\n        System.out.println(\"test--\");\r\n        game.start();\r\n        System.out.println(\"test--1\");\r\n        Monkey monkey = new Monkey(600, 200, 200, controller, true, view);\r\n        Monkey monkey2 = new Monkey(400, 200, 200, controller, false, view);\r\n\r\n        AnimalRun.addToWorldObjects(monkey);\r\n        AnimalRun.addToWorldObjects(monkey2);\r\n\r\n        System.out.println(\"test0\");\r\n        loop(monkey, monkey2, view);\r\n    }\r\n\r\n    private void loop(Monkey monkey, Monkey monkey2, View view) {\r\n        System.out.println(\"test1\");\r\n        monkey.pictures1[0].setHidden(true);\r\n        monkey2.pictures1[0].setHidden(true);\r\n\r\n        int i = 0;\r\n        while (true) {\r\n            System.out.println(\"test2\");\r\n            monkey.monkeyMove();\r\n            monkey2.monkeyMove();\r\n            monkey.monkeyJump();\r\n            monkey2.monkeyJump();\r\n            System.out.println(\"test3\");\r\n            monkey.pictures1[i].setHidden(true);\r\n            monkey2.pictures1[i].setHidden(true);\r\n\r\n            i = i >= 4 - 1\r\n                    ? 0\r\n                    : i + 1;\r\n\r\n            monkey.pictures1[i].setHidden(false);\r\n            monkey.currentIndex1 = i;\r\n\r\n            monkey2.pictures1[i].setHidden(false);\r\n            monkey2.currentIndex1 = i;\r\n\r\n            view.wait(180);\r\n\r\n            System.out.println(\"test\");\r\n        }\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/mastercontroler/Mastercontrol.java b/src/mastercontroler/Mastercontrol.java
+--- a/src/mastercontroler/Mastercontrol.java	(revision f09e2bfeb7146ca0b97fe477317b95fec55a28b3)
++++ b/src/mastercontroler/Mastercontrol.java	(date 1757575272336)
+@@ -12,8 +12,8 @@
+ import static java.lang.invoke.MethodHandles.loop;
+ 
+ public class Mastercontrol {
+-    private static final int WIDTH = 600;
+-    private static final int HEIGHT = 400;
++    private static final int WIDTH = 1100;
++    private static final int HEIGHT = 700;
+ 
+     protected AbstractController controller;
+     protected View view;
