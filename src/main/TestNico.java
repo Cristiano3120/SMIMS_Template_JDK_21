@@ -2,20 +2,32 @@ package main;
 
 import controller.AbstractController;
 import controller.TastaturController;
-import sas.Circle;
+import minigames.pong.PongNico;
+import sas.Rectangle;
 import sas.View;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class TestNico {
 
     private AbstractController controller;
     private View view;
+    private Rectangle pong1;
+    private  Rectangle pong2;
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args)
+    {
         View view = new View(800, 600);
-        view.setName("Startbildschirm Animalrun");
-        AbstractController controller = new TastaturController(view);
+        PongNico pongNico = new PongNico(view, new TastaturController(view));
+        while (true)
+        {
+            pongNico.doThat();
+            pongNico.pongWin();
+            view.wait(10);
+        }
+
+        //        view.setName("Startbildschirm Animalrun");
 ////        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);
 //
 //        ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), "resources/animalrun/background.png");
@@ -42,45 +54,45 @@ public class TestNico {
 //        view.remove(pressA_button);
 //        view.remove(headline);
 
-        Circle loewe = new Circle(50,50,30, new Color(0,0,255));
-        Circle monkey = new Circle(200,100,30, new Color(255,0,0));
-
-
-        while (!controller.getLinksA()) {
-            view.wait(10);
-        }
-
-        if (monkey.getShapeY() > loewe.getShapeY()) {
-            while(monkey.getShapeY() != loewe.getShapeY()) {
-                loewe.move(0, 1);
-                view.wait(4);
-            }
-        } else if (monkey.getShapeY() < loewe.getShapeY()) {
-            while(monkey.getShapeY() != loewe.getShapeY()) {
-                loewe.move(0, -1);
-            }
-        }
-
-        while (!monkey.intersects(loewe)) {
-            monkey.move(-1, 0);
-        }
-
-        while (!controller.getLinksA()) {
-            view.wait(10);
-        }
-
-        if (monkey.intersects(loewe)) {
-            for (int i = 0; i < 40; i++) {
-                monkey.move(1,-1);
-                view.wait(3);
-            }
-            for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {
-                monkey.move(0,1);
-                view.wait(1);
-            }
-            monkey.setHidden(true);
-            view.remove(monkey);
-        }
+//        Circle loewe = new Circle(50,50,30, new Color(0,0,255));
+//        Circle monkey = new Circle(200,100,30, new Color(255,0,0));
+//
+//
+//        while (!controller.getLinksA()) {
+//            view.wait(10);
+//        }
+//
+//        if (monkey.getShapeY() > loewe.getShapeY()) {
+//            while(monkey.getShapeY() != loewe.getShapeY()) {
+//                loewe.move(0, 1);
+//                view.wait(4);
+//            }
+//        } else if (monkey.getShapeY() < loewe.getShapeY()) {
+//            while(monkey.getShapeY() != loewe.getShapeY()) {
+//                loewe.move(0, -1);
+//            }
+//        }
+//
+//        while (!monkey.intersects(loewe)) {
+//            monkey.move(-1, 0);
+//        }
+//
+//        while (!controller.getLinksA()) {
+//            view.wait(10);
+//        }
+//
+//        if (monkey.intersects(loewe)) {
+//            for (int i = 0; i < 40; i++) {
+//                monkey.move(1,-1);
+//                view.wait(3);
+//            }
+//            for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {
+//                monkey.move(0,1);
+//                view.wait(1);
+//            }
+//            monkey.setHidden(true);
+//            view.remove(monkey);
+//        }
 //        Circle monkey = new Circle(200,100,30, new Color(255,0,0));
 //        Circle tumbleweed = new Circle(50,100,30, new Color(204,153,51));
 //        tumbleweed.moveTo(view.getWidth(), 100);
@@ -113,7 +125,9 @@ public class TestNico {
 //            monkey1.setHidden(true);
 //            view.remove(monkey1);
 //        }
-//    }
+//
+   }
 
-}}
+}
+
 
