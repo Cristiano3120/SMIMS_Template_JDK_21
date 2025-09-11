@@ -4,6 +4,7 @@ import common.Util;
 import controller.AbstractController;
 import controller.ArduinoController;
 import minigames.AbstractGame;
+import minigames.animalRun.Worldobject.Loewe;
 import minigames.animalRun.Worldobject.Platform;
 import minigames.animalRun.Worldobject.WorldObject;
 import sas.*;
@@ -25,9 +26,10 @@ public class AnimalRun extends AbstractGame {
     private ArduinoController arduinoController;
     private boolean gameRuns = true;
     private Monkey[] monkeys;
+    private Loewe loewe;
     private Set<WorldObject> worldObjects;
     private Set<WorldObject> summonNextRoundObjects;
-    private int tick;
+
 
     public AnimalRun(AbstractController controller, View view) {
         super(controller, view);
@@ -46,8 +48,8 @@ public class AnimalRun extends AbstractGame {
 
         monkeys = new Monkey[2];
         try {
-            monkeys[0] = new Monkey(50, 100, controller, true);
-            monkeys[1] = new Monkey(150, 200, controller, false);
+            monkeys[0] = new Monkey(50, 100, view, controller, true);
+            monkeys[1] = new Monkey(150, 200, view, controller, false);
 
             summonNextRoundObjects.add(monkeys[0]);
             summonNextRoundObjects.add(monkeys[1]);
@@ -56,11 +58,13 @@ public class AnimalRun extends AbstractGame {
             throw new RuntimeException(e);
         }
 
+        this.loewe = new Loewe(monkeys);
+
         long milisPerCycle = 1000 / TICK_RATE;
         long timeStamp = System.currentTimeMillis();
         long timeUntilNextCycle;
 
-        //summonNextRoundObjects.add(new Platform(view,true));
+        summonNextRoundObjects.add(new Platform(view, false));
 
         while (gameRuns) {
 
@@ -68,15 +72,20 @@ public class AnimalRun extends AbstractGame {
             // warte anschließend den Tick ab.
             timeStamp = System.currentTimeMillis();
             //MonkeyCollision
-            for (Monkey monkey : monkeys) {
-                boolean collision =
-                    worldObjects.stream()
-                        .filter(o -> o instanceof Platform)
-                        .map(p -> (Platform) p)
-                        .filter(p -> Util.getRectengle2DFrom(p).intersects(Util.getRectengle2DFrom(monkey)))
-                        .anyMatch(p -> p.getShapeY() > monkey.getShapeY()+monkey.getShapeHeight());
-                if(collision) monkey.signalCollision();
-            }
+//            Rectangle hitbox;
+//            for (Monkey monkey : monkeys) {
+//                hitbox = monkey.getHitbox();
+//                boolean collision =
+//                        worldObjects.stream()
+//                                .filter(o -> o instanceof Platform)
+//                                .map(p -> (Platform) p)
+//                                .filter(p -> Util.getRectengle2DFrom(p).intersects(Util.getRectengle2DFrom(monkey)))
+//                                .anyMatch(p -> p.getShapeY() > monkey.getShapeY() + monkey.getMonkeyHeight());
+//
+//                if (collision) {
+//                    monkey.signalCollision();
+//                }
+//            }
 
             // Füge eventuelle Objekte, die diesen Tick im set stehen, der Welt hinzu.
             worldObjects.addAll(summonNextRoundObjects);
@@ -91,8 +100,9 @@ public class AnimalRun extends AbstractGame {
                 w.updatePos();
             });
 
-            if(tick % 200 == 0)
-                summonNextRoundObjects.add(new Platform(view,false));
+//            if (tick % 200 == 0) {
+//                summonNextRoundObjects.add(new Platform(view, false));
+//            }
 
             checkPlatformCollision();
 
@@ -100,25 +110,25 @@ public class AnimalRun extends AbstractGame {
             if (timeUntilNextCycle < 0) timeUntilNextCycle = 0;
 
             view.wait((int) timeUntilNextCycle);
-            tick++;
+
         }
     }
 
-    private void newPlatform(){
+    private void newPlatform() {
         worldObjects.stream()
                 .filter(o -> o instanceof Platform)
                 .map(o -> (Platform) o)
                 .filter(p -> p.summonNext)
-                .forEach( pp -> {
+                .forEach(pp -> {
                     pp.summonNext = false;
                     Platform p = null;
                     do {
 
-                        if (p != null){
+                        if (p != null) {
                             p.deleateMe();
                             p = null;
                         }
-                        p = (Math.random() < 0.2)?  new Platform(view, true): new Platform(view,false);
+                        p = (Math.random() < 0.2) ? new Platform(view, true) : new Platform(view, false);
 
                     } while (!p.intersects(pp.nextPlatformZone));
 
@@ -134,17 +144,26 @@ public class AnimalRun extends AbstractGame {
     private void checkPlatformCollision() {
         for (WorldObject object : worldObjects) {
             if (object instanceof Platform platform) {
+
+
+                System.out.println(platform.getShapeX() + ", " + platform.getShapeY() + ", " + platform.getShapeHeight() + ", " + platform.getShapeHeight());
                 for (Monkey monkey : monkeys) {
+                    System.out.println(">>" + monkey.getShapeX() + ", " + monkey.getShapeY() + ", " + monkey.getMonkeyWidth() + ", " + monkey.getMonkeyHeight());
 
                     // Wenn der Affe die Plattform von oben berührt ...
-                    if (monkey.intersects(platform) && monkey.getShapeY() + monkey.getShapeHeight() >= platform.getShapeY()) {
-
+//                    if (monkey.intersects(platform) && monkey.getShapeY() + monkey.getMonkeyHeight() >= platform.getShapeY()) {
+                    boolean affeAufOderInPlattform = monkey.intersects(platform) && monkey.getShapeX() > platform.getShapeX()
+                            && monkey.getShapeX() + monkey.getMonkeyWidth() < platform.getShapeX() + platform.getWidth();
+                    System.out.println(monkey.intersects(platform));
+                    if (affeAufOderInPlattform) {
                         // ... kann der Affe darauf laufen.
+                        monkey.moveTo(monkey.getShapeX(), platform.getShapeY() - Monkey.IMAGE_HEIGHT + 55);
                         monkey.signalOnGround(true);
-                    }
+                    } else {
 
-                    // Der Affe ist offensichtlich in der Luft.
-                    monkey.signalOnGround(false);
+                        // Der Affe ist offensichtlich in der Luft.
+                        monkey.signalOnGround(false);
+                    }
                 }
             }
         }

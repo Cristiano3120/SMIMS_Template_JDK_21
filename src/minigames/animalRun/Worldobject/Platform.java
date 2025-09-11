@@ -15,7 +15,6 @@ import java.io.IOException;
 public class Platform extends Picture implements WorldObject {
 
     private static final double SPEED = 5.0;
-    private static int counter = 0; // TODO: Remove
 
     //Test
     public boolean summonNext;
@@ -38,7 +37,6 @@ public class Platform extends Picture implements WorldObject {
         //super(220, 100, 200, 200, "resources/animalrun/platforms/testInsel.png");
         super(view.getWidth()*2, 100, 200, 200, "resources/animalrun/platforms/InselTest2.png");
         this.view = view;
-        this.id = counter++;
         size = (int) (Math.random()* 2);
 
         if (images == null) {

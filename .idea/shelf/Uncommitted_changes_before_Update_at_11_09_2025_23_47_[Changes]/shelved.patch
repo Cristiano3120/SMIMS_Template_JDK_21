@@ -1,0 +1,173 @@
+Index: src/minigames/animalRun/Worldobject/Platform.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalRun.Worldobject;\r\n\r\nimport minigames.animalRun.AnimalRun;\r\nimport sas.Picture;\r\nimport sas.Rectangle;\r\nimport sas.View;\r\n\r\nimport javax.imageio.ImageIO;\r\nimport java.awt.*;\r\nimport java.awt.geom.Point2D;\r\nimport java.awt.image.BufferedImage;\r\nimport java.io.File;\r\nimport java.io.IOException;\r\n\r\npublic class Platform extends Picture implements WorldObject {\r\n\r\n    private static final double SPEED = 5.0;\r\n    private static int counter = 0; // TODO: Remove\r\n\r\n    //Test\r\n    private boolean summonNext;\r\n    private Point2D.Double pos;\r\n    private Rectangle rectTest;\r\n    private Rectangle blockedZone;\r\n    private Rectangle nextPlatformZone;\r\n    private double xKameraVrsatz = 0;\r\n    private View view;\r\n    private int id;\r\n    private int size;\r\n    public boolean deleateMe = false;\r\n\r\n\r\n    public Platform(View view, boolean summonNext, boolean space) {\r\n        //super(220, 100, 200, 200, \"resources/animalrun/platforms/testInsel.png\");\r\n        super(view.getWidth(), 100, 200, 200, \"resources/animalrun/platforms/InselTest2.png\");\r\n        this.summonNext = summonNext;\r\n        this.view = view;\r\n        this.id = counter++;\r\n        size = (int) (Math.random()* 2);\r\n        BufferedImage image = new BufferedImage(1021+1077+1795*size, 1223, BufferedImage.TYPE_INT_ARGB);\r\n        Graphics2D g2 = (Graphics2D) image.getGraphics();\r\n\r\n        try {\r\n            BufferedImage front = ImageIO.read(new File(\"resources/animalrun/platforms/platformLinks.png\"));\r\n            BufferedImage back = ImageIO.read(new File(\"resources/animalrun/platforms/platformRechts.png\"));\r\n            BufferedImage center = ImageIO.read(new File(\"resources/animalrun/platforms/platformMitte.png\"));\r\n            g2.drawImage(front,0,100,null);\r\n            for(int i = 0; i < size; i++){\r\n                g2.drawImage(center,1021 + i*1795,0,null);\r\n            }\r\n            g2.drawImage(back,1021 + size*1795,0,null);\r\n\r\n        } catch (IOException e) {\r\n            throw new RuntimeException(e);\r\n        }\r\n        setImage(image);\r\n\r\n        scaleTo(image.getWidth() * (size+1)*0.1, image.getHeight() * 0.08);\r\n\r\n        pos = new Point2D.Double();\r\n        space = true;\r\n        pos.x = (space)? view.getWidth() + SPEED + view.getWidth()*0.1 : view.getWidth() + SPEED;\r\n        pos.y = Math.random() * (view.getHeight() - getHeight() *3) +  getHeight() *2;\r\n        pos.y = ((int) (Math.random() * (view.getHeight() - getHeight() *3) +  getHeight() *2) / 10)*10;\r\n        //pos.y = Math.random() * (view.getHeight() - getHeight() / 2);\r\n\r\n\r\n//        System.out.println((view.getWidth() * 0.3) + \" / \" + view.getHeight() * 0.1 + \" -> \" + getShapeWidth() + \" \" + getShapeHeight());\r\n\r\n        //setImage(ImageIO.read(new File(\"resources/animalrun/platforms/testInsel.png\")));\r\n//        setImage(getImage());\r\n\r\n        rectTest = new Rectangle(getShapeX(), getShapeY(), getShapeWidth(), getShapeHeight(), Color.red);\r\n        rectTest.setTransparency(0.0F);\r\n\r\n        blockedZone = new Rectangle(0, 0, getShapeWidth(), getShapeHeight() * 5, Color.blue);\r\n        blockedZone.setTransparency(0.00F);\r\n\r\n        nextPlatformZone = new Rectangle(0, 0, getShapeWidth() + view.getWidth() * 0.3, getShapeHeight() * 4, Color.yellow);\r\n        nextPlatformZone.setTransparency(0.00F);\r\n        setPosition();\r\n//        System.out.println(\"Platform: Test\");\r\n\r\n\r\n    }\r\n\r\n    private Platform(double xPos, double yPos, double width, double height, String textur, View view) {\r\n        super(xPos, yPos, width, height, textur);\r\n\r\n    }\r\n\r\n\r\n    public void doThings(int tick) {\r\n        if(getShapeX() + getShapeWidth() < 0 )\r\n            deleateMe();\r\n\r\n        if (summonNext && getShapeX() + getShapeWidth() <= view.getWidth()) {\r\n            System.out.println(id + \" spawnt neu\");\r\n            summonNext();\r\n        }\r\n    }\r\n\r\n    private void summonNext() {\r\n        summonNext = false;\r\n        Platform p = null;\r\n        do {\r\n\r\n            //  view.getWidth() + AnimalRun.getXKameraVersatz(),\r\n            //            Math.random() * view.getHeight(),\r\n            //              view.getWidth() * 0.3,\r\n            //                view.getHeight() * 0.1);\r\n            if (p != null){\r\n                p.deleateMe();\r\n                p = null;\r\n            }\r\n            //System.out.println(id + \" neue Plattform\");\r\n            p = (Math.random() < 0.2)?  new Platform(view, true,true): new Platform(view, true,false);\r\n//            p.setHidden(true);\r\n            //view.remove(p);\r\n\r\n        } while (!p.intersects(nextPlatformZone));\r\n\r\n        AnimalRun.addToWorldObjects(p);\r\n    }\r\n\r\n    public void updatePos() {\r\n        setPosition();\r\n    }\r\n\r\n    public boolean isSollit() {\r\n        return false;\r\n    }\r\n\r\n    public Point2D.Double getPos(){\r\n        return pos;\r\n    }\r\n\r\n    public double getWidth(){\r\n        return getShapeWidth();\r\n    }\r\n\r\n    public double getHeight(){\r\n        return getShapeHeight();\r\n    }\r\n\r\n    protected void setPosition() {\r\n        if(true) return;\r\n        moveTo(pos.x - SPEED, pos.y);\r\n//        System.out.println(\"Platform: TestTTTTTT\" + pos.x + \" \" + getXPosition());\r\n        //rectTest.moveTo(pos.x - AnimalRun.getXKameraVersatz(), getYPosition());\r\n        rectTest.moveTo(pos.x - SPEED, getShapeY());\r\n        moveToByCenter(blockedZone, getCenterX(), getCenterY());\r\n        moveToByCenter(nextPlatformZone, getCenterX(), getCenterY());\r\n    }\r\n\r\n\r\n    public void setImage(BufferedImage bImage) {\r\n\r\n        BufferedImage sizedImage = new BufferedImage((int) (getShapeWidth()*1.5), (int) (getShapeHeight()*1.5), BufferedImage.TYPE_INT_ARGB);\r\n        Graphics2D g2 = (Graphics2D) sizedImage.getGraphics();\r\n       // Image image = bImage.getScaledInstance((int) (getShapeWidth()*1.5), (int) (getShapeHeight()*1.5), Image.SCALE_SMOOTH);\r\n        Image image = bImage.getScaledInstance((int) (getShapeWidth()*1.5), (int) (getShapeHeight()*1.5), Image.SCALE_DEFAULT);\r\n        g2.drawImage(bImage, 0, 0, (int) (getShapeWidth()*1.5), (int) (getShapeHeight()*1.5), null);\r\n        g2.dispose();\r\n        super.setImage(sizedImage);\r\n    }\r\n\r\n    void moveToByCenter(Rectangle r, double x, double y) {\r\n        r.moveTo(x - r.getShapeWidth() / 2, y - r.getShapeHeight() / 2);\r\n    }\r\n\r\n    public void deleateMe(){\r\n        view.remove(rectTest);\r\n        rectTest.setHidden(true);\r\n        view.remove(nextPlatformZone);\r\n        nextPlatformZone.setHidden(true);\r\n        view.remove(blockedZone);\r\n        blockedZone.setHidden(true);\r\n        view.remove(this);\r\n        this.setHidden(true);\r\n        deleateMe = true;\r\n    }\r\n    public boolean getDeleatMe(){\r\n        return deleateMe;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalRun/Worldobject/Platform.java b/src/minigames/animalRun/Worldobject/Platform.java
+--- a/src/minigames/animalRun/Worldobject/Platform.java	(revision a2ca977f0efe987f247a3f743fd159c1b692d042)
++++ b/src/minigames/animalRun/Worldobject/Platform.java	(date 1757627189290)
+@@ -18,44 +18,58 @@
+     private static int counter = 0; // TODO: Remove
+ 
+     //Test
+-    private boolean summonNext;
++    public boolean summonNext;
+     private Point2D.Double pos;
+     private Rectangle rectTest;
+     private Rectangle blockedZone;
+-    private Rectangle nextPlatformZone;
++    public Rectangle nextPlatformZone;
+     private double xKameraVrsatz = 0;
+     private View view;
+     private int id;
+     private int size;
+     public boolean deleateMe = false;
+ 
++    private static BufferedImage front;
++    private static BufferedImage back;
++    private static BufferedImage center;
++    private static BufferedImage[] images;
+ 
+-    public Platform(View view, boolean summonNext, boolean space) {
++    public Platform(View view, boolean space) {
+         //super(220, 100, 200, 200, "resources/animalrun/platforms/testInsel.png");
+-        super(view.getWidth(), 100, 200, 200, "resources/animalrun/platforms/InselTest2.png");
+-        this.summonNext = summonNext;
++        super(view.getWidth()*2, 100, 200, 200, "resources/animalrun/platforms/InselTest2.png");
+         this.view = view;
+         this.id = counter++;
+         size = (int) (Math.random()* 2);
+-        BufferedImage image = new BufferedImage(1021+1077+1795*size, 1223, BufferedImage.TYPE_INT_ARGB);
+-        Graphics2D g2 = (Graphics2D) image.getGraphics();
++
++        if (images == null) {
++            images = new BufferedImage[3];
++            for(int i = 0; i < images.length; i++) {
++                images[i] = new BufferedImage(1021+1077+1795*size, 1223, BufferedImage.TYPE_INT_ARGB);
++                Graphics2D g2 = (Graphics2D) images[i].getGraphics();
+ 
+-        try {
+-            BufferedImage front = ImageIO.read(new File("resources/animalrun/platforms/platformLinks.png"));
+-            BufferedImage back = ImageIO.read(new File("resources/animalrun/platforms/platformRechts.png"));
+-            BufferedImage center = ImageIO.read(new File("resources/animalrun/platforms/platformMitte.png"));
+-            g2.drawImage(front,0,100,null);
+-            for(int i = 0; i < size; i++){
+-                g2.drawImage(center,1021 + i*1795,0,null);
+-            }
+-            g2.drawImage(back,1021 + size*1795,0,null);
++                try {
++                    if(front == null || back == null || center == null) {
++                        front = ImageIO.read(new File("resources/animalrun/platforms/platformLinks.png"));
++                        back = ImageIO.read(new File("resources/animalrun/platforms/platformRechts.png"));
++                        center = ImageIO.read(new File("resources/animalrun/platforms/platformMitte.png"));
++                    }
++
++                    g2.drawImage(front,0,100,null);
++                    for(int j = 0; j < size; j++){
++                        g2.drawImage(center,1021 + j*1795,0,null);
++                    }
++                    g2.drawImage(back,1021 + size*1795,0,null);
+ 
+-        } catch (IOException e) {
+-            throw new RuntimeException(e);
++                } catch (IOException e) {
++                    throw new RuntimeException(e);
++                }
++            }
+         }
+-        setImage(image);
++
+ 
+-        scaleTo(image.getWidth() * (size+1)*0.1, image.getHeight() * 0.08);
++        setImage(images[size]);
++
++        scaleTo(images[size].getWidth() * (size+1)*0.1, images[size].getHeight() * 0.08);
+ 
+         pos = new Point2D.Double();
+         space = true;
+@@ -101,6 +115,7 @@
+     }
+ 
+     private void summonNext() {
++        if(true) return;
+         summonNext = false;
+         Platform p = null;
+         do {
+@@ -114,13 +129,18 @@
+                 p = null;
+             }
+             //System.out.println(id + " neue Plattform");
+-            p = (Math.random() < 0.2)?  new Platform(view, true,true): new Platform(view, true,false);
++            p = (Math.random() < 0.2)?  new Platform(view, true): new Platform(view,false);
+ //            p.setHidden(true);
+             //view.remove(p);
+ 
+         } while (!p.intersects(nextPlatformZone));
+ 
+-        AnimalRun.addToWorldObjects(p);
++       //AnimalRun.addToWorldObjects(p);
++    }
++
++    @Override
++    public void doThings() {
++        pos.x -= SPEED;
+     }
+ 
+     public void updatePos() {
+@@ -144,11 +164,10 @@
+     }
+ 
+     protected void setPosition() {
+-        if(true) return;
+-        moveTo(pos.x - SPEED, pos.y);
++        moveTo(pos.x , pos.y);
+ //        System.out.println("Platform: TestTTTTTT" + pos.x + " " + getXPosition());
+         //rectTest.moveTo(pos.x - AnimalRun.getXKameraVersatz(), getYPosition());
+-        rectTest.moveTo(pos.x - SPEED, getShapeY());
++        rectTest.moveTo(pos.x, getShapeY());
+         moveToByCenter(blockedZone, getCenterX(), getCenterY());
+         moveToByCenter(nextPlatformZone, getCenterX(), getCenterY());
+     }
+Index: src/minigames/animalRun/AnimalRun.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalRun;\r\n\r\nimport common.Util;\r\nimport controller.AbstractController;\r\nimport controller.ArduinoController;\r\nimport minigames.AbstractGame;\r\nimport minigames.animalRun.Worldobject.Platform;\r\nimport minigames.animalRun.Worldobject.WorldObject;\r\nimport sas.*;\r\n\r\nimport java.io.IOException;\r\nimport java.util.HashSet;\r\nimport java.util.Set;\r\nimport java.util.stream.Collectors;\r\n\r\npublic class AnimalRun extends AbstractGame {\r\n\r\n    /* Static Variables */\r\n    public static final double GRAVITY = 4.0;\r\n    private static final int TICK_RATE = 100;\r\n\r\n    /* Static Methods */\r\n\r\n    /* Object Variables */\r\n    private ArduinoController arduinoController;\r\n    private boolean gameRuns = true;\r\n    private Monkey[] monkeys;\r\n    private Set<WorldObject> worldObjects;\r\n    private Set<WorldObject> summonNextRoundObjects;\r\n    private int tick;\r\n\r\n    public AnimalRun(AbstractController controller, View view) {\r\n        super(controller, view);\r\n        this.worldObjects = new HashSet<>();\r\n        this.summonNextRoundObjects = new HashSet<>();\r\n    }\r\n\r\n    @Override\r\n    protected void initView() {\r\n        view.setName(\"AnimalRun\");\r\n    }\r\n\r\n    @Override\r\n    protected void runGame() {\r\n\r\n\r\n        monkeys = new Monkey[2];\r\n        try {\r\n            monkeys[0] = new Monkey(50, 100, controller, true);\r\n            monkeys[1] = new Monkey(150, 200, controller, false);\r\n\r\n            summonNextRoundObjects.add(monkeys[0]);\r\n            summonNextRoundObjects.add(monkeys[1]);\r\n        } catch (IOException e) {\r\n            Tools.confirmDialog(\"Das Spiel kann nicht starten, weil Bilder nicht geladen werden konnten!\");\r\n            throw new RuntimeException(e);\r\n        }\r\n\r\n        long milisPerCycle = 1000 / TICK_RATE;\r\n        long timeStamp = System.currentTimeMillis();\r\n        long timeUntilNextCycle;\r\n\r\n        //summonNextRoundObjects.add(new Platform(view,true));\r\n\r\n        while (gameRuns) {\r\n\r\n            // Setze Zeitstempel (alias \"starte Stoppuhr\"), lasse alle Objekte ihre Aktionen durchführen und\r\n            // warte anschließend den Tick ab.\r\n            timeStamp = System.currentTimeMillis();\r\n            //MonkeyCollision\r\n            for (Monkey monkey : monkeys) {\r\n                boolean collision =\r\n                    worldObjects.stream()\r\n                        .filter(o -> o instanceof Platform)\r\n                        .map(p -> (Platform) p)\r\n                        .filter(p -> Util.getRectengle2DFrom(p).intersects(Util.getRectengle2DFrom(monkey)))\r\n                        .anyMatch(p -> p.getShapeY() > monkey.getShapeY()+monkey.getShapeHeight());\r\n                if(collision) monkey.signalCollision();\r\n            }\r\n\r\n            // Füge eventuelle Objekte, die diesen Tick im set stehen, der Welt hinzu.\r\n            worldObjects.addAll(summonNextRoundObjects);\r\n            shapesToRemove.addAll(summonNextRoundObjects.stream()\r\n                    .filter(o -> o instanceof Shapes)\r\n                    .map(o -> (Shapes) o)\r\n                    .collect(Collectors.toSet()));\r\n            summonNextRoundObjects.clear();\r\n\r\n            worldObjects.stream().forEach(w -> {\r\n                w.doThings();\r\n                w.updatePos();\r\n            });\r\n\r\n            if(tick % 200 == 0)\r\n                summonNextRoundObjects.add(new Platform(view,false));\r\n\r\n            checkPlatformCollision();\r\n\r\n            timeUntilNextCycle = milisPerCycle - (System.currentTimeMillis() - timeStamp);\r\n            if (timeUntilNextCycle < 0) timeUntilNextCycle = 0;\r\n\r\n            view.wait((int) timeUntilNextCycle);\r\n            tick++;\r\n        }\r\n    }\r\n\r\n    /**\r\n     * Diese Methode prüft, ob die Affen auf einer Plattform sind, bzw. ob sie gegen eine dotzen.\r\n     */\r\n    private void checkPlatformCollision() {\r\n        for (WorldObject object : worldObjects) {\r\n            if (object instanceof Platform platform) {\r\n                for (Monkey monkey : monkeys) {\r\n\r\n                    // Wenn der Affe die Plattform von oben berührt ...\r\n                    if (monkey.intersects(platform) && monkey.getShapeY() + monkey.getShapeHeight() >= platform.getShapeY()) {\r\n\r\n                        // ... kann der Affe darauf laufen.\r\n                        monkey.signalOnGround(true);\r\n                    }\r\n\r\n                    // Der Affe ist offensichtlich in der Luft.\r\n                    monkey.signalOnGround(false);\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    public Monkey[] getMonkeys() {\r\n        return monkeys;\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalRun/AnimalRun.java b/src/minigames/animalRun/AnimalRun.java
+--- a/src/minigames/animalRun/AnimalRun.java	(revision a2ca977f0efe987f247a3f743fd159c1b692d042)
++++ b/src/minigames/animalRun/AnimalRun.java	(date 1757626179559)
+@@ -104,6 +104,30 @@
+         }
+     }
+ 
++    private void newPlatform(){
++        worldObjects.stream()
++                .filter(o -> o instanceof Platform)
++                .map(o -> (Platform) o)
++                .filter(p -> p.summonNext)
++                .forEach( pp -> {
++                    pp.summonNext = false;
++                    Platform p = null;
++                    do {
++
++                        if (p != null){
++                            p.deleateMe();
++                            p = null;
++                        }
++                        p = (Math.random() < 0.2)?  new Platform(view, true): new Platform(view,false);
++
++                    } while (!p.intersects(pp.nextPlatformZone));
++
++                    summonNextRoundObjects.add(p);
++                    shapesToRemove.add(p);
++                });
++
++    }
++
+     /**
+      * Diese Methode prüft, ob die Affen auf einer Plattform sind, bzw. ob sie gegen eine dotzen.
+      */

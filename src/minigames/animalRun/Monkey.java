@@ -6,6 +6,7 @@ import minigames.animalRun.Worldobject.WorldObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sas.Circle;
+import sas.Rectangle;
 import sas.View;
 
 import java.io.IOException;
@@ -16,8 +17,8 @@ public class Monkey extends Circle implements WorldObject {
     private static final Logger log = LoggerFactory.getLogger(Monkey.class);
 
     /* Static Variables */
+    public static final int IMAGE_HEIGHT = 250;
     protected static double MONKEY_MOVEMENT = 10.0;
-    private static final int IMAGE_HEIGHT = 250;
 
     /* Static Methods */
 
@@ -31,6 +32,8 @@ public class Monkey extends Circle implements WorldObject {
     private int indexImageRegular;
     private MovementFunction currentMovement;
     private boolean nextTickSetFallImage;
+    private boolean onGround;
+    private Rectangle hitbox;
 
     /* Constructors */
     public Monkey(double xp, double yp, View view, AbstractController controller, boolean isMonkey1) throws IOException {
@@ -44,12 +47,17 @@ public class Monkey extends Circle implements WorldObject {
         this.indexImageRegular = 0;
         this.currentMovement = new FunktionAufBoden(); // TODO
         this.nextTickSetFallImage = false;
-        setHidden(true);
+        this.onGround = false;
+
+        setTransparency(0.0f);
 
         prepareMonkeyImages();
         moveTo(xp, yp);
         MONKEY_IMAGES[0].setHidden(false);
         MONKEY_IMAGES[0].moveTo(xp, yp);
+
+        this.hitbox = new Rectangle(getShapeX(), getShapeY(), MONKEY_IMAGES[0].getShapeWidth(), MONKEY_IMAGES[0].getShapeHeight());
+        hitbox.setTransparency(0.0f);
 
     }
 
@@ -186,10 +194,20 @@ public class Monkey extends Circle implements WorldObject {
 
 
     public void signalOnGround(boolean onGround) {
-        currentMovement = new FunktionAufBoden();
+
+        if (!this.onGround && onGround) {
+            currentMovement = new FunktionAufBoden();
+            this.onGround = true;
+
+        }
+
     }
 
     public void signalCollision() {
+        if (!this.onGround) {
+            return;
+        }
+        onGround = false;
         currentMovement = new FunktionSprung(true);
     }
 
@@ -219,6 +237,18 @@ public class Monkey extends Circle implements WorldObject {
     @Override
     public boolean isSollit() {
         return false;
+    }
+
+    public Rectangle getHitbox() {
+        return hitbox;
+    }
+
+    public double getMonkeyWidth() {
+        return hitbox.getShapeWidth();
+    }
+
+    public double getMonkeyHeight() {
+        return hitbox.getShapeHeight();
     }
 
     /* Inner classes */
