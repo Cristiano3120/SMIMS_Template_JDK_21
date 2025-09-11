@@ -1,14 +1,26 @@
 package minigames.animalrun.Worldobject;
 
 import sas.Shapes;
+import sas.View;
 
-public abstract class WorldObject extends Shapes {
+import java.util.Vector;
 
-    protected WorldObject(double xPos, double yPos, double width, double height, String textur) {
-        super(xPos, yPos, width, height, textur);
-    }
+public interface WorldObject /*extends Shapes*/ {
 
-    public abstract void doThings(int tick);
+    //double xKameraVersatz;
+    //protected View view;
 
-    public abstract void updatePos();
+ //   protected WorldObject(double xPos, double yPos, double width, double height, String textur, View view) {
+ //       super(xPos, yPos, width, height, textur);
+  //      this.view = view;
+ //   }
+
+    public void doThings(int tick);
+
+    public void updatePos();
+
+    /* true wenn man darauf laufen kann */
+    public boolean isSollit();
+
 }
+
