@@ -22,5 +22,6 @@ public interface WorldObject /*extends Shapes*/ {
     /* true wenn man darauf laufen kann */
     public boolean isSollit();
 
+    public boolean getDeleatMe();
 }
 

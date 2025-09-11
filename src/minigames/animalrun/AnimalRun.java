@@ -4,6 +4,7 @@ import controller.AbstractController;
 import minigames.AbstractGame;
 import minigames.animalrun.Worldobject.Platform;
 import minigames.animalrun.Worldobject.WorldObject;
+import sas.Picture;
 import sas.Shapes;
 import sas.View;
 
@@ -86,9 +87,9 @@ public class AnimalRun extends AbstractGame implements Runnable {
 
     private class World {
         public static double xKameraVersatz = 0;
-        double xKameraSpeed = view.getWidth()* 0.001;
+        double xKameraSpeed = view.getWidth()* 0.003;
 
-        //Picture background = new Picture(0,0,WIDTH,HEIGHT,"resources/animalrun/background_game.png");
+        Picture background = new Picture(0,0,WIDTH,HEIGHT,"resources/animalrun/background_game.png");
 
         public static Set<WorldObject> worldObjects = new HashSet<WorldObject>();
         public static Set<WorldObject> summoneNextRoundObjects = new HashSet<>();
@@ -99,6 +100,14 @@ public class AnimalRun extends AbstractGame implements Runnable {
         }
 
         void update(int tick) {
+            worldObjects.stream()
+                    .filter(o -> o.getDeleatMe())
+                    .collect(Collectors.toCollection(HashSet::new))
+                    .stream()
+                    .forEach(o -> {
+                        worldObjects.remove(o);
+                        shapesToRemove.remove(o);
+                    });
             worldObjects.addAll(summoneNextRoundObjects);
             shapesToRemove.addAll( summoneNextRoundObjects.stream()
                     .filter(o -> o instanceof Shapes)
@@ -115,7 +124,7 @@ public class AnimalRun extends AbstractGame implements Runnable {
             });
 
             if (controller.getLinksB()) {
-                summoneNextRoundObjects.add(new Platform(view,true));
+                summoneNextRoundObjects.add(new Platform(view,true,false));
                 view.wait(50);
             }
         }

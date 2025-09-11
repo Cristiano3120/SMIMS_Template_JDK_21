@@ -149,4 +149,9 @@ public class Monkey extends Circle implements WorldObject {
     public boolean isSollit() {
         return false;
     }
+
+    @Override
+    public boolean getDeleatMe() {
+        return false;
+    }
 }
