@@ -23,32 +23,32 @@ public class Mastercontrol {
         view = new View(WIDTH,HEIGHT);
         controller =new TastaturController(view);
         game =new AnimalRun(controller,view);
-        System.out.println("test--");
+//        System.out.println("test--");
         game.start();
-        System.out.println("test--1");
+//        System.out.println("test--1");
         Monkey monkey = new Monkey(600, 200, 200, controller, true, view);
         Monkey monkey2 = new Monkey(400, 200, 200, controller, false, view);
 
         AnimalRun.addToWorldObjects(monkey);
         AnimalRun.addToWorldObjects(monkey2);
 
-        System.out.println("test0");
+//        System.out.println("test0");
         loop(monkey, monkey2, view);
     }
 
     private void loop(Monkey monkey, Monkey monkey2, View view) {
-        System.out.println("test1");
+//        System.out.println("test1");
         monkey.pictures1[0].setHidden(true);
         monkey2.pictures1[0].setHidden(true);
 
         int i = 0;
         while (true) {
-            System.out.println("test2");
+//            System.out.println("test2");
             monkey.monkeyMove();
             monkey2.monkeyMove();
             monkey.monkeyJump();
             monkey2.monkeyJump();
-            System.out.println("test3");
+//            System.out.println("test3");
             monkey.pictures1[i].setHidden(true);
             monkey2.pictures1[i].setHidden(true);
 
@@ -64,7 +64,7 @@ public class Mastercontrol {
 
             view.wait(180);
 
-            System.out.println("test");
+//            System.out.println("test");
         }
     }
 

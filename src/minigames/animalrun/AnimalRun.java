@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 
 public class AnimalRun extends AbstractGame implements Runnable {
     private static final int tickRate = 60;
-    private static final int WIDTH = 1000 / 2;
-    private static final int HEIGHT = 600 / 2;
+    private static final int WIDTH = 1000 ;
+    private static final int HEIGHT = 600 ;
     private boolean gameRuns = true;
     private int tick = 0;
 
@@ -86,7 +86,7 @@ public class AnimalRun extends AbstractGame implements Runnable {
 
     private class World {
         public static double xKameraVersatz = 0;
-        double xKameraSpeed = 1;
+        double xKameraSpeed = view.getWidth()* 0.001;
 
         //Picture background = new Picture(0,0,WIDTH,HEIGHT,"resources/animalrun/background_game.png");
 
@@ -106,7 +106,7 @@ public class AnimalRun extends AbstractGame implements Runnable {
                     .collect(Collectors.toSet()));;
             xKameraVersatz += xKameraSpeed;
 
-            System.out.println("xKameraVersatz = ");
+//            System.out.println("xKameraVersatz = ");
 
             worldObjects.stream().forEach(w -> {
                 w.doThings(tick);
