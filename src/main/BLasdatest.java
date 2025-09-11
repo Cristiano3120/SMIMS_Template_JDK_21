@@ -15,15 +15,16 @@ public class BLasdatest {
         AbstractController controller = new TastaturController(view);
 
 
-        Monkey monkey = new Monkey(50, 200, controller, true);
-        for (int i = 0; i < 110; i++) {
-            int index = i % 4;
-            monkey.setImageAndMove(index, false);
-            view.wait(500);
+        Monkey monkey1 = new Monkey(50, 200, controller, true);
+        Monkey monkey2 = new Monkey(50, 200, controller, false);
+        for (int i = 0; i < 200; i++) {
+
+            monkey1.doThings();
+            monkey2.doThings();
+            view.wait(50);
         }
 
 
-//        monkey.setImage(2, false);
 
 
 
