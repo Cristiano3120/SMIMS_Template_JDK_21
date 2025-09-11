@@ -42,78 +42,78 @@ public class TestNico {
 //        view.remove(pressA_button);
 //        view.remove(headline);
 
-//        Circle loewe = new Circle(50,50,30, new Color(0,0,255));
-//        Circle monkey = new Circle(200,100,30, new Color(255,0,0));
-//
-//
-//        while (!controller.getLinksA()) {
-//            view.wait(10);
-//        }
-//
-//        if (monkey.getShapeY() > loewe.getShapeY()) {
-//            while(monkey.getShapeY() != loewe.getShapeY()) {
-//                loewe.move(0, 1);
-//                view.wait(4);
-//            }
-//        } else if (monkey.getShapeY() < loewe.getShapeY()) {
-//            while(monkey.getShapeY() != loewe.getShapeY()) {
-//                loewe.move(0, -1);
-//            }
-//        }
-//
-//        while (!monkey.intersects(loewe)) {
-//            monkey.move(-1, 0);
-//        }
-//
-//        while (!controller.getLinksA()) {
-//            view.wait(10);
-//        }
-//
-//        if (monkey.intersects(loewe)) {
-//            for (int i = 0; i < 40; i++) {
-//                monkey.move(1,-1);
-//                view.wait(3);
-//            }
-//            for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {
-//                monkey.move(0,1);
-//                view.wait(1);
-//            }
-//            monkey.setHidden(true);
-//            view.remove(monkey);
-//        }
+        Circle loewe = new Circle(50,50,30, new Color(0,0,255));
         Circle monkey = new Circle(200,100,30, new Color(255,0,0));
-        Circle tumbleweed = new Circle(50,100,30, new Color(204,153,51));
-        tumbleweed.moveTo(view.getWidth(), 100);
-        for (int i = 0; i < view.getWidth() + tumbleweed.getShapeWidth(); i++) {
-            tumbleweed.move(-1,0);
-            tumbleweed.turn(45);
-            view.wait(20);
-            if (tumbleweed.intersects(monkey)) {
-                break;
-            }
-        }
-        if (tumbleweed.getShapeX() < 0) {
-            tumbleweed.setHidden(true);
-            view.remove(tumbleweed);
+
+
+        while (!controller.getLinksA()) {
+            view.wait(10);
         }
 
-        if (monkey.intersects(tumbleweed)) {
-            Circle monkey1 = new Circle(0,0,30, new Color(255,0,0));
-            monkey1.moveTo(monkey.getShapeX(), monkey.getShapeY());
-            monkey.setHidden(true);
-            view.remove(monkey);
+        if (monkey.getShapeY() > loewe.getShapeY()) {
+            while(monkey.getShapeY() != loewe.getShapeY()) {
+                loewe.move(0, 1);
+                view.wait(4);
+            }
+        } else if (monkey.getShapeY() < loewe.getShapeY()) {
+            while(monkey.getShapeY() != loewe.getShapeY()) {
+                loewe.move(0, -1);
+            }
+        }
+
+        while (!monkey.intersects(loewe)) {
+            monkey.move(-1, 0);
+        }
+
+        while (!controller.getLinksA()) {
+            view.wait(10);
+        }
+
+        if (monkey.intersects(loewe)) {
             for (int i = 0; i < 40; i++) {
-                monkey1.move(1,-1);
+                monkey.move(1,-1);
                 view.wait(3);
             }
             for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {
-                monkey1.move(0,1);
+                monkey.move(0,1);
                 view.wait(1);
             }
-            monkey1.setHidden(true);
-            view.remove(monkey1);
+            monkey.setHidden(true);
+            view.remove(monkey);
         }
-    }
+//        Circle monkey = new Circle(200,100,30, new Color(255,0,0));
+//        Circle tumbleweed = new Circle(50,100,30, new Color(204,153,51));
+//        tumbleweed.moveTo(view.getWidth(), 100);
+//        for (int i = 0; i < view.getWidth() + tumbleweed.getShapeWidth(); i++) {
+//            tumbleweed.move(-1,0);
+//            tumbleweed.turn(45);
+//            view.wait(20);
+//            if (tumbleweed.intersects(monkey)) {
+//                break;
+//            }
+//        }
+//        if (tumbleweed.getShapeX() < 0) {
+//            tumbleweed.setHidden(true);
+//            view.remove(tumbleweed);
+//        }
+//
+//        if (monkey.intersects(tumbleweed)) {
+//            Circle monkey1 = new Circle(0,0,30, new Color(255,0,0));
+//            monkey1.moveTo(monkey.getShapeX(), monkey.getShapeY());
+//            monkey.setHidden(true);
+//            view.remove(monkey);
+//            for (int i = 0; i < 40; i++) {
+//                monkey1.move(1,-1);
+//                view.wait(3);
+//            }
+//            for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {
+//                monkey1.move(0,1);
+//                view.wait(1);
+//            }
+//            monkey1.setHidden(true);
+//            view.remove(monkey1);
+//        }
+//    }
 
-}
+}}
 

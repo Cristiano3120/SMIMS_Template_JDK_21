@@ -1,0 +1,223 @@
+Index: src/minigames/animalRun/Worldobject/Loewe.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalRun.Worldobject;\r\nimport sas.Circle;\r\n\r\nimport java.awt.*;\r\n\r\npublic class Loewe {\r\n\r\n\r\n    Circle loewe = new Circle(50,50,30, new Color(0,0,255));\r\n    Circle monkey = new Circle(50,100,30, new Color(255,0,0));\r\n\r\n    public Loewe() {\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalRun/Worldobject/Loewe.java b/src/minigames/animalRun/Worldobject/Loewe.java
+--- a/src/minigames/animalRun/Worldobject/Loewe.java	(revision 82895f8b6e948344de635c5454fafc0bc70d82b1)
++++ b/src/minigames/animalRun/Worldobject/Loewe.java	(date 1757591877995)
+@@ -1,15 +1,58 @@
+ package minigames.animalRun.Worldobject;
++
++import common.ScalablePicture;
++import controller.AbstractController;
++import controller.TastaturController;
++import minigames.animalRun.AnimalRun;
++import minigames.animalRun.Monkey;
+ import sas.Circle;
++import sas.View;
+ 
+ import java.awt.*;
+ 
+-public class Loewe {
++public class Loewe implements WorldObject {
+ 
+-
+-    Circle loewe = new Circle(50,50,30, new Color(0,0,255));
+-    Circle monkey = new Circle(50,100,30, new Color(255,0,0));
++    private Monkey monkeys[];
++    private View view;
++    private AbstractController controller;
++    private ScalablePicture loeweClosed;
++    ScalablePicture loeweOpen;
+ 
+     public Loewe() {
+ 
++        this.view = view;
++        this.controller = controller;
++
++        this.loeweClosed = new ScalablePicture(0, 0, "resources/animalrun/loeweClosed.png");
++        this.loeweOpen = new ScalablePicture(0, 0, "resources/animalrun/loeweOpen.png");
++        this.monkeys = (Monkey[]) AnimalRun.getWorldObjects().stream().filter(o -> o instanceof Monkey).toArray();
++
++        loeweOpen.setHidden(true);
++
++    }
++
++    @Override
++    public void doThings(int tick) {
++
++        Monkey linkerAffe = monkeys[0].getShapeX() < monkeys[1].getShapeX() ? monkeys[0] : monkeys[1];
++
++        double differenceY = linkerAffe.getShapeY() - loeweClosed.getShapeY();
++        loeweClosed.move(0, differenceY * 0.2);
++        if (linkerAffe.intersects(loeweClosed)) {
++            loeweOpen.moveTo(loeweClosed.getShapeX(), loeweClosed.getShapeY());
++            loeweOpen.setHidden(false);
++            loeweClosed.setHidden(true);
++//            linkerAffe.stirb(); // TODO: auskommentieren
++        }
++
++    }
++
++    @Override
++    public void updatePos() {
++    }
++
++    @Override
++    public boolean isSollit() {
++        return false;
+     }
+ }
+Index: src/main/TestNico.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main;\r\n\r\nimport controller.AbstractController;\r\nimport controller.TastaturController;\r\nimport sas.Circle;\r\nimport sas.View;\r\n\r\nimport java.awt.*;\r\n\r\npublic class TestNico {\r\n\r\n    private AbstractController controller;\r\n    private View view;\r\n\r\n    public static void main(String[] args) {\r\n        View view = new View(800, 600);\r\n        view.setName(\"Startbildschirm Animalrun\");\r\n        AbstractController controller = new TastaturController(view);\r\n////        Startbildschirm test = new Startbildschirm(controller, view, 700, 500);\r\n//\r\n//        ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), \"resources/animalrun/background.png\");\r\n//        ScalablePicture pressA_button = new ScalablePicture(0, 0, \"resources/animalrun/pressA_button.png\");\r\n//        ScalablePicture headline = new ScalablePicture(0, 0, \"resources/animalrun/headline.png\");\r\n//\r\n//        pressA_button.scaleTo(view.getHeight() / 8 * 3);\r\n//        headline.scaleTo(view.getHeight() / 8 * 5);\r\n//\r\n//        pressA_button.moveTo(view.getWidth() / 2 - (pressA_button.getShapeWidth() / 2), view.getHeight() / 2);\r\n//        headline.moveTo(view.getWidth() / 2 - (headline.getShapeWidth() / 2), 0);\r\n//\r\n//        // hier auf button warten\r\n//        while (!controller.getLinksA()) {\r\n//            view.wait(10);\r\n//        }\r\n//\r\n//\r\n//        background.setHidden(true);\r\n//        pressA_button.setHidden(true);\r\n//        headline.setHidden(true);\r\n//\r\n//        view.remove(background);\r\n//        view.remove(pressA_button);\r\n//        view.remove(headline);\r\n\r\n//        Circle loewe = new Circle(50,50,30, new Color(0,0,255));\r\n//        Circle monkey = new Circle(200,100,30, new Color(255,0,0));\r\n//\r\n//\r\n//        while (!controller.getLinksA()) {\r\n//            view.wait(10);\r\n//        }\r\n//\r\n//        if (monkey.getShapeY() > loewe.getShapeY()) {\r\n//            while(monkey.getShapeY() != loewe.getShapeY()) {\r\n//                loewe.move(0, 1);\r\n//                view.wait(4);\r\n//            }\r\n//        } else if (monkey.getShapeY() < loewe.getShapeY()) {\r\n//            while(monkey.getShapeY() != loewe.getShapeY()) {\r\n//                loewe.move(0, -1);\r\n//            }\r\n//        }\r\n//\r\n//        while (!monkey.intersects(loewe)) {\r\n//            monkey.move(-1, 0);\r\n//        }\r\n//\r\n//        while (!controller.getLinksA()) {\r\n//            view.wait(10);\r\n//        }\r\n//\r\n//        if (monkey.intersects(loewe)) {\r\n//            for (int i = 0; i < 40; i++) {\r\n//                monkey.move(1,-1);\r\n//                view.wait(3);\r\n//            }\r\n//            for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {\r\n//                monkey.move(0,1);\r\n//                view.wait(1);\r\n//            }\r\n//            monkey.setHidden(true);\r\n//            view.remove(monkey);\r\n//        }\r\n        Circle monkey = new Circle(200,100,30, new Color(255,0,0));\r\n        Circle tumbleweed = new Circle(50,100,30, new Color(204,153,51));\r\n        tumbleweed.moveTo(view.getWidth(), 100);\r\n        for (int i = 0; i < view.getWidth() + tumbleweed.getShapeWidth(); i++) {\r\n            tumbleweed.move(-1,0);\r\n            tumbleweed.turn(45);\r\n            view.wait(20);\r\n            if (tumbleweed.intersects(monkey)) {\r\n                break;\r\n            }\r\n        }\r\n        if (tumbleweed.getShapeX() < 0) {\r\n            tumbleweed.setHidden(true);\r\n            view.remove(tumbleweed);\r\n        }\r\n\r\n        if (monkey.intersects(tumbleweed)) {\r\n            Circle monkey1 = new Circle(0,0,30, new Color(255,0,0));\r\n            monkey1.moveTo(monkey.getShapeX(), monkey.getShapeY());\r\n            monkey.setHidden(true);\r\n            view.remove(monkey);\r\n            for (int i = 0; i < 40; i++) {\r\n                monkey1.move(1,-1);\r\n                view.wait(3);\r\n            }\r\n            for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {\r\n                monkey1.move(0,1);\r\n                view.wait(1);\r\n            }\r\n            monkey1.setHidden(true);\r\n            view.remove(monkey1);\r\n        }\r\n    }\r\n\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/TestNico.java b/src/main/TestNico.java
+--- a/src/main/TestNico.java	(revision 82895f8b6e948344de635c5454fafc0bc70d82b1)
++++ b/src/main/TestNico.java	(date 1757589712864)
+@@ -42,78 +42,78 @@
+ //        view.remove(pressA_button);
+ //        view.remove(headline);
+ 
+-//        Circle loewe = new Circle(50,50,30, new Color(0,0,255));
+-//        Circle monkey = new Circle(200,100,30, new Color(255,0,0));
+-//
+-//
+-//        while (!controller.getLinksA()) {
+-//            view.wait(10);
+-//        }
+-//
+-//        if (monkey.getShapeY() > loewe.getShapeY()) {
+-//            while(monkey.getShapeY() != loewe.getShapeY()) {
+-//                loewe.move(0, 1);
+-//                view.wait(4);
+-//            }
+-//        } else if (monkey.getShapeY() < loewe.getShapeY()) {
+-//            while(monkey.getShapeY() != loewe.getShapeY()) {
+-//                loewe.move(0, -1);
+-//            }
+-//        }
+-//
+-//        while (!monkey.intersects(loewe)) {
+-//            monkey.move(-1, 0);
+-//        }
+-//
+-//        while (!controller.getLinksA()) {
+-//            view.wait(10);
+-//        }
+-//
+-//        if (monkey.intersects(loewe)) {
+-//            for (int i = 0; i < 40; i++) {
+-//                monkey.move(1,-1);
+-//                view.wait(3);
+-//            }
+-//            for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {
+-//                monkey.move(0,1);
+-//                view.wait(1);
+-//            }
+-//            monkey.setHidden(true);
+-//            view.remove(monkey);
+-//        }
++        Circle loewe = new Circle(50,50,30, new Color(0,0,255));
+         Circle monkey = new Circle(200,100,30, new Color(255,0,0));
+-        Circle tumbleweed = new Circle(50,100,30, new Color(204,153,51));
+-        tumbleweed.moveTo(view.getWidth(), 100);
+-        for (int i = 0; i < view.getWidth() + tumbleweed.getShapeWidth(); i++) {
+-            tumbleweed.move(-1,0);
+-            tumbleweed.turn(45);
+-            view.wait(20);
+-            if (tumbleweed.intersects(monkey)) {
+-                break;
++
++
++        while (!controller.getLinksA()) {
++            view.wait(10);
++        }
++
++        if (monkey.getShapeY() > loewe.getShapeY()) {
++            while(monkey.getShapeY() != loewe.getShapeY()) {
++                loewe.move(0, 1);
++                view.wait(4);
+             }
++        } else if (monkey.getShapeY() < loewe.getShapeY()) {
++            while(monkey.getShapeY() != loewe.getShapeY()) {
++                loewe.move(0, -1);
++            }
+         }
+-        if (tumbleweed.getShapeX() < 0) {
+-            tumbleweed.setHidden(true);
+-            view.remove(tumbleweed);
++
++        while (!monkey.intersects(loewe)) {
++            monkey.move(-1, 0);
+         }
++
++        while (!controller.getLinksA()) {
++            view.wait(10);
++        }
+ 
+-        if (monkey.intersects(tumbleweed)) {
+-            Circle monkey1 = new Circle(0,0,30, new Color(255,0,0));
+-            monkey1.moveTo(monkey.getShapeX(), monkey.getShapeY());
+-            monkey.setHidden(true);
+-            view.remove(monkey);
++        if (monkey.intersects(loewe)) {
+             for (int i = 0; i < 40; i++) {
+-                monkey1.move(1,-1);
++                monkey.move(1,-1);
+                 view.wait(3);
+             }
+             for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {
+-                monkey1.move(0,1);
++                monkey.move(0,1);
+                 view.wait(1);
+             }
+-            monkey1.setHidden(true);
+-            view.remove(monkey1);
++            monkey.setHidden(true);
++            view.remove(monkey);
+         }
+-    }
++//        Circle monkey = new Circle(200,100,30, new Color(255,0,0));
++//        Circle tumbleweed = new Circle(50,100,30, new Color(204,153,51));
++//        tumbleweed.moveTo(view.getWidth(), 100);
++//        for (int i = 0; i < view.getWidth() + tumbleweed.getShapeWidth(); i++) {
++//            tumbleweed.move(-1,0);
++//            tumbleweed.turn(45);
++//            view.wait(20);
++//            if (tumbleweed.intersects(monkey)) {
++//                break;
++//            }
++//        }
++//        if (tumbleweed.getShapeX() < 0) {
++//            tumbleweed.setHidden(true);
++//            view.remove(tumbleweed);
++//        }
++//
++//        if (monkey.intersects(tumbleweed)) {
++//            Circle monkey1 = new Circle(0,0,30, new Color(255,0,0));
++//            monkey1.moveTo(monkey.getShapeX(), monkey.getShapeY());
++//            monkey.setHidden(true);
++//            view.remove(monkey);
++//            for (int i = 0; i < 40; i++) {
++//                monkey1.move(1,-1);
++//                view.wait(3);
++//            }
++//            for (int i = 0; i < view.getHeight() + monkey.getShapeHeight(); i++) {
++//                monkey1.move(0,1);
++//                view.wait(1);
++//            }
++//            monkey1.setHidden(true);
++//            view.remove(monkey1);
++//        }
++//    }
+ 
+-}
++}}
+ 
