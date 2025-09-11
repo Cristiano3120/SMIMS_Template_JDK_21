@@ -18,7 +18,7 @@ public class BLasdatest {
         Monkey monkey = new Monkey(50, 200, controller, true);
         view.wait(1000);
 
-        monkey.move(50,50);
+        monkey.move(0,0);
         view.wait(1000);
 
         for (int i = 0; i < 12; i++) {
