@@ -4,14 +4,12 @@ import minigames.AbstractGame;
 import sas.*;
 import common.ScalablePicture;
 import controller.AbstractController;
-
 import java.util.ArrayList;
 
 
 public class Startbildschirm {
 
-    private AbstractController controller;
-    private View view;
+
 
 
     public Startbildschirm(AbstractController controller, View view, int viewWidth, int viewHeight) {
