@@ -5,38 +5,26 @@ import controller.AbstractController;
 import minigames.animalRun.Worldobject.WorldObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sas.Circle;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 
-public class Monkey extends ScalablePicture implements WorldObject {
+public class Monkey extends Circle implements WorldObject {
 
     private static final Logger log = LoggerFactory.getLogger(Monkey.class);
 
     /* Static Variables */
     protected static double MONKEY_MOVEMENT = 5.0;
-    protected static int baseLevelX = 0;
     private static final int IMAGE_HEIGHT = 250;
     private static final int IMAGE_WIDTH = (int) (IMAGE_HEIGHT * 1.44);
 
     /* Static Methods */
-    private static BufferedImage scaleImage(BufferedImage tempImage) {
-        BufferedImage sizedImage = new BufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = (Graphics2D) sizedImage.getGraphics();
-        Image image = tempImage.getScaledInstance(IMAGE_WIDTH, IMAGE_HEIGHT, Image.SCALE_SMOOTH);
-        g2.drawImage(image, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, null);
-        g2.dispose();
-        return sizedImage;
-    }
 
     /* Object Variables */
     private AbstractController controller;
-    private final BufferedImage[] MONKEY_IMAGES = new BufferedImage[4];
-    private final BufferedImage[] MONKEY_IMAGES_JUMP = new BufferedImage[2];
+    private final ScalablePicture[] MONKEY_IMAGES;
+    private final ScalablePicture[] MONKEY_IMAGES_JUMP;
     private boolean isMonkey1;
     private boolean turnedLeft;
     private boolean onGround;
@@ -46,15 +34,19 @@ public class Monkey extends ScalablePicture implements WorldObject {
 
     /* Constructors */
     public Monkey(double xp, double yp, AbstractController controller, boolean isMonkey1) throws IOException {
-        super(xp, yp, "resources/animalrun/monkey1.png");
+        super(xp, yp, 0.1);
+        this.MONKEY_IMAGES = new ScalablePicture[4];
+        this.MONKEY_IMAGES_JUMP = new ScalablePicture[2];
         this.controller = controller;
         this.isMonkey1 = isMonkey1;
         this.turnedLeft = true;
         this.currentMovement = new FunktionSprung(true);
+        setHidden(true);
 
         prepareMonkeyImages();
-        //setImage(1,true); // setze das erste Bild als Start
+        setImageAndMove(0, false); // setze das erste Bild als Start
         moveTo(xp, yp);
+        System.out.println(MONKEY_IMAGES[0].getShapeX() + ", " + MONKEY_IMAGES[0].getShapeY());
 
     }
 
@@ -62,15 +54,16 @@ public class Monkey extends ScalablePicture implements WorldObject {
 
         // Zuerst laden wir die regulären Bilder.
         int summand = isMonkey1 ? 0 : 4;
-        BufferedImage tempImage;
+        ScalablePicture tempPic;
+
         for (int i = 0; i < MONKEY_IMAGES.length; i++) {
 
-            // Lade das Bild.
-            tempImage = ImageIO.read(new File("resources/animalrun/monkey" + (i + 1 + summand) + ".png"));
-            System.out.println("resources/animalrun/monkey" + (i + 1 + summand) + ".png");
+            tempPic = new ScalablePicture(0, 0, "resources/animalrun/monkey" + (i + 1 + summand) + ".png");
+            tempPic.scaleTo(250);
+            tempPic.moveTo(getShapeX(), getShapeY());
+            tempPic.setHidden(true);
 
-            // Passe die Größe an.
-            MONKEY_IMAGES[i] = scaleImage(tempImage);
+            MONKEY_IMAGES[i] = tempPic;
 
         }
 
@@ -78,22 +71,27 @@ public class Monkey extends ScalablePicture implements WorldObject {
         summand = isMonkey1 ? 0 : 2;
         for (int i = 0; i < MONKEY_IMAGES_JUMP.length; i++) {
 
-            // Lade das Bild.
-            tempImage = ImageIO.read(new File("resources/animalrun/monkey" + (i + 9 + summand) + ".png"));
-            System.out.println("resources/animalrun/monkey" + (i + 9 + summand) + ".png");
+            tempPic = new ScalablePicture(0, 0, "resources/animalrun/monkey" + (i + 9 + summand) + ".png");
+            tempPic.scaleTo(250);
+            tempPic.moveTo(getShapeX(), getShapeY());
+            tempPic.setHidden(true);
 
-            // Passe die Größe an.
-            MONKEY_IMAGES_JUMP[i] = scaleImage(tempImage);
+            MONKEY_IMAGES_JUMP[i] = tempPic;
         }
     }
 
     /* Object Methods */
     private void flip(double joystickVal) {
+
+        ScalablePicture imageToFlip = currentMovement instanceof FunktionAufBoden
+                ? MONKEY_IMAGES[indexImageRegular]
+                : MONKEY_IMAGES_JUMP[indexImageJump];
+
         if (joystickVal < 0 && !turnedLeft) {
-            flipHorizontal();
+            imageToFlip.flipHorizontal();
             turnedLeft = true;
         } else if (joystickVal > 0 && turnedLeft) {
-            flipHorizontal();
+            imageToFlip.flipHorizontal();
             turnedLeft = false;
         }
     }
@@ -105,19 +103,15 @@ public class Monkey extends ScalablePicture implements WorldObject {
     @Override
     public void doThings() {
 
-        System.out.println(getShapeX()+ ", " + getShapeY());
 
         // Get the x-position of the correct joystick.
         double joystickVal = isMonkey1 ? controller.getJoystickRechtsX() : controller.getJoystickLinksX();
         flip(joystickVal);
-        System.out.println("joystickVal: " + joystickVal); // TODO remove
 
         // Does the player want to jump?
         boolean jumpButtonPressed = isMonkey1
                 ? controller.getLinksA()
                 : controller.getRechtsA();
-
-        System.out.println("jumpButton " + jumpButtonPressed);
 
         if (jumpButtonPressed && currentMovement instanceof FunktionAufBoden) {
             currentMovement = new FunktionSprung(true);
@@ -126,12 +120,12 @@ public class Monkey extends ScalablePicture implements WorldObject {
 
         // Choose the right animation.
         if (currentMovement instanceof FunktionAufBoden) {
-            setImage(indexImageRegular, false);
+            setImageAndMove(indexImageRegular, false);
             indexImageRegular = indexImageRegular >= MONKEY_IMAGES.length - 1
                     ? 0
                     : indexImageRegular + 1;
         } else {
-            setImage(indexImageJump, true);
+            setImageAndMove(indexImageJump, true);
             indexImageJump = 1;
         }
 
@@ -151,6 +145,34 @@ public class Monkey extends ScalablePicture implements WorldObject {
 
     }
 
+    /**
+     * Sets the desired image and moves it to the current position.
+     *
+     * @param index the target index.
+     * @param jump  indicates whether we are jumping / falling or not.
+     */
+    public void setImageAndMove(int index, boolean jump) {
+
+        System.out.println("Moving to " + index + ", (" + jump + ")");
+
+        if (jump) {
+
+            if (index != indexImageJump) {
+                MONKEY_IMAGES_JUMP[indexImageJump].setHidden(true);
+                MONKEY_IMAGES_JUMP[index].setHidden(false);
+                MONKEY_IMAGES_JUMP[index].moveTo(getShapeX(), getShapeY());
+
+                indexImageJump = index;
+            }
+        } else {
+
+            MONKEY_IMAGES[indexImageRegular].setHidden(true);
+            MONKEY_IMAGES[index].setHidden(false);
+            MONKEY_IMAGES[index].moveTo(getShapeX(), getShapeY());
+            indexImageRegular = index;
+        }
+    }
+
     public boolean isOnGround() {
         return onGround;
     }
@@ -159,21 +181,6 @@ public class Monkey extends ScalablePicture implements WorldObject {
     public boolean isSollit() {
         return false;
     }
-
-    public void setImage(int index, boolean jump) {
-        if (jump) {
-            super.setImage(MONKEY_IMAGES_JUMP[index]);
-        } else {
-            super.setImage(MONKEY_IMAGES[index]);
-        }
-    }
-
-
-    @Override
-    protected void setImage(BufferedImage image) {
-        super.setImage(image);
-    }
-
 
     /* Inner classes */
     private static class Coordinates {

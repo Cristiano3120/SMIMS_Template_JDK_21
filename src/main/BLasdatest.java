@@ -16,19 +16,12 @@ public class BLasdatest {
 
 
         Monkey monkey = new Monkey(50, 200, controller, true);
-        view.wait(1000);
-
-        monkey.move(50,50);
-        view.wait(1000);
-
-        for (int i = 0; i < 12; i++) {
-
-            monkey.setImage(i % 4, false);
-            System.out.println(i);
-
+        for (int i = 0; i < 110; i++) {
+            int index = i % 4;
+            monkey.setImageAndMove(index, false);
             view.wait(500);
-
         }
+
 
 //        monkey.setImage(2, false);
 

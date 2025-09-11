@@ -1,4 +1,4 @@
-package minigames.animalrun;
+package minigames.animalRun;
 
 import Hilfe.Rechteck_mit_runden_Ecken;
 import common.ScalablePicture;
