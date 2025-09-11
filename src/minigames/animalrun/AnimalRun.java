@@ -13,19 +13,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AnimalRun extends AbstractGame implements Runnable {
+public class AnimalRun extends AbstractGame {
 
     /* Static Variables */
     public static final double GRAVITY = -1.0;
     private static final int TICK_RATE = 100;
 
+    // TODO: Kamerabewegung
 
     /* Static Methods */
-    // TODO: alles nicht-static machen
-    public static double getXKameraVersatz() {
-        return World.xKameraVersatz;
-    }
-
     public static Set<WorldObject> getWorldObjects() {
         return World.worldObjects;
     }
@@ -60,11 +56,6 @@ public class AnimalRun extends AbstractGame implements Runnable {
 
     @Override
     protected void runGame() {
-        new Thread(this).start(); // TODO: kein Thread!
-    }
-
-    @Override
-    public void run() {
         System.out.println("Welcome to AnimalRun");
 
         monkeys = new Monkey[2];
@@ -127,8 +118,6 @@ public class AnimalRun extends AbstractGame implements Runnable {
     }
 
     public class World {
-        public static double xKameraVersatz = 0;
-        double xKameraSpeed = view.getWidth() * 0.001;
 
         //Picture background = new Picture(0,0,WIDTH,HEIGHT,"resources/animalrun/background_game.png");
 
@@ -141,15 +130,12 @@ public class AnimalRun extends AbstractGame implements Runnable {
         }
 
         void update(int tick) {
-            worldObjects.addAll(summonNextRoundObjects); // TODO: clear all elements? -> sonst wird jede Runde alles neu ge-addet
+            worldObjects.addAll(summonNextRoundObjects);
             shapesToRemove.addAll(summonNextRoundObjects.stream()
                     .filter(o -> o instanceof Shapes)
                     .map(o -> (Shapes) o)
                     .collect(Collectors.toSet()));
-
-            xKameraVersatz += xKameraSpeed;
-
-            System.out.println("xKameraVersatz = ");
+            worldObjects.clear();
 
             worldObjects.stream().forEach(w -> {
                 w.doThings(tick);

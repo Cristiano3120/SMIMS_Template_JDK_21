@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 
 public class Platform extends Picture implements WorldObject {
 
-    private static int counter = 0; // TODO: Remove
+    public static final double PLATFORM_SPEED = 10.0;
 
     //Test
     private boolean summonNext;
@@ -29,20 +29,13 @@ public class Platform extends Picture implements WorldObject {
         super(220, 100, 200, 200, "resources/animalrun/platforms/InselTest2.png");
         this.summonNext = summonNext;
         this.view = view;
-        this.id = counter++;
 
         scaleTo(view.getWidth() * 0.3, view.getHeight() * 0.1);
 
         pos = new Point2D.Double();
-        pos.x = view.getWidth() + AnimalRun.getXKameraVersatz();
-        pos.y = Math.random() * (view.getHeight() - getHeight() *3) +  getHeight() *2;
+        pos.x = view.getWidth();
+        pos.y = Math.random() * (view.getHeight() - getHeight() * 3) + getHeight() * 2;
         //pos.y = Math.random() * (view.getHeight() - getHeight() / 2);
-
-
-//        System.out.println((view.getWidth() * 0.3) + " / " + view.getHeight() * 0.1 + " -> " + getShapeWidth() + " " + getShapeHeight());
-
-        //setImage(ImageIO.read(new File("resources/animalrun/platforms/testInsel.png")));
-//        setImage(getImage());
 
         rectTest = new Rectangle(getShapeX(), getShapeY(), getShapeWidth(), getShapeHeight(), Color.red);
         rectTest.setTransparency(0.5F);
@@ -53,25 +46,12 @@ public class Platform extends Picture implements WorldObject {
         nextPlatformZone = new Rectangle(0, 0, getShapeWidth() + view.getWidth() * 0.3, getShapeHeight() * 5, Color.yellow);
         nextPlatformZone.setTransparency(0F);
         setPosition();
-//        System.out.println("Platform: Test");
-
 
     }
-
-    private Platform(double xPos, double yPos, double width, double height, String textur, View view) {
-        super(xPos, yPos, width, height, textur);
-
-    }
-
 
     public void doThings(int tick) {
-//        System.out.println("Platform: doThings " + (getCenterX()));
-//        System.out.println("Test------ " + (getShapeX() + getShapeWidth() - AnimalRun.getXKameraVersatz()) + " " + getShapeWidth() + " " + view.getWidth());
-
-
 
         if (summonNext && getShapeX() + getShapeWidth() <= view.getWidth()) {
-            System.out.println(id + " spawnt neu");
             summonNext();
         }
     }
@@ -85,7 +65,7 @@ public class Platform extends Picture implements WorldObject {
             //            Math.random() * view.getHeight(),
             //              view.getWidth() * 0.3,
             //                view.getHeight() * 0.1);
-            if (p != null){
+            if (p != null) {
                 p.deleateMe();
                 p = null;
             }
@@ -110,10 +90,10 @@ public class Platform extends Picture implements WorldObject {
 
     protected void setPosition() {
 
-        moveTo(pos.x - AnimalRun.getXKameraVersatz(), pos.y);
+        moveTo(pos.x - PLATFORM_SPEED, pos.y);
 //        System.out.println("Platform: TestTTTTTT" + pos.x + " " + getXPosition());
         //rectTest.moveTo(pos.x - AnimalRun.getXKameraVersatz(), getYPosition());
-        rectTest.moveTo(pos.x - AnimalRun.getXKameraVersatz(), getShapeY());
+        rectTest.moveTo(pos.x - PLATFORM_SPEED, getShapeY());
         moveToByCenter(blockedZone, getCenterX(), getCenterY());
         moveToByCenter(nextPlatformZone, getCenterX(), getCenterY());
     }
@@ -132,7 +112,7 @@ public class Platform extends Picture implements WorldObject {
         r.moveTo(x - r.getShapeWidth() / 2, y - r.getShapeHeight() / 2);
     }
 
-    public void deleateMe(){
+    public void deleateMe() {
         view.remove(nextPlatformZone);
         view.remove(blockedZone);
         view.remove(this);

@@ -5,26 +5,28 @@ import controller.AbstractController;
 import minigames.animalRun.Worldobject.WorldObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sas.Circle;
+import sas.Picture;
 import sas.Shapes;
-import sas.View;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 
-public class Monkey extends Circle implements WorldObject {
+public class Monkey extends Picture implements WorldObject {
 
     private static final Logger log = LoggerFactory.getLogger(Monkey.class);
     /* Static Variables */
     protected static double MONKEY_MOVEMENT = 5.0;
     protected static int baseLevelX = 0;
+    private static final int IMAGE_WIDTH = 40;
+    private static final int IMAGE_HEIGHT= 100;
 
     /* Object Variables */
     private AbstractController controller;
     private final ScalablePicture[] pictures1 = new ScalablePicture[4];
     private int currentIndex1;
     private boolean isMonkey1;
-    private boolean turnedLeft = true;
+    private boolean turnedLeft;
     private boolean onGround;
     private int animIndex = 0;
 
@@ -33,28 +35,26 @@ public class Monkey extends Circle implements WorldObject {
         super(xp, yp, 0.1);
         this.controller = controller;
         this.isMonkey1 = isMonkey1;
+        this.turnedLeft = true;
         this.currentIndex1 = 0;
+
         setHidden(true);
-
-        if (isMonkey1) {
-            setupMonkey1(xp, yp);
-        } else {
-            setupMonkey2(xp, yp);
-        }
+        setupMonkeyImages(xp, yp);
     }
 
-    public void setupMonkey1(double xp, double yp) {
-        for (int i = 1; i <= 4; i++) {
-            ScalablePicture scalablePicture = new ScalablePicture(xp, yp, 150, 150, "resources/animalrun/monkey" + (i) + ".png");
-            scalablePicture.setHidden(true);
+    public void setupMonkeyImages(double xp, double yp) {
 
-            pictures1[i - 1] = scalablePicture;
-        }
-    }
+        BufferedImage sizedImage = new BufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = (Graphics2D) sizedImage.getGraphics();
+        Image image = bImage.getScaledInstance((int) getWidth(), (int) getHeight(), Image.SCALE_SMOOTH);
+        g2.drawImage(bImage, 0, 0, (int) getWidth(), (int) getHeight(), null);
+        g2.dispose();
+        super.setImage(sizedImage);
 
-    private void setupMonkey2(double xp, double yp) {
+
+        int summand = isMonkey1 ? 0 : 4;
         for (int i = 1; i <= 4; i++) {
-            ScalablePicture scalablePicture = new ScalablePicture(xp, yp, 150, 150, "resources/animalrun/monkey" + (i + 4) + ".png");
+            ScalablePicture scalablePicture = new ScalablePicture(xp, yp, 150, 150, "resources/animalrun/monkey" + (i + summand) + ".png");
             scalablePicture.setHidden(true);
 
             pictures1[i - 1] = scalablePicture;
@@ -74,6 +74,8 @@ public class Monkey extends Circle implements WorldObject {
     }
 
     private void handleMovement() {
+
+        // TODO
 
         /*
          * alle möglichen Fälle
@@ -115,35 +117,6 @@ public class Monkey extends Circle implements WorldObject {
         return isMonkey1 ? controller.getJoystickLinksX() : controller.getJoystickRechtsX();
     }
 
-//    public void monkeyJump() {
-//        if (isMonkey1) {
-//            double velocity = 0;
-//            if (controller.getRechtsA()) {
-//                velocity = 200;
-//                for (int i = 0; i < pictures1.length; i++) {
-//                    pictures1[i].move(MONKEY_MOVEMENT * controller.getJoystickRechtsX() * 20, -velocity);
-//                }
-//                view.wait(200);
-//                for (int i = 0; i < pictures1.length; i++) {
-//                    pictures1[i].move(MONKEY_MOVEMENT * controller.getJoystickRechtsX() * 20, velocity);
-//                }
-//            }
-//        } else {
-//            double velocity = 0;
-//        if (controller.getLinksA()) {
-//            velocity = 200;
-//            for (int i = 0; i < pictures1.length; i++) {
-//                pictures1[i].move(MONKEY_MOVEMENT * controller.getJoystickLinksX() * 20, -velocity);
-//            }
-//            view.wait(200);
-//            for (int i = 0; i < pictures1.length; i++) {
-//                pictures1[i].move(MONKEY_MOVEMENT * controller.getJoystickLinksX() * 20, velocity);
-//            }
-//        }
-//        }
-//
-//    }
-
 
     @Override
     public void doThings(int tick) {
@@ -181,6 +154,11 @@ public class Monkey extends Circle implements WorldObject {
     public boolean isSollit() {
         return false;
     }
+
+    private void setImage(int index) {
+        // TODO
+    }
+
 
     /* Inner classes */
     private static class Coordinates {
