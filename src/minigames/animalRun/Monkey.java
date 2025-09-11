@@ -168,6 +168,7 @@ public class Monkey extends ScalablePicture implements WorldObject {
         }
     }
 
+
     @Override
     protected void setImage(BufferedImage image) {
         super.setImage(image);
