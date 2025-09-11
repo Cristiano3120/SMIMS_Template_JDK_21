@@ -1,20 +1,28 @@
 package minigames.animalRun;
 
+import common.SoundThread;
+import javazoom.jl.decoder.JavaLayerException;
 import sas.*;
 import common.ScalablePicture;
 import controller.AbstractController;
 
+import java.io.FileNotFoundException;
+
 
 public class Startbildschirm {
-
-    private AbstractController controller;
-    private View view;
-
 
     public Startbildschirm(AbstractController controller, View view, int viewWidth, int viewHeight) {
 
         view.setSize(viewWidth, viewHeight);
         view.setName("Startbildschirm Animalrun");
+
+        SoundThread hintergrundmusik;
+        try {
+            hintergrundmusik = new SoundThread("resources/animalRun/music/StartMusic.mp3", true, true);
+            hintergrundmusik.start();
+        } catch (FileNotFoundException | JavaLayerException e) {
+            throw new RuntimeException(e);
+        }
 
         ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), "resources/animalrun/background.png");
         ScalablePicture pressA_button = new ScalablePicture(0, 0, "resources/animalrun/pressA_button.png");
@@ -28,8 +36,16 @@ public class Startbildschirm {
 
 
         // hier auf button warten
-        while(!controller.getLinksA()) {
+        while (!controller.getLinksA()) {
             view.wait(10);
+        }
+
+        try {
+            SoundThread klicksound = new SoundThread("resources/animalRun/music/KLicksound.mp3", false, true);
+            klicksound.start();
+        }
+        catch (FileNotFoundException | JavaLayerException e) {
+            throw new RuntimeException(e);
         }
 
         background.setHidden(true);
@@ -39,20 +55,21 @@ public class Startbildschirm {
         view.remove(background);
         view.remove(pressA_button);
         view.remove(headline);
+        hintergrundmusik.stopPlayer();
 
     }
 
     // TODO: Das muss hier weg und ins Game.
-    private void moveBackground(double offsetX) {
-
-        ScalablePicture[] backgrounds = new ScalablePicture[4];// TODO: Das hier richtig machen.
-        for (int j = 0; j < backgrounds.length; j++) { // Gehe durch alle Bodenelemente durch ...
-            backgrounds[j].move(-offsetX, 0); // ... und bewege das jeweils aktuelle Element nach links.
-            if (backgrounds[j].getShapeX() + backgrounds[j].getShapeWidth() < 0) { // Sind wir links über den Rand hinaus?
-                System.out.println("moving " + j);
-                int prevIndex = j <= 0 ? backgrounds.length - 1 : j - 1; // bestimme den Index des vorherigen Bodenelements
-                backgrounds[j].moveTo(backgrounds[prevIndex].getShapeX() + backgrounds[prevIndex].getShapeWidth(), backgrounds[j].getShapeY()); // "teleportiere" das ELement hinter seinen Vorgänger, sprich: ganz nach rechts
-            }
-        }
-    }
+//    private void moveBackground(double offsetX) {
+//
+//        ScalablePicture[] backgrounds = new ScalablePicture[4];// TODO: Das hier richtig machen.
+//        for (int j = 0; j < backgrounds.length; j++) { // Gehe durch alle Bodenelemente durch ...
+//            backgrounds[j].move(-offsetX, 0); // ... und bewege das jeweils aktuelle Element nach links.
+//            if (backgrounds[j].getShapeX() + backgrounds[j].getShapeWidth() < 0) { // Sind wir links über den Rand hinaus?
+//                System.out.println("moving " + j);
+//                int prevIndex = j <= 0 ? backgrounds.length - 1 : j - 1; // bestimme den Index des vorherigen Bodenelements
+//                backgrounds[j].moveTo(backgrounds[prevIndex].getShapeX() + backgrounds[prevIndex].getShapeWidth(), backgrounds[j].getShapeY()); // "teleportiere" das ELement hinter seinen Vorgänger, sprich: ganz nach rechts
+//            }
+//        }
+//    }
 }

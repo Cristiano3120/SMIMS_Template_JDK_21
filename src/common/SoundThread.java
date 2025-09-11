@@ -36,7 +36,7 @@ public class SoundThread extends Thread {
      * @throws FileNotFoundException falls das sound file nicht gefunden werden kann.
      * @throws JavaLayerException    falls das {@link Player}-Objekt nicht erstellt werden kann.
      */
-    private SoundThread(String file, boolean loop, boolean daemon) throws FileNotFoundException, JavaLayerException {
+    public SoundThread(String file, boolean loop, boolean daemon) throws FileNotFoundException, JavaLayerException {
         this.file = file;
         this.inputStream = new FileInputStream(file);
         this.player = new Player(inputStream);
@@ -55,6 +55,7 @@ public class SoundThread extends Thread {
     }
 
     public void stopPlayer() {
+        loop = false;
         player.close();
         closeStream();
     }

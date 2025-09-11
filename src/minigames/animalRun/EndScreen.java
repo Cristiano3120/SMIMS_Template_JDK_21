@@ -2,13 +2,16 @@ package minigames.animalRun;
 
 import Hilfe.Rechteck_mit_runden_Ecken;
 import common.ScalablePicture;
+import common.SoundThread;
 import controller.AbstractController;
 import controller.TastaturController;
+import javazoom.jl.decoder.JavaLayerException;
 import sas.Rectangle;
 import sas.Text;
 import sas.View;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 
 
 public class EndScreen {
@@ -25,12 +28,23 @@ public class EndScreen {
     private ScalablePicture btnHome;
     private ScalablePicture trophy;
     private ScalablePicture umrandung;
+    SoundThread winsound;
+    SoundThread klicksound;
+    SoundThread klick2;
 
     public EndScreen(int x, int y, float transparency, View view, boolean player1gewonnen, TastaturController controller) {
         this.view = view;
         this.controller = controller;
 
-        recht1 = new Rectangle(x, y, view.getWidth(), view.getHeight(), new Color(81, 72, 72));
+
+        try {
+            winsound = new SoundThread("resources/animalRun/music/Winsound.mp3", false, true);
+            winsound.start();
+        }
+        catch (FileNotFoundException | JavaLayerException e) {
+            throw new RuntimeException(e);
+        }
+                recht1 = new Rectangle(x, y, view.getWidth(), view.getHeight(), new Color(81, 72, 72));
         recht1.setTransparency(transparency);
         r5 = new Rechteck_mit_runden_Ecken(view.getWidth() * 8 / 90, view.getHeight() / 12, view.getWidth() * 74 / 90, view.getWidth() * 11 / 90, new Color(43, 43, 43));
         if (player1gewonnen == true) {
@@ -61,14 +75,37 @@ public class EndScreen {
         }
         boolean links = true;
         while (!controller.getLinksA()) {
-            if (controller.getJoystickLinksX() < 0) {
+            if (!links&&controller.getJoystickLinksX() < 0) {
                 links = true;
                 umrandung.moveTo(btnRestart.getShapeX() - 3, btnRestart.getShapeY() - 3);
-            } else if (controller.getJoystickLinksX() > 0) {
+                try {
+                    klick2 = new SoundThread("resources/animalRun/music/KLick2.mp3", false, true);
+                    klick2.start();
+                }
+                catch (FileNotFoundException | JavaLayerException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            else if (links&&controller.getJoystickLinksX() > 0) {
                 links = false;
                 umrandung.moveTo(btnHome.getShapeX() - 3, btnHome.getShapeY() - 3);
+                try {
+                    klick2 = new SoundThread("resources/animalRun/music/KLick2.mp3", false, true);
+                    klick2.start();
+                }
+                catch (FileNotFoundException | JavaLayerException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
+        try {
+            klicksound = new SoundThread("resources/animalRun/music/KLicksound.mp3", false, true);
+            klicksound.start();
+        }
+        catch (FileNotFoundException | JavaLayerException e) {
+            throw new RuntimeException(e);
+        }
+
         view.remove(recht1);
         view.remove(text);
         view.remove(btnRestart);
@@ -76,6 +113,7 @@ public class EndScreen {
         view.remove(trophy);
         view.remove(r5);
         view.remove(umrandung);
+        winsound.stopPlayer();
         return links;
     }
 
