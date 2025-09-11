@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class AnimalRun extends AbstractGame implements Runnable {
-    private static final int tickRate = 60;
+    private static final int tickRate = 100;
     private static final int WIDTH = 1000 ;
     private static final int HEIGHT = 600 ;
     private boolean gameRuns = true;

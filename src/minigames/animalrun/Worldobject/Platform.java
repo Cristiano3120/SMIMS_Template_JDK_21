@@ -30,7 +30,7 @@ public class Platform extends Picture implements WorldObject {
 
     public Platform(View view, boolean summonNext) {
         //super(220, 100, 200, 200, "resources/animalrun/platforms/testInsel.png");
-        super(220, 100, 200, 200, "resources/animalrun/platforms/InselTest2.png");
+        super(view.getWidth(), 100, 200, 200, "resources/animalrun/platforms/InselTest2.png");
         this.summonNext = summonNext;
         this.view = view;
         this.id = counter++;
@@ -41,17 +41,17 @@ public class Platform extends Picture implements WorldObject {
         try {
             BufferedImage front = ImageIO.read(new File("resources/animalrun/platforms/platformLinks.png"));
             BufferedImage back = ImageIO.read(new File("resources/animalrun/platforms/platformRechts.png"));
-            BufferedImage center = ImageIO.read(new File("resources/animalrun/platforms/InselMiatte.png"));
+            BufferedImage center = ImageIO.read(new File("resources/animalrun/platforms/platformMitte.png"));
             g2.drawImage(front,0,0,null);
             for(int i = 0; i < size; i++){
-                g2.drawImage(front,1077 + x*,0,null);
+                g2.drawImage(center,1077 + i*1795,0,null);
             }
+            g2.drawImage(back,1077 + size*1795,0,null);
 
-            g2.drawImage(front,0,0,null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        setImage(image);
 
         scaleTo(view.getWidth() * 0.3, view.getHeight() * 0.1);
 
