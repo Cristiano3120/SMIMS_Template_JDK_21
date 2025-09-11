@@ -1,9 +1,4 @@
-package minigames.animalrun.Worldobject;
-
-import sas.Shapes;
-import sas.View;
-
-import java.util.Vector;
+package minigames.animalRun.Worldobject;
 
 public interface WorldObject /*extends Shapes*/ {
 

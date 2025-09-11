@@ -1,22 +1,21 @@
-package minigames.animalrun;
+package minigames.animalRun;
 
-import minigames.AbstractGame;
 import sas.*;
 import common.ScalablePicture;
 import controller.AbstractController;
-import java.util.ArrayList;
 
 
 public class Startbildschirm {
 
-
+    private AbstractController controller;
+    private View view;
 
 
     public Startbildschirm(AbstractController controller, View view, int viewWidth, int viewHeight) {
 
         view.setSize(viewWidth, viewHeight);
         view.setName("Startbildschirm Animalrun");
-//test
+
         ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), "resources/animalrun/background.png");
         ScalablePicture pressA_button = new ScalablePicture(0, 0, "resources/animalrun/pressA_button.png");
         ScalablePicture headline = new ScalablePicture(0, 0, "resources/animalrun/headline.png");

@@ -1,4 +1,4 @@
-package minigames.animalrun;
+package minigames.animalRun;
 
 import Hilfe.Rechteck_mit_runden_Ecken;
 import common.ScalablePicture;
@@ -7,7 +7,6 @@ import controller.TastaturController;
 import sas.Rectangle;
 import sas.Text;
 import sas.View;
-import mastercontroler.Mastercontrol;
 
 import java.awt.*;
 
