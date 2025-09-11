@@ -127,6 +127,7 @@ public class Monkey extends Circle implements WorldObject {
                 jumpFlip();
                 jumpPicture.move(MONKEY_MOVEMENT * controller.getJoystickRechtsX() * 10, -velocity);
 
+
                 view.wait(250);
 
                 //double jump
@@ -220,4 +221,30 @@ public class Monkey extends Circle implements WorldObject {
     public boolean getDeleatMe() {
         return false;
     }
+
+
+    private void testWait(){
+
+
+
+    }
+
+
+    // stirb methode
+    private int stirbAnimation = 0;
+    public void stirb(){
+        stirbAnimation = 1;
+    }
+
+    // mus in doThings aufgerufen werden
+    public void stirbGestarted(int tick ){
+        if(stirbAnimation == 0) return;
+
+
+
+
+        stirbAnimation++;
+    }
+
+
 }

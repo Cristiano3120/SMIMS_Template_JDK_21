@@ -81,7 +81,9 @@ public class AnimalRun extends AbstractGame implements Runnable {
         //double d = new Platform(view, true).getShapeWidth();
     }
 
+    public void Background(){
 
+    }
 
 
     private class World {
