@@ -20,11 +20,9 @@ public class Mastercontrol {
         view = new View(WIDTH, HEIGHT);
         controller = new TastaturController(view);
 
-        Monkey monkey = new Monkey(600, 200, 200, controller, true, view);
+        Monkey monkey = new Monkey(200, 200, 200, controller, true, view);
         Monkey monkey2 = new Monkey(400, 200, 200, controller, false, view);
-
-        monkey.pictures1[0].hashCode();
-
+        System.out.println(monkey.pictures1[0].getCenterY());
         loop(monkey, monkey2, view);
 
     }

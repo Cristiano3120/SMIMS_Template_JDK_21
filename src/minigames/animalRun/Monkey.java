@@ -26,6 +26,8 @@ public class Monkey extends Circle {
     /* Object Variables */
     private AbstractController controller;
     public final ScalablePicture[] pictures1 = new ScalablePicture[4];
+    public ScalablePicture jumpPicture;
+    private boolean jumpTurnedLeft;
     public int currentIndex1;
     private boolean isMonkey1;
     private boolean turnedLeft = true;
@@ -33,7 +35,7 @@ public class Monkey extends Circle {
 
     /* Constructors */
     public Monkey(double yp, double w, double h, AbstractController controller, boolean isMonkey1, View view) {
-        super(100, yp , 0.1);
+        super(100, yp, 0.1);
         this.controller = controller;
         this.isMonkey1 = isMonkey1;
         this.view = view;
@@ -42,27 +44,33 @@ public class Monkey extends Circle {
 
         if (isMonkey1) {
             setupMonkey1();
-        }
-        else {
+        } else {
             setupMonkey2();
         }
     }
 
-    public void setupMonkey1(){
-        for (int i = 1; i <= 4; i++){
-            ScalablePicture scalablePicture = new ScalablePicture(10, 200, 150, 150,"resources/animalrun/monkey" + (i) + ".png");
+    public void setupMonkey1() {
+        for (int i = 1; i <= 4; i++) {
+            ScalablePicture scalablePicture = new ScalablePicture(10, 400, 150, 150, "resources/animalrun/monkey" + (i) + ".png");
             scalablePicture.setHidden(true);
 
-            pictures1[i-1] = scalablePicture;
+            pictures1[i - 1] = scalablePicture;
+            jumpPicture = new ScalablePicture(10, 400, 150, 150, "resources/animalrun/monkey" + 11 + ".png");
+            jumpPicture.setHidden(true);
+            jumpTurnedLeft = true;
+
         }
     }
 
-    private void setupMonkey2(){
-        for (int i = 1; i <= 4; i++){
-            ScalablePicture scalablePicture = new ScalablePicture(10, 200, 150, 150,"resources/animalrun/monkey" + (i + 4) + ".png");
+    private void setupMonkey2() {
+        for (int i = 1; i <= 4; i++) {
+            ScalablePicture scalablePicture = new ScalablePicture(10, 400, 150, 150, "resources/animalrun/monkey" + (i + 4) + ".png");
             scalablePicture.setHidden(true);
 
-            pictures1[i-1] = scalablePicture;
+            pictures1[i - 1] = scalablePicture;
+            jumpPicture = new ScalablePicture(10, 400, 150, 150, "resources/animalrun/monkey" + 12 + ".png");
+            jumpPicture.setHidden(true);
+            jumpTurnedLeft = true;
         }
     }
 
@@ -82,6 +90,7 @@ public class Monkey extends Circle {
         }
     }
 
+    //MONKEY MUSS BEI SPRINGEN GEFLIPPED WERDEN HIER LOGIK DAFÜR KLAUEN
     private void flip(double joystickVal) {
         if (joystickVal < 0) {
             if (!turnedLeft) {
@@ -106,31 +115,88 @@ public class Monkey extends Circle {
     }
 
     public void monkeyJump() {
-    if (isMonkey1) {
+        if (isMonkey1) {
             double velocity = 0;
             if (controller.getRechtsA()) {
-                velocity = 200;
-                for (int i = 0; i < pictures1.length; i++) {
-                    pictures1[i].move(MONKEY_MOVEMENT * controller.getJoystickRechtsX() * 20, -velocity);
+                jumpPicture.moveTo(pictures1[currentIndex1].getCenterX(), pictures1[currentIndex1].getCenterY() );
+                pictures1[currentIndex1].setHidden(true);
+                jumpPicture.setHidden(false);
+
+                velocity = 250;
+                jumpFlip();
+                jumpPicture.move(MONKEY_MOVEMENT * controller.getJoystickRechtsX() * 10, -velocity);
+
+                view.wait(250);
+
+                //double jump
+                if (controller.getRechtsA()) {
+                    jumpPicture.move(MONKEY_MOVEMENT * controller.getJoystickRechtsX() * 10, -velocity);
+
+                    view.wait(200);
+
+                    jumpPicture.move(MONKEY_MOVEMENT * controller.getJoystickRechtsX() * 10, velocity);
+
+                    view.wait(200);
                 }
-                view.wait(200);
-                for (int i = 0; i < pictures1.length; i++) {
-                    pictures1[i].move(MONKEY_MOVEMENT * controller.getJoystickRechtsX() * 20, velocity);
+
+                    jumpPicture.move(MONKEY_MOVEMENT * controller.getJoystickRechtsX() * 10, velocity);
+                    jumpPicture.moveTo(jumpPicture.getCenterX(), jumpPicture.getCenterY());
+
+                jumpPicture.setHidden(true);
+                pictures1[currentIndex1].setHidden(false);
+
+                for(int i = 0; i < pictures1.length; i++) {
+                    pictures1[i].moveTo(jumpPicture.getCenterX(), jumpPicture.getCenterY() - 147.85);
                 }
+
+                System.out.println(pictures1[0].getCenterY());
             }
         } else {
             double velocity = 0;
-        if (controller.getLinksA()) {
-            velocity = 200;
-            for (int i = 0; i < pictures1.length; i++) {
-                pictures1[i].move(MONKEY_MOVEMENT * controller.getJoystickLinksX() * 20, -velocity);
-            }
-            view.wait(200);
-            for (int i = 0; i < pictures1.length; i++) {
-                pictures1[i].move(MONKEY_MOVEMENT * controller.getJoystickLinksX() * 20, velocity);
-            }
-        }
-        }
 
+            if (controller.getLinksA()) {
+                jumpPicture.moveTo(pictures1[currentIndex1].getShapeX(), pictures1[currentIndex1].getShapeY());
+                pictures1[currentIndex1].setHidden(true);
+                jumpPicture.setHidden(false);
+
+                velocity = 250;
+                jumpPicture.move(MONKEY_MOVEMENT * controller.getJoystickLinksX() * 10, -velocity);
+
+
+                view.wait(200);
+
+                //double jump
+                if (controller.getRechtsA()) {
+                    jumpPicture.move(MONKEY_MOVEMENT * controller.getJoystickRechtsX() * 10, -velocity);
+
+                    view.wait(200);
+
+
+                    jumpPicture.move(MONKEY_MOVEMENT * controller.getJoystickRechtsX() * 10, velocity);
+
+                    view.wait(200);
+                }
+
+                jumpPicture.move(MONKEY_MOVEMENT * controller.getJoystickLinksX() * 10, velocity);
+
+                jumpPicture.setHidden(true);
+                pictures1[currentIndex1].setHidden(false);
+                for(int i = 0; i < pictures1.length; i++) {
+                    pictures1[i].moveTo(jumpPicture.getCenterX(), jumpPicture.getCenterY()-200);
+                }
+            }
+
+        }
+    }
+
+    public void jumpFlip() {
+        if (!turnedLeft && jumpTurnedLeft) {
+            jumpPicture.flipHorizontal();
+            jumpTurnedLeft = false;
+
+        }else if(turnedLeft && !jumpTurnedLeft) {
+                jumpPicture.flipHorizontal();
+                jumpTurnedLeft = true;
+        }
     }
 }
