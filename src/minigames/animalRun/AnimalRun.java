@@ -1,14 +1,13 @@
-package minigames.animalrun;
+package minigames.animalRun;
 
 import controller.AbstractController;
 import minigames.AbstractGame;
-import minigames.animalrun.Worldobject.Platform;
-import minigames.animalrun.Worldobject.WorldObject;
+import minigames.animalRun.Worldobject.Platform;
+import minigames.animalRun.Worldobject.WorldObject;
 import sas.Picture;
 import sas.Shapes;
 import sas.View;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;

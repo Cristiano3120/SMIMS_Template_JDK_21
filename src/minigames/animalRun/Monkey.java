@@ -2,20 +2,12 @@ package minigames.animalRun;
 
 import common.ScalablePicture;
 import controller.AbstractController;
-import minigames.animalrun.Worldobject.WorldObject;
+import minigames.animalRun.Worldobject.WorldObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sas.Circle;
 import sas.Shapes;
 import sas.View;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import static java.nio.file.Files.move;
 
 public class Monkey extends Circle implements WorldObject {
 
@@ -33,8 +25,8 @@ public class Monkey extends Circle implements WorldObject {
     private View view;
 
     /* Constructors */
-    public Monkey(double yp, double w, double h, AbstractController controller, boolean isMonkey1, View view) {
-        super(100, yp , 0.1);
+    public Monkey(double xp, double yp, AbstractController controller, boolean isMonkey1, View view) {
+        super(xp, yp , 0.1);
         this.controller = controller;
         this.isMonkey1 = isMonkey1;
         this.view = view;

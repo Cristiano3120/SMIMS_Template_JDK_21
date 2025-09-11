@@ -1,6 +1,6 @@
-package minigames.animalrun.Worldobject;
+package minigames.animalRun.Worldobject;
 
-import minigames.animalrun.AnimalRun;
+import minigames.animalRun.AnimalRun;
 import sas.Picture;
 import sas.Rectangle;
 import sas.View;
@@ -8,7 +8,6 @@ import sas.View;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
