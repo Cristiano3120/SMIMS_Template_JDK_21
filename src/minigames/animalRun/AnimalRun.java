@@ -104,6 +104,30 @@ public class AnimalRun extends AbstractGame {
         }
     }
 
+    private void newPlatform(){
+        worldObjects.stream()
+                .filter(o -> o instanceof Platform)
+                .map(o -> (Platform) o)
+                .filter(p -> p.summonNext)
+                .forEach( pp -> {
+                    pp.summonNext = false;
+                    Platform p = null;
+                    do {
+
+                        if (p != null){
+                            p.deleateMe();
+                            p = null;
+                        }
+                        p = (Math.random() < 0.2)?  new Platform(view, true): new Platform(view,false);
+
+                    } while (!p.intersects(pp.nextPlatformZone));
+
+                    summonNextRoundObjects.add(p);
+                    shapesToRemove.add(p);
+                });
+
+    }
+
     /**
      * Diese Methode prüft, ob die Affen auf einer Plattform sind, bzw. ob sie gegen eine dotzen.
      */

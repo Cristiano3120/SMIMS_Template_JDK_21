@@ -18,44 +18,58 @@ public class Platform extends Picture implements WorldObject {
     private static int counter = 0; // TODO: Remove
 
     //Test
-    private boolean summonNext;
+    public boolean summonNext;
     private Point2D.Double pos;
     private Rectangle rectTest;
     private Rectangle blockedZone;
-    private Rectangle nextPlatformZone;
+    public Rectangle nextPlatformZone;
     private double xKameraVrsatz = 0;
     private View view;
     private int id;
     private int size;
     public boolean deleateMe = false;
 
+    private static BufferedImage front;
+    private static BufferedImage back;
+    private static BufferedImage center;
+    private static BufferedImage[] images;
 
-    public Platform(View view, boolean summonNext, boolean space) {
+    public Platform(View view, boolean space) {
         //super(220, 100, 200, 200, "resources/animalrun/platforms/testInsel.png");
-        super(view.getWidth(), 100, 200, 200, "resources/animalrun/platforms/InselTest2.png");
-        this.summonNext = summonNext;
+        super(view.getWidth()*2, 100, 200, 200, "resources/animalrun/platforms/InselTest2.png");
         this.view = view;
         this.id = counter++;
         size = (int) (Math.random()* 2);
-        BufferedImage image = new BufferedImage(1021+1077+1795*size, 1223, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = (Graphics2D) image.getGraphics();
 
-        try {
-            BufferedImage front = ImageIO.read(new File("resources/animalrun/platforms/platformLinks.png"));
-            BufferedImage back = ImageIO.read(new File("resources/animalrun/platforms/platformRechts.png"));
-            BufferedImage center = ImageIO.read(new File("resources/animalrun/platforms/platformMitte.png"));
-            g2.drawImage(front,0,100,null);
-            for(int i = 0; i < size; i++){
-                g2.drawImage(center,1021 + i*1795,0,null);
+        if (images == null) {
+            images = new BufferedImage[3];
+            for(int i = 0; i < images.length; i++) {
+                images[i] = new BufferedImage(1021+1077+1795*size, 1223, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2 = (Graphics2D) images[i].getGraphics();
+
+                try {
+                    if(front == null || back == null || center == null) {
+                        front = ImageIO.read(new File("resources/animalrun/platforms/platformLinks.png"));
+                        back = ImageIO.read(new File("resources/animalrun/platforms/platformRechts.png"));
+                        center = ImageIO.read(new File("resources/animalrun/platforms/platformMitte.png"));
+                    }
+
+                    g2.drawImage(front,0,100,null);
+                    for(int j = 0; j < size; j++){
+                        g2.drawImage(center,1021 + j*1795,0,null);
+                    }
+                    g2.drawImage(back,1021 + size*1795,0,null);
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
-            g2.drawImage(back,1021 + size*1795,0,null);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
-        setImage(image);
 
-        scaleTo(image.getWidth() * (size+1)*0.1, image.getHeight() * 0.08);
+
+        setImage(images[size]);
+
+        scaleTo(images[size].getWidth() * (size+1)*0.1, images[size].getHeight() * 0.08);
 
         pos = new Point2D.Double();
         space = true;
@@ -101,6 +115,7 @@ public class Platform extends Picture implements WorldObject {
     }
 
     private void summonNext() {
+        if(true) return;
         summonNext = false;
         Platform p = null;
         do {
@@ -114,13 +129,18 @@ public class Platform extends Picture implements WorldObject {
                 p = null;
             }
             //System.out.println(id + " neue Plattform");
-            p = (Math.random() < 0.2)?  new Platform(view, true,true): new Platform(view, true,false);
+            p = (Math.random() < 0.2)?  new Platform(view, true): new Platform(view,false);
 //            p.setHidden(true);
             //view.remove(p);
 
         } while (!p.intersects(nextPlatformZone));
 
-        AnimalRun.addToWorldObjects(p);
+       //AnimalRun.addToWorldObjects(p);
+    }
+
+    @Override
+    public void doThings() {
+        pos.x -= SPEED;
     }
 
     public void updatePos() {
@@ -144,11 +164,10 @@ public class Platform extends Picture implements WorldObject {
     }
 
     protected void setPosition() {
-        if(true) return;
-        moveTo(pos.x - SPEED, pos.y);
+        moveTo(pos.x , pos.y);
 //        System.out.println("Platform: TestTTTTTT" + pos.x + " " + getXPosition());
         //rectTest.moveTo(pos.x - AnimalRun.getXKameraVersatz(), getYPosition());
-        rectTest.moveTo(pos.x - SPEED, getShapeY());
+        rectTest.moveTo(pos.x, getShapeY());
         moveToByCenter(blockedZone, getCenterX(), getCenterY());
         moveToByCenter(nextPlatformZone, getCenterX(), getCenterY());
     }
