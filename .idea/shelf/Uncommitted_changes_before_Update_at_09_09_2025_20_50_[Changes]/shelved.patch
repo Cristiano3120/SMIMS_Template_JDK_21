@@ -1,0 +1,50 @@
+Index: src/minigames/animalrun/LVL/World_LVL1.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/LVL/World_LVL1.java b/src/minigames/animalrun/LVL/World.java
+rename from src/minigames/animalrun/LVL/World_LVL1.java
+rename to src/minigames/animalrun/LVL/World.java
+--- a/src/minigames/animalrun/LVL/World_LVL1.java	(revision 2f7b1b3fc51c05d2b2975e3aa0fb7202dbd90571)
++++ b/src/minigames/animalrun/LVL/World.java	(date 1757443800029)
+@@ -1,7 +1,20 @@
+ package minigames.animalrun.LVL;
+ 
++import minigames.animalrun.Worldobject.WorldObject;
+ import sas.Picture;
++import sas.Sprite;
+ 
+-public class World_LVL1 {
+-    Picture background =new Picture(0,0,900,700,"resources/animalrun/background_game.png");
++import java.util.ArrayList;
++import java.util.HashSet;
++import java.util.Set;
++
++public class World {
++    int xKameraVersatz = 0;
++    Picture background = new Picture(0,0,900,700,"resources/animalrun/background_game.png");
++
++    Set<WorldObject> wordObjects = new HashSet<WorldObject>();
++
++    void update(int tick) {
++        wordObjects.stream().forEach(w -> w.doMove(tick));
++    }
+ }
+Index: src/minigames/animalrun/Worldobject/WorldObject.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/WorldObject.java b/src/minigames/animalrun/Worldobject/WorldObject.java
+new file mode 100644
+--- /dev/null	(date 1757443800038)
++++ b/src/minigames/animalrun/Worldobject/WorldObject.java	(date 1757443800038)
+@@ -0,0 +1,7 @@
++package minigames.animalrun.Worldobject;
++
++public abstract class WorldObject {
++
++    public abstract void doMove(int tick);
++
++}

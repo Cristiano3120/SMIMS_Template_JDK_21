@@ -1,0 +1,201 @@
+Index: src/minigames/animalrun/Startbildschirm.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun;\r\n\r\nimport minigames.AbstractGame;\r\nimport sas.*;\r\nimport common.ScalablePicture;\r\nimport controller.AbstractController;\r\n\r\nimport java.util.ArrayList;\r\n\r\n\r\npublic class Startbildschirm {\r\n\r\n    private AbstractController controller;\r\n    private View view;\r\n\r\n\r\n    public Startbildschirm(AbstractController controller, View view, int viewWidth, int viewHeight) {\r\n\r\n        view.setSize(viewWidth, viewHeight);\r\n        view.setName(\"Startbildschirm Animalrun\");\r\n\r\n        ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), \"resources/animalrun/background.png\");\r\n        ScalablePicture pressA_button = new ScalablePicture(0, 0, \"resources/animalrun/pressA_button.png\");\r\n        ScalablePicture headline = new ScalablePicture(0, 0, \"resources/animalrun/headline.png\");\r\n\r\n        pressA_button.scaleTo(view.getHeight() / 8 * 3);\r\n        headline.scaleTo(view.getHeight() / 8 * 5);\r\n\r\n        pressA_button.moveTo(view.getWidth() / 2 - (pressA_button.getShapeWidth() / 2), view.getHeight() / 2);\r\n        headline.moveTo(view.getWidth() / 2 - (headline.getShapeWidth() / 2), 0);\r\n\r\n        // hier auf button warten\r\n        while(!controller.getLinksA()) {\r\n            view.wait(10);\r\n        }\r\n\r\n        background.setHidden(true);\r\n        pressA_button.setHidden(true);\r\n        headline.setHidden(true);\r\n\r\n        view.remove(background);\r\n        view.remove(pressA_button);\r\n        view.remove(headline);\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Startbildschirm.java b/src/minigames/animalrun/Startbildschirm.java
+--- a/src/minigames/animalrun/Startbildschirm.java	(revision c8222b3da900c37738872b31ea9264f1f2f5decf)
++++ b/src/minigames/animalrun/Startbildschirm.java	(date 1757491672587)
+@@ -20,14 +20,8 @@
+         view.setName("Startbildschirm Animalrun");
+ 
+         ScalablePicture background = new ScalablePicture(0, 0, view.getWidth(), view.getHeight(), "resources/animalrun/background.png");
+-        ScalablePicture pressA_button = new ScalablePicture(0, 0, "resources/animalrun/pressA_button.png");
+-        ScalablePicture headline = new ScalablePicture(0, 0, "resources/animalrun/headline.png");
+-
+-        pressA_button.scaleTo(view.getHeight() / 8 * 3);
+-        headline.scaleTo(view.getHeight() / 8 * 5);
+-
+-        pressA_button.moveTo(view.getWidth() / 2 - (pressA_button.getShapeWidth() / 2), view.getHeight() / 2);
+-        headline.moveTo(view.getWidth() / 2 - (headline.getShapeWidth() / 2), 0);
++        ScalablePicture pressA_button = new ScalablePicture(210, 300, 375, 250, "resources/animalrun/pressA_button.png");
++        ScalablePicture headline = new ScalablePicture(100, 0, 600, 400, "resources/animalrun/headline.png");
+ 
+         // hier auf button warten
+         while(!controller.getLinksA()) {
+@@ -42,5 +36,19 @@
+         view.remove(pressA_button);
+         view.remove(headline);
+ 
++    }
++
++    // TODO: Das muss hier weg und ins Game.
++    private void moveBackground(double offsetX) {
++
++        ScalablePicture[] backgrounds = new ScalablePicture[4];// TODO: Das hier richtig machen.
++        for (int j = 0; j < backgrounds.length; j++) { // Gehe durch alle Bodenelemente durch ...
++            backgrounds[j].move(-offsetX, 0); // ... und bewege das jeweils aktuelle Element nach links.
++            if (backgrounds[j].getShapeX() + backgrounds[j].getShapeWidth() < 0) { // Sind wir links über den Rand hinaus?
++                System.out.println("moving " + j);
++                int prevIndex = j <= 0 ? backgrounds.length - 1 : j - 1; // bestimme den Index des vorherigen Bodenelements
++                backgrounds[j].moveTo(backgrounds[prevIndex].getShapeX() + backgrounds[prevIndex].getShapeWidth(), backgrounds[j].getShapeY()); // "teleportiere" das ELement hinter seinen Vorgänger, sprich: ganz nach rechts
++            }
++        }
+     }
+ }
+Index: src/minigames/animalrun/Worldobject/Background.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun.Worldobject;\r\n\r\nimport common.ScalablePicture;\r\nimport minigames.AbstractGame;\r\n\r\npublic class Background extends ScalablePicture {\r\n    private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES +\"background_game.png\";\r\n    public Background(int x, int y) {\r\n        super(x, y, PATH_IMAGE);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/Background.java b/src/minigames/animalrun/Worldobject/Background.java
+--- a/src/minigames/animalrun/Worldobject/Background.java	(revision c8222b3da900c37738872b31ea9264f1f2f5decf)
++++ b/src/minigames/animalrun/Worldobject/Background.java	(date 1757491672618)
+@@ -5,7 +5,7 @@
+ 
+ public class Background extends ScalablePicture {
+     private static final String PATH_IMAGE = AbstractGame.PATH_TO_RESOURCES +"background_game.png";
+-    public Background(int x, int y) {
+-        super(x, y, PATH_IMAGE);
++    public Background(int x, int y,int width,int height) {
++        super(x, y,width,height, PATH_IMAGE);
+     }
+ }
+Index: src/minigames/animalrun/Worldobject/Platform.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun.Worldobject;\r\n\r\nimport sas.Shapes;\r\nimport sas.View;\r\n\r\nimport java.awt.*;\r\nimport java.awt.geom.Point2D;\r\nimport java.awt.image.BufferedImage;\r\n\r\npublic class Platform extends WorldObject {\r\n\r\n    Point2D.Double pos;\r\n\r\n    public Platform(View view) {\r\n        super(0, 0, 0, 0, \"resources/animalrun/plattforms/testInsel.png\", view);\r\n        pos.x = view.getWidth() + xKameraVersatz;\r\n        pos.y = Math.random() * view.getHeight();\r\n\r\n        setPosition();\r\n        setSize(200,50);\r\n        System.out.println(\"Platform: Test\");\r\n    }\r\n\r\n    public Platform(double xPos, double yPos, double width, double height, String textur,View view) {\r\n        super(xPos, yPos, width, height, textur, view);\r\n\r\n    }\r\n\r\n    @Override\r\n    public void doThings(int tick) {\r\n\r\n    }\r\n\r\n    @Override\r\n    public void updatePos() {\r\n        setPosition();\r\n    }\r\n\r\n    @Override\r\n    public boolean isSollit() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public Shapes clone() {\r\n        return null;\r\n    }\r\n\r\n    protected void setPosition() {\r\n        super.setPosition(pos.x - xKameraVersatz, pos.y);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/Worldobject/Platform.java b/src/minigames/animalrun/Worldobject/Platform.java
+--- a/src/minigames/animalrun/Worldobject/Platform.java	(revision c8222b3da900c37738872b31ea9264f1f2f5decf)
++++ b/src/minigames/animalrun/Worldobject/Platform.java	(date 1757491672634)
+@@ -13,6 +13,7 @@
+ 
+     public Platform(View view) {
+         super(0, 0, 0, 0, "resources/animalrun/plattforms/testInsel.png", view);
++        pos = new Point2D.Double();
+         pos.x = view.getWidth() + xKameraVersatz;
+         pos.y = Math.random() * view.getHeight();
+ 
+@@ -28,7 +29,7 @@
+ 
+     @Override
+     public void doThings(int tick) {
+-
++        System.out.println("Platform: doThings " + (getCenterX()) + " " + pos.y);
+     }
+ 
+     @Override
+Index: src/controller/TastaturController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\nimport sas.View;\r\n\r\n/**\r\n * Die Klasse <code>{@link TastaturController}</code> dient lediglich als Platzhalter während der Programmierphase,\r\n * solange Joystick, Gamepad, ... noch nicht fertiggestellt sind. Damit die anderen Teams programmieren und ihre Spiele\r\n * auch steuern können, wird übergangsweise die Tastatur zur Eingabe verwendet. Später kann man dann einfach zur\r\n * Joystick-/Gamepad-/... Steuerung wechseln, indem man schlicht die verwendete Klasse ändert.\r\n */\r\npublic class TastaturController extends AbstractController {\r\n\r\n    /* Static Variables */\r\n\r\n    /* Static Methods */\r\n\r\n    /* Object Variables */\r\n    private View view;\r\n\r\n    /* Constructors */\r\n    public TastaturController(View view) {\r\n        this.view = view;\r\n    }\r\n\r\n    /* Object Methods */\r\n    @Override\r\n    protected void werteDatenAus() {\r\n        // Hier muss nichts getan werden.\r\n    }\r\n\r\n    @Override\r\n    public void disconnect() {\r\n        // Hier muss nichts getan werden.\r\n    }\r\n\r\n    /* Getters and Setters */\r\n\r\n    /**\r\n     * In dieser Beispielmethode wird gezeigt, wie man mithilfe der Tastatureingabe (Pfeiltaste links und / oder\r\n     * Pfeiltaste rechts) das Joystick- bzw. Gamepad-Input simulieren könnte.\r\n     *\r\n     * @return\r\n     */\r\n    @Override\r\n    public double getJoystickLinksX() {\r\n\r\n        double x = 0.0;\r\n\r\n        if (view.keyPressed('A')) {\r\n            x += -1d;\r\n        }\r\n\r\n        if (view.keyPressed('D')) {\r\n            x += 1d;\r\n        }\r\n\r\n        return x;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickLinksY() {\r\n        double y = 0.0;\r\n\r\n        if (view.keyPressed('W')) {\r\n            y += -1d;\r\n        }\r\n\r\n        if (view.keyDownPressed()) {\r\n            y += 1d;\r\n        }\r\n\r\n        return y;\r\n    }\r\n\r\n    public double getJoystickRechtsX() {\r\n\r\n        double x = 0.0;\r\n\r\n        if (view.keyLeftPressed()) {\r\n            x += -1d;\r\n        }\r\n\r\n        if (view.keyRightPressed()) {\r\n            x += 1d;\r\n        }\r\n\r\n        return x;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickRechtsY() {\r\n        double y = 0.0;\r\n\r\n        if (view.keyUpPressed()) {\r\n            y += -1d;\r\n        }\r\n\r\n        if (view.keyDownPressed()) {\r\n            y += 1d;\r\n        }\r\n\r\n        return y;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksA() {\r\n        return view.keyPressed('1');\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksB() {\r\n        return view.keyPressed('1');\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksC() {\r\n        return view.keyPressed('3');\r\n    }\r\n    @Override\r\n    public boolean getLinksD() {\r\n        return view.keyPressed('4');\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsA() {\r\n        return view.keyPressed('7');\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsB() {\r\n        return view.keyPressed('8');\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsC() {\r\n        return view.keyPressed('9');\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsD() {\r\n        return view.keyPressed('0');\r\n    }\r\n    /* Inner Classes */\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/TastaturController.java b/src/controller/TastaturController.java
+--- a/src/controller/TastaturController.java	(revision c8222b3da900c37738872b31ea9264f1f2f5decf)
++++ b/src/controller/TastaturController.java	(date 1757491672635)
+@@ -109,7 +109,7 @@
+ 
+     @Override
+     public boolean getLinksB() {
+-        return view.keyPressed('1');
++        return view.keyPressed('2');
+     }
+ 
+     @Override
+Index: src/minigames/animalrun/AnimalRun.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.animalrun;\r\n\r\nimport controller.AbstractController;\r\nimport minigames.AbstractGame;\r\nimport minigames.animalrun.Worldobject.Platform;\r\nimport minigames.animalrun.Worldobject.WorldObject;\r\nimport sas.Picture;\r\nimport sas.View;\r\n\r\nimport java.util.HashSet;\r\nimport java.util.Set;\r\n\r\npublic class AnimalRun extends AbstractGame {\r\n    private  static final int tickRate = 60;\r\n    private static final int WIDTH = 900;\r\n    private static final int HEIGHT = 700;\r\n    private boolean gameRuns = true;\r\n\r\n    private World currentWorld;\r\n\r\n    public AnimalRun(AbstractController controller, View view) {\r\n        super(controller,view);\r\n    }\r\n\r\n    @Override\r\n    protected void initView() {\r\n        view.setSize(WIDTH, HEIGHT);\r\n        view.setName(\"AnimalRun\");\r\n\r\n        new Startbildschirm(controller, view, WIDTH, HEIGHT);\r\n\r\n        currentWorld = new World(controller, view);\r\n    }\r\n\r\n    @Override\r\n    protected void runGame() {\r\n        long milisPerCycle = 1000 / tickRate;\r\n        long timeStamp = System.currentTimeMillis();\r\n        long timeUntilNextCycle;\r\n\r\n        while (gameRuns) {\r\n            timeStamp = System.currentTimeMillis();\r\n            update();\r\n            timeUntilNextCycle = milisPerCycle - (System.currentTimeMillis() - timeStamp);\r\n            if (timeUntilNextCycle < 0) timeUntilNextCycle = 0;\r\n            try {\r\n                //Thread.sleep(timeUntilNextCycle);\r\n                view.wait(timeUntilNextCycle);\r\n            } catch (InterruptedException e) {\r\n                throw new RuntimeException(e);\r\n            }\r\n        }\r\n    }\r\n\r\n    private void update() {\r\n\r\n    }\r\n\r\n    private class World {\r\n        double xKameraVersatz = 0;\r\n        Picture background = new Picture(0,0,900,700,\"resources/animalrun/background_game.png\");\r\n\r\n        Set<WorldObject> wordObjects = new HashSet<WorldObject>();\r\n        // instanzen der playerklasse\r\n\r\n        public World(AbstractController controller, View view){\r\n\r\n        }\r\n\r\n        void update(int tick) {\r\n\r\n            wordObjects.stream().forEach(w ->{\r\n                w.setXKameraVersatz(xKameraVersatz);\r\n                w.doThings(tick);\r\n                w.updatePos();\r\n            });\r\n\r\n            if(controller.getLinksB()){\r\n                newWorldObject(new Platform(view));\r\n            }\r\n        }\r\n        void newWorldObject(WorldObject w){\r\n            wordObjects.add(w);\r\n            shapesToRemove.add(w);\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/minigames/animalrun/AnimalRun.java b/src/minigames/animalrun/AnimalRun.java
+--- a/src/minigames/animalrun/AnimalRun.java	(revision c8222b3da900c37738872b31ea9264f1f2f5decf)
++++ b/src/minigames/animalrun/AnimalRun.java	(date 1757491672650)
+@@ -12,9 +12,10 @@
+ 
+ public class AnimalRun extends AbstractGame {
+     private  static final int tickRate = 60;
+-    private static final int WIDTH = 900;
+-    private static final int HEIGHT = 700;
++    private static final int WIDTH = 900/2;
++    private static final int HEIGHT = 700/3;
+     private boolean gameRuns = true;
++    private int tick = 0;
+ 
+     private World currentWorld;
+ 
+@@ -34,6 +35,8 @@
+ 
+     @Override
+     protected void runGame() {
++        System.out.println("Welcome to AnimalRun");
++
+         long milisPerCycle = 1000 / tickRate;
+         long timeStamp = System.currentTimeMillis();
+         long timeUntilNextCycle;
+@@ -44,8 +47,8 @@
+             timeUntilNextCycle = milisPerCycle - (System.currentTimeMillis() - timeStamp);
+             if (timeUntilNextCycle < 0) timeUntilNextCycle = 0;
+             try {
+-                //Thread.sleep(timeUntilNextCycle);
+-                view.wait(timeUntilNextCycle);
++                Thread.sleep(timeUntilNextCycle);
++                //view.wait(timeUntilNextCycle);
+             } catch (InterruptedException e) {
+                 throw new RuntimeException(e);
+             }
+@@ -53,12 +56,15 @@
+     }
+ 
+     private void update() {
+-
++        currentWorld.update(tick);
++        tick++;
+     }
+ 
+     private class World {
+         double xKameraVersatz = 0;
+-        Picture background = new Picture(0,0,900,700,"resources/animalrun/background_game.png");
++        double xKameraSpeed = 1;
++
++        Picture background = new Picture(0,0,WIDTH,HEIGHT,"resources/animalrun/background_game.png");
+ 
+         Set<WorldObject> wordObjects = new HashSet<WorldObject>();
+         // instanzen der playerklasse
+@@ -69,6 +75,9 @@
+ 
+         void update(int tick) {
+ 
++            xKameraVersatz += xKameraSpeed;
++
++
+             wordObjects.stream().forEach(w ->{
+                 w.setXKameraVersatz(xKameraVersatz);
+                 w.doThings(tick);
+Index: src/mastercontroler/Mastercontrol.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package mastercontroler;\r\n\r\nimport controller.AbstractController;\r\nimport controller.TastaturController;\r\nimport minigames.AbstractGame;\r\nimport minigames.animalrun.AnimalRun;\r\nimport sas.View;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class Mastercontrol {\r\n    private static final int WIDTH = 600;\r\n    private static final int HEIGHT = 400;\r\n\r\n    protected AbstractController controller;\r\n    protected View view;\r\n    protected AbstractGame game;\r\n\r\n    public Mastercontrol() {\r\n        view = new View(WIDTH,HEIGHT);\r\n        controller =new TastaturController(view);\r\n        game =new AnimalRun(controller,view);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/mastercontroler/Mastercontrol.java b/src/mastercontroler/Mastercontrol.java
+--- a/src/mastercontroler/Mastercontrol.java	(revision c8222b3da900c37738872b31ea9264f1f2f5decf)
++++ b/src/mastercontroler/Mastercontrol.java	(date 1757491672650)
+@@ -20,5 +20,6 @@
+         view = new View(WIDTH,HEIGHT);
+         controller =new TastaturController(view);
+         game =new AnimalRun(controller,view);
++        game.start();
+     }
+ }
