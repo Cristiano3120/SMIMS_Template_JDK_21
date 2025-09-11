@@ -7,8 +7,10 @@ import minigames.AbstractGame;
 import minigames.animalRun.Worldobject.Platform;
 import minigames.animalRun.Worldobject.WorldObject;
 import sas.Shapes;
+import sas.Tools;
 import sas.View;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,8 +61,13 @@ public class AnimalRun extends AbstractGame {
         System.out.println("Welcome to AnimalRun");
 
         monkeys = new Monkey[2];
-        monkeys[0] = new Monkey(1000, 200, controller, true);
-        monkeys[1] = new Monkey(1000, 200, controller, false);
+        try {
+            monkeys[0] = new Monkey(1000, 200, controller, true);
+            monkeys[1] = new Monkey(1000, 200, controller, false);
+        } catch (IOException e) {
+            Tools.confirmDialog("Das Spiel kann nicht starten, weil Bilder nicht geladen werden konnten!");
+            throw new RuntimeException(e);
+        }
 
         AnimalRun.addToWorldObjects(monkeys[0]);
         AnimalRun.addToWorldObjects(monkeys[1]);
