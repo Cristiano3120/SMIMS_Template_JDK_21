@@ -15,6 +15,6 @@ public abstract class Entity {
 
     protected void drawByRectangles(Graphics2D g2d, Image image){
         g2d.drawImage(image, (int) bounds.getX(), (int) ( bounds.getY() + JumpGame.generalHeight), (int) bounds.getWidth(), (int) bounds.getHeight(),null);
-        g2d.drawImage(image, (int) bounds.getX() + 360, (int) ( bounds.getY() + JumpGame.generalHeight), (int) bounds.getWidth(), (int) bounds.getHeight(),null);
+        g2d.drawImage(image, (int) bounds.getX() + 360, (int) ( bounds.getY() +JumpGame.generalHeight ), (int) bounds.getWidth(), (int) bounds.getHeight(),null);
     }
 }

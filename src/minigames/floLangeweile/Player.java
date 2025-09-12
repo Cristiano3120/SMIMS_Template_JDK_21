@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public class Player extends Entity {
 
+    double lastHeight = 0;
     private double speedX = 0;
     private double speedY = 0;
     private boolean rechterPlayer;
@@ -37,26 +38,46 @@ public class Player extends Entity {
     @Override
     public void doThings(int tick) {
         //keine ränder
-        if(bounds.getX() < -180) bounds.setRect(bounds.getX() + 180, bounds.getY(), bounds.getWidth(), bounds.getHeight());
-        if(bounds.getX() > 180) bounds.setRect(bounds.getX() - 180, bounds.getY(), bounds.getWidth(), bounds.getHeight());
+        var panelWidth = JumpGame.getGamePanel().getWidth();
+        if(bounds.getX() < -panelWidth/2 ) bounds.setRect(panelWidth/2, bounds.getY(), bounds.getWidth(), bounds.getHeight());
+        if(bounds.getX() > panelWidth/2) bounds.setRect( -panelWidth/2, bounds.getY(), bounds.getWidth(), bounds.getHeight());
 
 
         // Steuerung
         steuerung();
 
+        // erster spieler
+        if(bounds.getY() + JumpGame.generalHeight < JumpGame.getGamePanel().getHeight()*0.3)
+            JumpGame.generalHeight++;
+
+        //ende
+        System.out.println(bounds.getY() + JumpGame.generalHeight > JumpGame.getGamePanel().getHeight());
+        if(bounds.getY() + JumpGame.generalHeight > JumpGame.getGamePanel().getHeight() )
+            JumpGame.oneDied = true;
+
         //movment
-        tryToMove();
+        boolean inAir = tryToMove();
+        if(inAir){
+             speedY += 0.1;
+        }else {
+            speedY = -6;
+        }
 
     }
     private void steuerung(){
-        System.out.println("test: "+ speedX + " " + JumpGame.controller.getJoystickLinksX());
+
         if(rechterPlayer){
-            speedX += JumpGame.controller.getJoystickRechtsX();
+            speedX = (speedX*19 + JumpGame.controller.getJoystickRechtsX()*10)/20;
+
         }
         else{
-            speedX += JumpGame.controller.getJoystickLinksX();
+            speedX = (speedX*19 + JumpGame.controller.getJoystickLinksX()*10)/20;
         }
+        if(speedX > 15) speedX = 15;
+        if(speedX < -15) speedX = -15;
     }
+
+
 
     @Override
     public void drawSelf(Graphics2D g2d) {
@@ -67,23 +88,23 @@ public class Player extends Entity {
     private boolean tryToMove(){
         if(speedY < 0){
             bounds.setFrame(bounds.getMinX() + speedX, bounds.getMinY() +speedY, bounds.getWidth(), bounds.getHeight());
-            if(bounds.getX() > JumpGame.generalHeight){
-                JumpGame.generalHeight = bounds.getX();
-            }
+
             return true;
         }
-        Rectangle2D.Double r = new Rectangle2D.Double(bounds.getX() + speedX ,bounds.getY() + speedY, bounds.getWidth(), 1);
+        Rectangle2D.Double r = new Rectangle2D.Double(bounds.getX() + speedX ,bounds.getY() + bounds.getHeight() -1 + speedY, bounds.getWidth(), 1);
+        Rectangle2D.Double r2 = new Rectangle2D.Double(bounds.getX() + speedX + JumpGame.getGamePanel().getWidth() ,bounds.getY() + bounds.getHeight() -1 + speedY, bounds.getWidth(), 1);
         boolean collide = JumpGame.umgebung.stream()
                 .anyMatch(u -> u.bounds.intersects(r));
+        if(!collide)
+            collide = JumpGame.umgebung.stream()
+                    .anyMatch(u -> u.bounds.intersects(r2));
 
         if(collide){
             return false;
         }
         else{
             bounds.setFrame(bounds.getMinX() + speedX, bounds.getMinY() +speedY, bounds.getWidth(), bounds.getHeight());
-            if(bounds.getX() > JumpGame.generalHeight){
-                JumpGame.generalHeight = bounds.getX();
-            }
+
             return true;
         }
 
