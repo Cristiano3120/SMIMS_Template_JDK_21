@@ -131,7 +131,7 @@ public class ArduinoController extends AbstractController implements SerialPortE
     public double getJoystickLinksX() {
         double value = (empfangendeDaten.getLinks().X - 512 - offSetLinksX) / 512 ;
         if(Math.abs(value) > 1) value = value / Math.abs(value);
-        return value;
+        return -value;
     }
 
     @Override
@@ -144,7 +144,7 @@ public class ArduinoController extends AbstractController implements SerialPortE
     public double getJoystickRechtsX() {
         double value = (empfangendeDaten.getRechts().X - 512 - offSetRechtsX) / 512 ;
         if(Math.abs(value) > 1) value = value / Math.abs(value);
-        return value;
+        return -value;
     }
 
     @Override

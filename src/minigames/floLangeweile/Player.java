@@ -51,7 +51,7 @@ public class Player extends Entity {
             JumpGame.generalHeight++;
 
         //ende
-        System.out.println(bounds.getY() + JumpGame.generalHeight > JumpGame.getGamePanel().getHeight());
+//        System.out.println(bounds.getY() + JumpGame.generalHeight > JumpGame.getGamePanel().getHeight());
         if(bounds.getY() + JumpGame.generalHeight > JumpGame.getGamePanel().getHeight() )
             JumpGame.oneDied = true;
 

@@ -45,7 +45,10 @@ public class JumpGame extends AbstractGame {
 
     public static void main(String[] args) {
         var v = new View((int) (WIDTH), HEIGHT);
-        var j = new JumpGame(new TastaturController(v), v);
+        var j = new JumpGame(new ArduinoController(), v);
+        v.wait(2000);
+//        var j = new JumpGame(new TastaturController(v), v);
+//        j.start();
         j.runGame();
     }
 
@@ -72,7 +75,7 @@ public class JumpGame extends AbstractGame {
     @Override
     protected void initView() {
         view.setSize(WIDTH, HEIGHT);
-        view.setName("SMIMS Frogger");
+        view.setName("SMIMS Jumper");
     }
 
     @Override
@@ -116,15 +119,14 @@ public class JumpGame extends AbstractGame {
 
             oneDied = false;
             tick = 0;
-            System.out.println("Test");
             while (!controller.getLinksA()) {
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                view.wait(50);
+//                try {
+//                    Thread.sleep(50);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
             }
-            System.out.println("TestTTTTTTT");
 
         }
 
@@ -132,7 +134,7 @@ public class JumpGame extends AbstractGame {
     private void summonPlatform( int height){
         int x = (int) (Math.random() * gamePanel.getWidth() /Platformen.WIDTH);
         umgebungNew.add(new NormPlatform(x*Platformen.WIDTH, (int) (height*LAYER_DISTENCE - generalHeight)));
-        System.out.println("Summon Platform" + (height*LAYER_DISTENCE - generalHeight) + " " + (height*LAYER_DISTENCE ));
+//        System.out.println("Summon Platform" + (height*LAYER_DISTENCE - generalHeight) + " " + (height*LAYER_DISTENCE ));
     }
 
     private void update(int tick) {
@@ -140,14 +142,14 @@ public class JumpGame extends AbstractGame {
         umgebungNew.clear();
         objekte.addAll(objekteNew);
         objekteNew.clear();
-        ///  ////
+
         if(tick % 2 == 0){
             JumpGame.generalHeight++;
         }
-        System.out.println("Test: " + !umgebung.stream().anyMatch(u -> u.bounds.getY() + generalHeight < 100));
+//        System.out.println("Test: " + !umgebung.stream().anyMatch(u -> u.bounds.getY() + generalHeight < 100));
         if(!umgebung.stream().anyMatch(u -> u.bounds.getY() + generalHeight < LAYER_DISTENCE)) {
             summonPlatform(0);
-            System.out.println("TEstEEEEEEEEEEEEEEEe");
+//            System.out.println("TEstEEEEEEEEEEEEEEEe");
         }
 
         objekte.forEach(objekt -> objekt.doThings(tick));
