@@ -98,12 +98,12 @@ public class AnimalRun extends AbstractGame {
                     monkey.signalKill();
                     System.out.println("Done");
                     gameRuns = false;
-                    return;
+                    break;
                 }
                 if (monkey.getHitbox().getShapeY() > view.getHeight()) {
                     gameRuns = false;
                     System.out.println("done2");
-                    return;
+                    break;
                 }
             }
 
@@ -136,13 +136,14 @@ public class AnimalRun extends AbstractGame {
 
         }
 
+        System.out.println("End screen!");
         for (Shapes shape : shapesToRemove) {
             shape.setHidden(true);
             view.remove(shape);
         }
 
-        EndScreen screen = new EndScreen(0, 0, 0.5f, view, true, controller);
-        screen.waitForInput();
+        EndScreen test = new EndScreen(0, 0, 0.5f, view, true, controller);
+        System.out.println(test.waitForInput());
     }
 
     private void newPlatform() {
