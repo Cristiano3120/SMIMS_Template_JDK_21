@@ -1,0 +1,435 @@
+Index: src/controller/ArduinoController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\nimport jssc.SerialPort;\r\nimport jssc.SerialPortEvent;\r\nimport jssc.SerialPortEventListener;\r\nimport jssc.SerialPortException;\r\n\r\npublic class ArduinoController extends AbstractController implements SerialPortEventListener {\r\n\r\n    /* Static Variables */\r\n\r\n    /* Static Methods */\r\n\r\n    /* Object Variables */\r\n    private String data = \"\";\r\n    private SerialPort serialPort;\r\n\r\n    /* Constructors */\r\n    public ArduinoController() {\r\n        initSerialPort();\r\n    }\r\n\r\n    /* Object Methods */\r\n    @Override\r\n    public void disconnect() {\r\n        try {\r\n            serialPort.closePort();\r\n        } catch (SerialPortException e) {\r\n            System.err.println(e);\r\n        }\r\n    }\r\n\r\n    public void serialEvent(SerialPortEvent e) {\r\n        try {\r\n            data = data + serialPort.readString();\r\n            data = data.replaceAll(\" \", \"\");\r\n            data = data.replaceAll(\"null\", \"\");\r\n            data = data.replaceAll(\"\\n\", \"\");\r\n            data = data.replaceAll(\"\\r\", \"\");\r\n\r\n            werteDatenAus();\r\n\r\n        } catch (SerialPortException ex) {\r\n            System.out.println(ex);\r\n        }\r\n    }\r\n\r\n    @Override\r\n    protected void werteDatenAus() {\r\n\r\n        System.out.println(\"data: \" + data); // TODO: diese Zeile hier löschen\r\n\r\n        // TODO: Hier passiert die Magie.\r\n\r\n\r\n        // Sobald wir fertig sind, müssen wir den Inhalt des data-Strings löschen, denn der Controller schreibt\r\n        // hier ununterbrochen neues Input rein. Auf diese Weise würde schnell eine sehr lange Zeichenkette\r\n        // gebildet, in der z.B. alle Analogstick-Bewegungen gespeichert würden, die aber überhaupt nicht mehr\r\n        // relevant sind.\r\n        data = \"\";\r\n    }\r\n\r\n    private void initSerialPort() {\r\n        boolean funktioniert = false;\r\n        for (int i = 21; i > 1 && !funktioniert; i--) {\r\n            funktioniert = true;\r\n            try {\r\n                serialPort = new SerialPort(\"COM\" + i);\r\n                serialPort.openPort();\r\n                serialPort.setParams(9600, 8, 1, 0);\r\n                serialPort.addEventListener(this);\r\n            } catch (SerialPortException ex) {\r\n                funktioniert = false;\r\n            }\r\n        }\r\n    }\r\n\r\n    /* Getters and Setters */\r\n    @Override\r\n    public double getJoystickLinksX() {\r\n        return 0;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickLinksY() {\r\n        return 0;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickRechtsX() {\r\n        return 0;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickRechtsY() {\r\n        return 0;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksA() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksB() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksC() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksD() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsA() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsB() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsC() {\r\n        return false;\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsD() {\r\n        return false;\r\n    }\r\n\r\n    /* Inner Classes */\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/ArduinoController.java b/src/controller/ArduinoController.java
+--- a/src/controller/ArduinoController.java	(revision bc0ecdaf532ffeb7e25e4dd80e5120c6cb5ec578)
++++ b/src/controller/ArduinoController.java	(date 1757651185926)
+@@ -4,6 +4,7 @@
+ import jssc.SerialPortEvent;
+ import jssc.SerialPortEventListener;
+ import jssc.SerialPortException;
++import com.google.gson.Gson;
+ 
+ public class ArduinoController extends AbstractController implements SerialPortEventListener {
+ 
+@@ -12,12 +13,45 @@
+     /* Static Methods */
+ 
+     /* Object Variables */
+-    private String data = "";
+     private SerialPort serialPort;
++    private final StringBuilder buffer = new StringBuilder();
++    private  EmpfangendeDaten empfangendeDaten = new EmpfangendeDaten();
++
++    boolean ersterLauf = true;
++    double offSetLinksX = 0;
++    double offSetLinksY = 0;
++    double offSetRechtsX = 0;
++    double offSetRechtsY = 0;
++
++    final class EmpfangendeDaten
++    {
++        private KnopfSeite links = new  KnopfSeite();
++        private KnopfSeite rechts = new KnopfSeite();
++
++        public KnopfSeite getLinks(){
++            return links;
++        };
++
++        public KnopfSeite getRechts(){
++            return rechts;
++        }
++    }
++
++    public final class KnopfSeite
++    {
++        public int A;
++        public int B;
++        public int C;
++        public int D;
++
++        public double X;
++        public double Y;
++    }
+ 
+     /* Constructors */
+-    public ArduinoController() {
++    public ArduinoController()  {
+         initSerialPort();
++
+     }
+ 
+     /* Object Methods */
+@@ -32,38 +66,51 @@
+ 
+     public void serialEvent(SerialPortEvent e) {
+         try {
+-            data = data + serialPort.readString();
+-            data = data.replaceAll(" ", "");
+-            data = data.replaceAll("null", "");
+-            data = data.replaceAll("\n", "");
+-            data = data.replaceAll("\r", "");
++            String incoming = serialPort.readString();
+ 
+-            werteDatenAus();
++            if (incoming != null) {
++                buffer.append(incoming);
+ 
++                int newLineIndex;
++                while ((newLineIndex = buffer.indexOf("\n")) != -1) {
++                    String line = buffer.substring(0, newLineIndex).trim();
++                    buffer.delete(0, newLineIndex +1);
++
++                    if (!line.isEmpty())
++                    {
++                        werteDatenAus(line);
++                    }
++                }
++            }
+         } catch (SerialPortException ex) {
+-            System.out.println(ex);
++            ex.printStackTrace();
+         }
++
+     }
++
+ 
+     @Override
+-    protected void werteDatenAus() {
+-
+-        System.out.println("data: " + data); // TODO: diese Zeile hier löschen
++    protected void werteDatenAus(String json) {
++        try
++        {
++            Gson gson = new Gson();
++            empfangendeDaten =  gson.fromJson(json, EmpfangendeDaten.class);
++            System.out.println(json);
++            readJoystickOffset();
++        }
++        catch (Exception ex)
++        {
++            System.out.println("ERROR: " + json);
++        }
++    }
+ 
+-        // TODO: Hier passiert die Magie.
+-
+-
+-        // Sobald wir fertig sind, müssen wir den Inhalt des data-Strings löschen, denn der Controller schreibt
+-        // hier ununterbrochen neues Input rein. Auf diese Weise würde schnell eine sehr lange Zeichenkette
+-        // gebildet, in der z.B. alle Analogstick-Bewegungen gespeichert würden, die aber überhaupt nicht mehr
+-        // relevant sind.
+-        data = "";
+-    }
+ 
+     private void initSerialPort() {
+         boolean funktioniert = false;
++
+         for (int i = 21; i > 1 && !funktioniert; i--) {
+             funktioniert = true;
++
+             try {
+                 serialPort = new SerialPort("COM" + i);
+                 serialPort.openPort();
+@@ -75,67 +122,84 @@
+         }
+     }
+ 
++    private void readJoystickOffset()
++    {
++        if(ersterLauf)
++        {
++            ersterLauf = false;
++
++            offSetLinksX = empfangendeDaten.getLinks().X - 512;
++            offSetLinksY = empfangendeDaten.getLinks().Y - 512;
++            offSetRechtsX = empfangendeDaten.getRechts().X - 512;
++            offSetRechtsY = empfangendeDaten.getRechts().Y - 512;
++        }
++    }
++
+     /* Getters and Setters */
+     @Override
+     public double getJoystickLinksX() {
+-        return 0;
++        double value = (empfangendeDaten.getLinks().X - 512 - offSetLinksX) / 512 ;
++        if(Math.abs(value) > 1) value = value / Math.abs(value);
++        return value;
+     }
+ 
+     @Override
+     public double getJoystickLinksY() {
+-        return 0;
++        return empfangendeDaten.getLinks().Y;
+     }
+-
+     @Override
+     public double getJoystickRechtsX() {
+-        return 0;
++        double value = (empfangendeDaten.getRechts().X - 512 - offSetRechtsX) / 512 ;
++        if(Math.abs(value) > 1) value = value / Math.abs(value);
++        return value;
+     }
+ 
+     @Override
+     public double getJoystickRechtsY() {
+-        return 0;
++        double value = (empfangendeDaten.getRechts().Y - 512 - offSetRechtsY) / 512 ;
++        if(Math.abs(value) > 1) value = value / Math.abs(value);
++        return value;
+     }
+ 
+     @Override
+     public boolean getLinksA() {
+-        return false;
++        return empfangendeDaten.getLinks().A == 1;
+     }
+ 
+     @Override
+     public boolean getLinksB() {
+-        return false;
++        return empfangendeDaten.getLinks().A == 1;
+     }
+ 
+     @Override
+     public boolean getLinksC() {
+-        return false;
++        return empfangendeDaten.getLinks().C == 1;
+     }
+ 
+     @Override
+     public boolean getLinksD() {
+-        return false;
++        return empfangendeDaten.getLinks().D == 1;
+     }
+ 
+     @Override
+     public boolean getRechtsA() {
+-        return false;
++        return empfangendeDaten.getRechts().A == 1;
+     }
+ 
+     @Override
+     public boolean getRechtsB() {
+-        return false;
++        return empfangendeDaten.getRechts().B == 1;
+     }
+ 
+     @Override
+     public boolean getRechtsC() {
+-        return false;
++        return empfangendeDaten.getRechts().C == 1;
+     }
+ 
+     @Override
+     public boolean getRechtsD() {
+-        return false;
++        return empfangendeDaten.getRechts().D == 1;
+     }
+-
+     /* Inner Classes */
+ 
+-}
++}
+\ No newline at end of file
+Index: src/controller/TastaturController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\nimport sas.View;\r\n\r\n/**\r\n * Die Klasse <code>{@link TastaturController}</code> dient lediglich als Platzhalter während der Programmierphase,\r\n * solange Joystick, Gamepad, ... noch nicht fertiggestellt sind. Damit die anderen Teams programmieren und ihre Spiele\r\n * auch steuern können, wird übergangsweise die Tastatur zur Eingabe verwendet. Später kann man dann einfach zur\r\n * Joystick-/Gamepad-/... Steuerung wechseln, indem man schlicht die verwendete Klasse ändert.\r\n */\r\npublic class TastaturController extends AbstractController {\r\n\r\n    /* Static Variables */\r\n\r\n    /* Static Methods */\r\n\r\n    /* Object Variables */\r\n    private View view;\r\n\r\n    /* Constructors */\r\n    public TastaturController(View view) {\r\n        this.view = view;\r\n    }\r\n\r\n    /* Object Methods */\r\n    @Override\r\n    protected void werteDatenAus() {\r\n        // Hier muss nichts getan werden.\r\n    }\r\n\r\n    @Override\r\n    public void disconnect() {\r\n        // Hier muss nichts getan werden.\r\n    }\r\n\r\n    /* Getters and Setters */\r\n\r\n    /**\r\n     * In dieser Beispielmethode wird gezeigt, wie man mithilfe der Tastatureingabe (Pfeiltaste links und / oder\r\n     * Pfeiltaste rechts) das Joystick- bzw. Gamepad-Input simulieren könnte.\r\n     *\r\n     * @return\r\n     */\r\n    @Override\r\n    public double getJoystickLinksX() {\r\n\r\n        double x = 0.0;\r\n\r\n        if (view.keyPressed('A')) {\r\n            x += -1d;\r\n        }\r\n\r\n        if (view.keyPressed('D')) {\r\n            x += 1d;\r\n        }\r\n\r\n        return x;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickLinksY() {\r\n        double y = 0.0;\r\n\r\n        if (view.keyPressed('W')) {\r\n            y += -1d;\r\n        }\r\n\r\n        if (view.keyDownPressed()) {\r\n            y += 1d;\r\n        }\r\n\r\n        return y;\r\n    }\r\n\r\n    public double getJoystickRechtsX() {\r\n\r\n        double x = 0.0;\r\n\r\n        if (view.keyLeftPressed()) {\r\n            x += -1d;\r\n        }\r\n\r\n        if (view.keyRightPressed()) {\r\n            x += 1d;\r\n        }\r\n\r\n        return x;\r\n    }\r\n\r\n    @Override\r\n    public double getJoystickRechtsY() {\r\n        double y = 0.0;\r\n\r\n        if (view.keyUpPressed()) {\r\n            y += -1d;\r\n        }\r\n\r\n        if (view.keyDownPressed()) {\r\n            y += 1d;\r\n        }\r\n\r\n        return y;\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksA() {\r\n        return view.keyPressed('1');\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksB() {\r\n        return view.keyPressed('2');\r\n    }\r\n\r\n    @Override\r\n    public boolean getLinksC() {\r\n        return view.keyPressed('3');\r\n    }\r\n    @Override\r\n    public boolean getLinksD() {\r\n        return view.keyPressed('4');\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsA() {\r\n        return view.keyPressed('7');\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsB() {\r\n        return view.keyPressed('8');\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsC() {\r\n        return view.keyPressed('9');\r\n    }\r\n\r\n    @Override\r\n    public boolean getRechtsD() {\r\n        return view.keyPressed('0');\r\n    }\r\n    /* Inner Classes */\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/TastaturController.java b/src/controller/TastaturController.java
+--- a/src/controller/TastaturController.java	(revision bc0ecdaf532ffeb7e25e4dd80e5120c6cb5ec578)
++++ b/src/controller/TastaturController.java	(date 1757646826620)
+@@ -22,10 +22,9 @@
+         this.view = view;
+     }
+ 
+-    /* Object Methods */
+     @Override
+-    protected void werteDatenAus() {
+-        // Hier muss nichts getan werden.
++    protected void werteDatenAus(String json) {
++
+     }
+ 
+     @Override
+Index: src/controller/AbstractController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controller;\r\n\r\npublic abstract class AbstractController {\r\n\r\n    /* Static Variables */\r\n\r\n    /* Static Methods */\r\n\r\n    /* Object Variables */\r\n\r\n    /* Constructors */\r\n    public AbstractController() {\r\n       super();\r\n    }\r\n\r\n    /* Object Methods */\r\n    protected abstract void werteDatenAus();\r\n\r\n    public abstract void disconnect();\r\n\r\n    /* Getters and Setters */\r\n    /**\r\n     * A getter for the x-axis of the joystick's analog stick.\r\n     *\r\n     * @return values ranging from <code>-512</code> (all the way left) to, <code>0</code> (neutral position) to\r\n     * <code>511</code> (all the way right).\r\n     */\r\n    public abstract double getJoystickLinksX();\r\n\r\n    /**\r\n     * A getter for the y-axis of the joystick's analog stick.\r\n     *\r\n     * @return values ranging from <code>-512</code> (all the way up) to, <code>0</code> (neutral position) to\r\n     * <code>511</code> (all the way down).\r\n     */\r\n    public abstract double getJoystickLinksY();\r\n\r\n    public abstract double getJoystickRechtsX();\r\n\r\n    public abstract double getJoystickRechtsY();\r\n\r\n    public abstract boolean getLinksA();\r\n\r\n    public abstract boolean getLinksB();\r\n\r\n    public abstract boolean getLinksC();\r\n\r\n    public abstract boolean getLinksD();\r\n\r\n    public abstract boolean getRechtsA();\r\n\r\n    public abstract boolean getRechtsB();\r\n\r\n    public abstract boolean getRechtsC();\r\n\r\n    public abstract boolean getRechtsD();\r\n    // TODO: Mehr Methoden hinzufügen, z.B. für Buttons o.ä.\r\n\r\n    /* Inner Classes */\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller/AbstractController.java b/src/controller/AbstractController.java
+--- a/src/controller/AbstractController.java	(revision bc0ecdaf532ffeb7e25e4dd80e5120c6cb5ec578)
++++ b/src/controller/AbstractController.java	(date 1757646807439)
+@@ -10,11 +10,11 @@
+ 
+     /* Constructors */
+     public AbstractController() {
+-       super();
++        super();
+     }
+ 
+     /* Object Methods */
+-    protected abstract void werteDatenAus();
++    protected abstract void werteDatenAus(String json);
+ 
+     public abstract void disconnect();
+ 
+Index: SMIMS_Template_JDK_21.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"JAVA_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\" inherit-compiler-output=\"true\">\r\n    <exclude-output />\r\n    <content url=\"file://$MODULE_DIR$\">\r\n      <sourceFolder url=\"file://$MODULE_DIR$/resources\" type=\"java-resource\" />\r\n      <sourceFolder url=\"file://$MODULE_DIR$/src\" isTestSource=\"false\" />\r\n    </content>\r\n    <orderEntry type=\"jdk\" jdkName=\"21\" jdkType=\"JavaSDK\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n    <orderEntry type=\"library\" name=\"sasRetina_java8\" level=\"project\" />\r\n    <orderEntry type=\"library\" name=\"slf4j-api-2.0.16\" level=\"project\" />\r\n    <orderEntry type=\"library\" name=\"slf4j-simple-2.0.16-sources\" level=\"project\" />\r\n    <orderEntry type=\"library\" name=\"jssc-2.10\" level=\"project\" />\r\n    <orderEntry type=\"library\" name=\"jlayer-1.0.3\" level=\"project\" />\r\n  </component>\r\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/SMIMS_Template_JDK_21.iml b/SMIMS_Template_JDK_21.iml
+--- a/SMIMS_Template_JDK_21.iml	(revision bc0ecdaf532ffeb7e25e4dd80e5120c6cb5ec578)
++++ b/SMIMS_Template_JDK_21.iml	(date 1757646591861)
+@@ -13,5 +13,14 @@
+     <orderEntry type="library" name="slf4j-simple-2.0.16-sources" level="project" />
+     <orderEntry type="library" name="jssc-2.10" level="project" />
+     <orderEntry type="library" name="jlayer-1.0.3" level="project" />
++    <orderEntry type="module-library">
++      <library>
++        <CLASSES>
++          <root url="jar://$USER_HOME$/Downloads/gson-2.10.1.jar!/" />
++        </CLASSES>
++        <JAVADOC />
++        <SOURCES />
++      </library>
++    </orderEntry>
+   </component>
+ </module>
+\ No newline at end of file
+Index: src/minigames/pong/PongNico.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package minigames.pong;\r\nimport controller.AbstractController;\r\nimport controller.ArduinoController;\r\nimport controller.TastaturController;\r\nimport sas.*;\r\nimport java.awt.Color;\r\n\r\npublic class PongNico {\r\n\r\n    View view;\r\n    TastaturController controller;\r\n    ArduinoController  arduinoController;\r\n    Rectangle pong1;\r\n    Rectangle pong2;\r\n    Circle ball;\r\n    double n = 1;\r\n    double a = 0;\r\n    double abprallwinkel = 0;\r\n    double treffstelle = 0;\r\n    Text player1ScoreText;\r\n    Text player2ScoreText;\r\n    int player1Score;\r\n    int player2Score;\r\n    Rectangle player1ScoreRect;\r\n    Rectangle player2ScoreRect;\r\n\r\n    public PongNico(View view, TastaturController controller) {\r\n\r\n        this.view = view;\r\n        this.controller = controller;\r\n        arduinoController = new ArduinoController();\r\n\r\n        view.setBackgroundColor(Color.gray);\r\n\r\n        pong1 = new Rectangle(0, 0, view.getWidth()/100*2, view.getHeight()/12*3, new Color(41,49,51));\r\n        pong2 = new Rectangle(0, 0, view.getWidth()/100*2, view.getHeight()/12*3, new Color(41,49,51));\r\n\r\n\r\n\r\n        int offset = 20;\r\n        player1ScoreText = new Text(offset, 0, \"0\");\r\n        player2ScoreText = new Text(view.getWidth() - offset, 0, \"0\");\r\n\r\n        ball = new Circle(0, 0, (view.getHeight()/2)/20, new Color(255,255,255));\r\n\r\n        init();\r\n    }\r\n\r\n    private void init(){\r\n        pong1.moveTo(view.getWidth()/10*2, view.getHeight()/2-pong1.getShapeHeight()/2);\r\n        pong2.moveTo(view.getWidth()/10*8, view.getHeight()/2-pong2.getShapeHeight()/2);\r\n\r\n        ball.moveTo(view.getWidth()/2-ball.getShapeWidth()/2, view.getHeight()/2-ball.getShapeHeight()/2);\r\n    }\r\n\r\n    public void doThat() {\r\n\r\n        if (controller.getLinksA() || arduinoController.getJoystickLinksY() < 512 && pong1.getShapeY() > 0) {\r\n            pong1.move(0, -8);\r\n        }\r\n\r\n        if (controller.getLinksB() || arduinoController.getJoystickLinksY() > 512 && pong1.getShapeY() + pong1.getShapeHeight() < view.getHeight()) {\r\n            pong1.move(0, 8);\r\n        }\r\n        if (controller.getRechtsC() || arduinoController.getJoystickRechtsX() < 512 && pong2.getShapeY() > 0) {\r\n            pong2.move(0, -8);\r\n        }\r\n        if (controller.getRechtsD() || arduinoController.getJoystickLinksY() > 512 &&  pong2.getShapeY() + pong2.getShapeHeight() < view.getHeight()) {\r\n            pong2.move(0, 8);\r\n        }\r\n\r\n        ball.move(n, a);\r\n\r\n        if (n < 0 && n > 200) {\r\n            n = n - 0.001;\r\n        } else if (n > 0 && n < 200) {\r\n            n = n + 0.0025;\r\n        }\r\n\r\n        if (ball.intersects(pong1) || ball.intersects(pong2)) {\r\n            n = n * -1;\r\n        }\r\n\r\n        if (ball.intersects(pong1)) {\r\n            treffstelle = pong1.getCenterY() - ball.getCenterY();\r\n        } else {\r\n            treffstelle = pong2.getCenterY() - ball.getCenterY();\r\n        }\r\n\r\n        abprallwinkel = treffstelle / 10 * (100 / 89) * -1;\r\n\r\n        if (ball.intersects(pong1) || ball.intersects(pong2)) {\r\n            a = (100 / 45) * abprallwinkel;\r\n        }\r\n\r\n        if (ball.getShapeY() < 0 || ball.getShapeY() + ball.getShapeHeight() > view.getHeight()) {\r\n            a = a * -1;\r\n        }\r\n    }\r\n    public boolean pongWin() {\r\n        if (ball.getShapeX() < 0 || ball.getShapeX() + ball.getShapeWidth() > view.getWidth()) {\r\n            pong1.setHidden(true);\r\n            pong2.setHidden(true);\r\n            ball.setHidden(true);\r\n\r\n            view.remove(pong1);\r\n            view.remove(pong2);\r\n            view.remove(ball);\r\n\r\n            if (ball.getShapeX() < 0) {\r\n                player1ScoreText.setText(String.valueOf(++player1Score));\r\n            }\r\n\r\n            if (ball.getShapeX() + ball.getShapeWidth() > view.getWidth()) {\r\n                player2ScoreText.setText(String.valueOf(++player1Score));\r\n            }\r\n\r\n            return false;\r\n        }\r\n        return true;\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/src/minigames/pong/PongNico.java b/src/minigames/pong/PongNico.java
+--- a/src/minigames/pong/PongNico.java	(revision bc0ecdaf532ffeb7e25e4dd80e5120c6cb5ec578)
++++ b/src/minigames/pong/PongNico.java	(date 1757650026682)
+@@ -9,7 +9,7 @@
+ 
+     View view;
+     TastaturController controller;
+-    ArduinoController  arduinoController;
++    ArduinoController arduinoController;
+     Rectangle pong1;
+     Rectangle pong2;
+     Circle ball;
+@@ -32,41 +32,47 @@
+ 
+         view.setBackgroundColor(Color.gray);
+ 
+-        pong1 = new Rectangle(0, 0, view.getWidth()/100*2, view.getHeight()/12*3, new Color(41,49,51));
+-        pong2 = new Rectangle(0, 0, view.getWidth()/100*2, view.getHeight()/12*3, new Color(41,49,51));
++        pong1 = new Rectangle(0, 0, view.getWidth() / 100 * 2, view.getHeight() / 12 * 3, new Color(41, 49, 51));
++        pong2 = new Rectangle(0, 0, view.getWidth() / 100 * 2, view.getHeight() / 12 * 3, new Color(41, 49, 51));
+ 
+ 
+-
+         int offset = 20;
+         player1ScoreText = new Text(offset, 0, "0");
+         player2ScoreText = new Text(view.getWidth() - offset, 0, "0");
+ 
+-        ball = new Circle(0, 0, (view.getHeight()/2)/20, new Color(255,255,255));
++        ball = new Circle(0, 0, (view.getHeight() / 2) / 20, new Color(255, 255, 255));
+ 
+         init();
++
++        //Wait so arduino can init
++        view.wait(3000);
+     }
+ 
+-    private void init(){
+-        pong1.moveTo(view.getWidth()/10*2, view.getHeight()/2-pong1.getShapeHeight()/2);
+-        pong2.moveTo(view.getWidth()/10*8, view.getHeight()/2-pong2.getShapeHeight()/2);
++    private void init() {
++        pong1.moveTo(view.getWidth() / 10 * 2, view.getHeight() / 2 - pong1.getShapeHeight() / 2);
++        pong2.moveTo(view.getWidth() / 10 * 8, view.getHeight() / 2 - pong2.getShapeHeight() / 2);
+ 
+-        ball.moveTo(view.getWidth()/2-ball.getShapeWidth()/2, view.getHeight()/2-ball.getShapeHeight()/2);
++        ball.moveTo(view.getWidth() / 2 - ball.getShapeWidth() / 2, view.getHeight() / 2 - ball.getShapeHeight() / 2);
+     }
+ 
+     public void doThat() {
+ 
+-        if (controller.getLinksA() || arduinoController.getJoystickLinksY() < 512 && pong1.getShapeY() > 0) {
+-            pong1.move(0, -8);
++        int deadzone = 30; // +/- Bereich, in dem nichts passiert
++
++        double leftY = arduinoController.getJoystickLinksY();
++        if (leftY < 514 - deadzone && pong1.getShapeY() > 0) {
++            pong1.move(0, -2.5);
++        }
++        if (leftY > 514 + deadzone && pong1.getShapeY() + pong1.getShapeHeight() < view.getHeight()) {
++            pong1.move(0, 2.5);
+         }
+ 
+-        if (controller.getLinksB() || arduinoController.getJoystickLinksY() > 512 && pong1.getShapeY() + pong1.getShapeHeight() < view.getHeight()) {
+-            pong1.move(0, 8);
++        double rightY = arduinoController.getJoystickRechtsY();
++        if (rightY < 517 - deadzone && pong2.getShapeY() > 0) {
++            pong2.move(0, -2.5);
+         }
+-        if (controller.getRechtsC() || arduinoController.getJoystickRechtsX() < 512 && pong2.getShapeY() > 0) {
+-            pong2.move(0, -8);
+-        }
+-        if (controller.getRechtsD() || arduinoController.getJoystickLinksY() > 512 &&  pong2.getShapeY() + pong2.getShapeHeight() < view.getHeight()) {
+-            pong2.move(0, 8);
++        if (rightY > 517 + deadzone && pong2.getShapeY() + pong2.getShapeHeight() < view.getHeight()) {
++            pong2.move(0, 2.5);
+         }
+ 
+         ball.move(n, a);
+@@ -97,26 +103,23 @@
+             a = a * -1;
+         }
+     }
++
+     public boolean pongWin() {
+-        if (ball.getShapeX() < 0 || ball.getShapeX() + ball.getShapeWidth() > view.getWidth()) {
+-            pong1.setHidden(true);
+-            pong2.setHidden(true);
+-            ball.setHidden(true);
+-
+-            view.remove(pong1);
+-            view.remove(pong2);
+-            view.remove(ball);
++//        if (ball.getShapeX() < 0 || ball.getShapeX() + ball.getShapeWidth() > view.getWidth()) {
++//            if (ball.getShapeX() < 0) {
++//                player1ScoreText.setText(String.valueOf(++player1Score));
++//                init();
++//            }
++//
++//            if (ball.getShapeX() + ball.getShapeWidth() > view.getWidth()) {
++//                player2ScoreText.setText(String.valueOf(++player1Score));
++//                init();
++//            }
++//
++//            return false;
++//        }
++//        return true;
+ 
+-            if (ball.getShapeX() < 0) {
+-                player1ScoreText.setText(String.valueOf(++player1Score));
+-            }
+-
+-            if (ball.getShapeX() + ball.getShapeWidth() > view.getWidth()) {
+-                player2ScoreText.setText(String.valueOf(++player1Score));
+-            }
+-
+-            return false;
+-        }
+         return true;
+     }
+ }
