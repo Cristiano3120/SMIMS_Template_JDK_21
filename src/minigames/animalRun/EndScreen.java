@@ -27,7 +27,7 @@ public class EndScreen {
     private ScalablePicture trophy;
     private ScalablePicture umrandung;
 
-    public EndScreen(int x, int y, float transparency, View view, boolean player1gewonnen, TastaturController controller) {
+    public EndScreen(int x, int y, float transparency, View view, boolean player1gewonnen, AbstractController controller) {
         this.view = view;
         this.controller = controller;
 

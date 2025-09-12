@@ -29,12 +29,14 @@ public class AnimalRun extends AbstractGame {
     private Loewe loewe;
     private Set<WorldObject> worldObjects;
     private Set<WorldObject> summonNextRoundObjects;
+    private int tick;
 
 
     public AnimalRun(AbstractController controller, View view) {
         super(controller, view);
         this.worldObjects = new HashSet<>();
         this.summonNextRoundObjects = new HashSet<>();
+        this.tick = 0;
     }
 
     @Override
@@ -44,6 +46,8 @@ public class AnimalRun extends AbstractGame {
 
     @Override
     protected void runGame() {
+
+        new Startbildschirm(controller, view);
 
 
         monkeys = new Monkey[2];
@@ -92,19 +96,21 @@ public class AnimalRun extends AbstractGame {
             for (Monkey monkey : monkeys) {
                 if (loewe.intersects(monkey)) {
                     monkey.signalKill();
+                    System.out.println("Done");
                     gameRuns = false;
                     return;
                 }
-                if(monkey.getHitbox().getShapeX() > view.getHeight()) {
+                if (monkey.getHitbox().getShapeY() > view.getHeight()) {
                     gameRuns = false;
+                    System.out.println("done2");
                     return;
                 }
             }
 
             // Ist ein Affe aus der Map gefallen?
 
-                // Füge eventuelle Objekte, die diesen Tick im set stehen, der Welt hinzu.
-                worldObjects.addAll(summonNextRoundObjects);
+            // Füge eventuelle Objekte, die diesen Tick im set stehen, der Welt hinzu.
+            worldObjects.addAll(summonNextRoundObjects);
             shapesToRemove.addAll(summonNextRoundObjects.stream()
                     .filter(o -> o instanceof Shapes)
                     .map(o -> (Shapes) o)
@@ -116,18 +122,27 @@ public class AnimalRun extends AbstractGame {
                 w.updatePos();
             });
 
-//            if (tick % 200 == 0) {
-//                summonNextRoundObjects.add(new Platform(view, false));
-//            }
+            if (tick % 200 == 0) {
+                summonNextRoundObjects.add(new Platform(view, false));
+            }
 
             checkPlatformCollision();
 
             timeUntilNextCycle = milisPerCycle - (System.currentTimeMillis() - timeStamp);
             if (timeUntilNextCycle < 0) timeUntilNextCycle = 0;
 
+            tick++;
             view.wait((int) timeUntilNextCycle);
 
         }
+
+        for (Shapes shape : shapesToRemove) {
+            shape.setHidden(true);
+            view.remove(shape);
+        }
+
+        EndScreen screen = new EndScreen(0, 0, 0.5f, view, true, controller);
+        screen.waitForInput();
     }
 
     private void newPlatform() {
@@ -166,7 +181,6 @@ public class AnimalRun extends AbstractGame {
 
 //                System.out.println(platform.getShapeX() + ", " + platform.getShapeY() + ", " + platform.getShapeHeight() + ", " + platform.getShapeHeight());
                 for (Monkey monkey : monkeys) {
-                    System.out.println(">>" + monkey.getShapeX() + ", " + monkey.getShapeY() + ", " + monkey.getMonkeyWidth() + ", " + monkey.getMonkeyHeight());
 
                     // Wenn der Affe die Plattform von oben berührt ...
 //                    if (monkey.intersects(platform) && monkey.getShapeY() + monkey.getMonkeyHeight() >= platform.getShapeY()) {
