@@ -15,23 +15,22 @@ public class Player extends Entity {
     private boolean rechterPlayer;
 
 
-    private static BufferedImage[] images;
+    private static BufferedImage imagesLeft;
+    private static BufferedImage imagesRight;
 
     public Player(int x, int y, boolean rechts) {
         bounds = new Rectangle2D.Double(x, y, 50, 50);
         rechterPlayer = rechts;
 
-        if(images == null){
-            images = new BufferedImage[4];
-            for(int i = 0; i < images.length; i++){
-                try {
-                    images[i] = ImageIO.read(new File("resources/jumpGame/player/player0.png"));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        try {
+            if (imagesLeft == null) {
+                imagesLeft = ImageIO.read(new File("resources/jumpGame/player/playerfalse.png"));
             }
-
-
+            if (imagesRight == null) {
+                imagesRight = ImageIO.read(new File("resources/jumpGame/player/playertrue.png"));
+            }
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 
@@ -67,21 +66,22 @@ public class Player extends Entity {
     private void steuerung(){
 
         if(rechterPlayer){
-            speedX = (speedX*19 + JumpGame.controller.getJoystickRechtsX()*10)/20;
+            speedX = (speedX + JumpGame.controller.getJoystickRechtsX()*10)/2;
 
         }
         else{
-            speedX = (speedX*19 + JumpGame.controller.getJoystickLinksX()*10)/20;
+            speedX = (speedX + JumpGame.controller.getJoystickLinksX()*10)/2;
         }
-        if(speedX > 15) speedX = 15;
-        if(speedX < -15) speedX = -15;
+        if(speedX > 5) speedX = 5;
+        if(speedX < -5) speedX = -5;
     }
 
 
 
     @Override
     public void drawSelf(Graphics2D g2d) {
-        drawByRectangles(g2d,images[0]);
+        if(rechterPlayer) drawByRectangles(g2d,imagesRight);
+        else drawByRectangles(g2d,imagesLeft);
     }
 
     // true wenn funktionirt

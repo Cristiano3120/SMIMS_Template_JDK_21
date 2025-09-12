@@ -17,7 +17,8 @@ public class ArduinoController extends AbstractController implements SerialPortE
     /* Object Variables */
     private SerialPort serialPort;
     private final StringBuilder buffer = new StringBuilder();
-    private  EmpfangendeDaten empfangendeDaten = new EmpfangendeDaten();
+    private String data;
+    private EmpfangendeDaten empfangendeDaten = new EmpfangendeDaten();
 
     boolean ersterLauf = true;
     double offSetLinksX = 0;
@@ -26,7 +27,8 @@ public class ArduinoController extends AbstractController implements SerialPortE
     double offSetRechtsY = 0;
 
     /* Constructors */
-    public ArduinoController()  {
+    public ArduinoController() {
+        this.data = "";
         initSerialPort();
 
     }
@@ -42,26 +44,42 @@ public class ArduinoController extends AbstractController implements SerialPortE
     }
 
     public void serialEvent(SerialPortEvent e) {
+
         try {
-            String incoming = serialPort.readString();
+            data = data + serialPort.readString();
+            data = data.replaceAll(" ", "");
+            data = data.replaceAll("null", "");
+            data = data.replaceAll("\n", "");
+            data = data.replaceAll("\r", "");
 
-            if (incoming != null) {
-                buffer.append(incoming);
+            werteDatenAus(null);
 
-                int newLineIndex;
-                while ((newLineIndex = buffer.indexOf("\n")) != -1) {
-                    String line = buffer.substring(0, newLineIndex).trim();
-                    buffer.delete(0, newLineIndex +1);
-
-                    if (!line.isEmpty())
-                    {
-                        werteDatenAus(line);
-                    }
-                }
-            }
         } catch (SerialPortException ex) {
-            ex.printStackTrace();
+            System.out.println(ex);
         }
+
+
+//        try {
+//            String incoming = serialPort.readString();
+//
+//            if (incoming != null) {
+//                buffer.append(incoming);
+//
+//                int newLineIndex;
+//                while ((newLineIndex = buffer.indexOf("\n")) != -1) {
+//                    System.out.println("> " + newLineIndex);
+//                    String line = buffer.substring(0, newLineIndex).trim();
+//                    buffer.delete(0, newLineIndex +1);
+//                    System.out.println(">>"+line);
+//                    if (!line.isEmpty())
+//                    {
+//                        werteDatenAus(line);
+//                    }
+//                }
+//            }
+//        } catch (SerialPortException ex) {
+//            ex.printStackTrace();
+//        }
 
     }
 
@@ -84,17 +102,56 @@ public class ArduinoController extends AbstractController implements SerialPortE
 
     @Override
     protected void werteDatenAus(String json) {
-        try
-        {
+
+        json = data;
+
+        if (data == null) {
+            return;
+        }
+
+//        System.out.println(data);
+
+        if (!data.contains("}}")) {
+            return;
+        }
+
+        try {
+            json = data.substring(data.indexOf('{'), data.indexOf("}}")+2);
             Gson gson = new Gson();
-            empfangendeDaten =  gson.fromJson(json, EmpfangendeDaten.class);
+            empfangendeDaten = gson.fromJson(json, EmpfangendeDaten.class);
             readJoystickOffset();
-        }
-        catch (Exception ex)
-        {
+
+        } catch (Exception ex) {
             System.out.println("ERROR: " + json);
+        } finally {
+            data = "";
         }
+
     }
+
+//        try {
+//
+//            int newLineIndex;
+//            while ((newLineIndex = buffer.indexOf("\n")) != -1) {
+//                String line = buffer.substring(0, newLineIndex).trim();
+//                buffer.delete(0, newLineIndex + 1);
+//                if (!line.isEmpty()) {
+//                    werteDatenAus(line);
+//                }
+//
+//            }
+//        } catch (SerialPortException ex) {
+//            ex.printStackTrace();
+//        }
+//
+//        try {
+//            Gson gson = new Gson();
+//            empfangendeDaten = gson.fromJson(json, EmpfangendeDaten.class);
+//            readJoystickOffset();
+//        } catch (Exception ex) {
+//            System.out.println("ERROR: " + json);
+//        }
+//    }
 
     private void initSerialPort() {
         boolean funktioniert = false;
@@ -113,10 +170,8 @@ public class ArduinoController extends AbstractController implements SerialPortE
         }
     }
 
-    private void readJoystickOffset()
-    {
-        if(ersterLauf)
-        {
+    private void readJoystickOffset() {
+        if (ersterLauf) {
             ersterLauf = false;
 
             offSetLinksX = empfangendeDaten.getLinks().X - 512;
@@ -129,28 +184,29 @@ public class ArduinoController extends AbstractController implements SerialPortE
     /* Getters and Setters */
     @Override
     public double getJoystickLinksX() {
-        double value = (empfangendeDaten.getLinks().X - 512 - offSetLinksX) / 512 ;
-        if(Math.abs(value) > 1) value = value / Math.abs(value);
+        double value = (empfangendeDaten.getLinks().X - 512 - offSetLinksX) / 512;
+        if (Math.abs(value) > 1) value = value / Math.abs(value);
         return -value;
     }
 
     @Override
     public double getJoystickLinksY() {
-        double value = (empfangendeDaten.getLinks().Y - 512 - offSetLinksY) / 512 ;
-        if(Math.abs(value) > 1) value = value / Math.abs(value);
+        double value = (empfangendeDaten.getLinks().Y - 512 - offSetLinksY) / 512;
+        if (Math.abs(value) > 1) value = value / Math.abs(value);
         return value;
     }
+
     @Override
     public double getJoystickRechtsX() {
-        double value = (empfangendeDaten.getRechts().X - 512 - offSetRechtsX) / 512 ;
-        if(Math.abs(value) > 1) value = value / Math.abs(value);
+        double value = (empfangendeDaten.getRechts().X - 512 - offSetRechtsX) / 512;
+        if (Math.abs(value) > 1) value = value / Math.abs(value);
         return -value;
     }
 
     @Override
     public double getJoystickRechtsY() {
-        double value = (empfangendeDaten.getRechts().Y - 512 - offSetRechtsY) / 512 ;
-        if(Math.abs(value) > 1) value = value / Math.abs(value);
+        double value = (empfangendeDaten.getRechts().Y - 512 - offSetRechtsY) / 512;
+        if (Math.abs(value) > 1) value = value / Math.abs(value);
         return value;
     }
 
